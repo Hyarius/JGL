@@ -1,0 +1,175 @@
+#include "jgl.h"
+
+extern jgl::String color_shader_vert;
+extern jgl::String color_shader_frag;
+extern jgl::String texture_shader_vert;
+extern jgl::String texture_shader_frag;
+extern jgl::String texture_bitmap_shader_vert;
+extern jgl::String texture_bitmap_shader_frag;
+extern jgl::String color_model_shader_vert;
+extern jgl::String color_model_shader_frag;
+extern jgl::String texture_model_shader_vert;
+extern jgl::String texture_model_shader_frag;
+
+jgl::Application* jgl::Application::_active_application = nullptr;
+
+void GLAPIENTRY
+MessageCallback(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	if (severity == GL_DEBUG_TYPE_ERROR || severity == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR || severity == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR ||
+		severity == GL_DEBUG_TYPE_ERROR_ARB || severity == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB || severity == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB)
+		fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s", (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
+}
+
+namespace jgl
+{
+	Application::Application(const jgl::String& p_title, const jgl::Vector2Int& p_size, jgl::Color p_background)
+	{
+		jgl::start();
+
+		_active_application = this;
+
+		_title = p_title;
+		_size = p_size;
+		_background = p_background;
+		_play = true;
+
+		_create_window(p_title, _size.x, _size.y, 4, 2);
+		THROW_INFORMATION("Window created");
+		add_shader("Color_shader_2D", color_shader_vert, color_shader_frag);
+		add_shader("Texture_shader_2D", texture_shader_vert, texture_shader_frag);
+		add_shader("Texture_text_shader_2D", texture_bitmap_shader_vert, texture_bitmap_shader_frag);
+		//add_shader("Color_shader_3D", color_model_shader_vert, color_model_shader_frag);
+		//add_shader("Texture_shader_3D", texture_model_shader_vert, texture_model_shader_frag);
+
+		// During init, enable debug output
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(MessageCallback, 0);
+
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_GREATER);
+		glClearDepth(-1.0f);
+		glEnable(GL_BLEND);
+		glCullFace(GL_BACK);
+		glDisable(GL_CULL_FACE);
+		glCullFace(GL_FRONT_AND_BACK);
+		//glEnable(GL_CULL_FACE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glFrontFace(GL_CCW);
+		glDisable(GL_CULL_FACE);
+
+		_central_widget = new Central_widget();
+		_central_widget->set_geometry(0, _size);
+		_central_widget->activate();
+
+		resize(_size.x, _size.y);
+
+		set_active_application(this);
+
+		_active_viewport = _central_widget->viewport();
+	}
+
+	Application::~Application()
+	{
+		jgl::stop();
+	}
+
+	void Application::_handle_win_message()
+	{
+		MSG msg;
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) { // If we have a message to process, process it
+			if (msg.message == WM_QUIT) {
+				quit(); // Set running to false if we have a message to quit
+			}
+			else {
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		}
+	}
+
+	void Application::resize(jgl::Int x, jgl::Int y)
+	{
+		_size = jgl::Vector2Int(x, y);
+		jgl::Vector2 old_size = _opengl_context.size();
+		_opengl_context.resize(x, y);
+		if (_central_widget != nullptr)
+		{
+			_active_viewport = _central_widget->viewport();
+			_central_widget->resize(0, _size);
+		}
+	}
+
+	void Application::_clear()
+	{
+		_opengl_context.clear();
+	}
+
+	void Application::_render()
+	{
+		_opengl_context.render();
+	}
+
+	void Application::quit()
+	{
+		_play = false;
+	}
+
+	jgl::Int Application::run()
+	{
+		jgl::Ulong next_tick = GetTickCount();
+		_opengl_context.setup(_background);
+
+		while (_play == true)
+		{
+			_time = GetTickCount();
+
+			_central_widget->viewport()->use();
+
+			_clear();
+			_handle_win_message();
+
+			if (next_tick <= _time)
+			{
+				next_tick = next_tick + _tick_delta;
+				_central_widget->_fixed_update_children();
+			}
+
+			_central_widget->_update_children();
+
+			_update_input();
+
+			_central_widget->_render_children();
+
+			_render();
+		}
+		return (1);
+	}
+
+	jgl::Shader* Application::add_shader_from_file(jgl::String name, jgl::String vertex_shader_path, jgl::String fragment_shader_path)
+	{
+		THROW_INFORMATION("Creating shader [" + name + "] from file");
+		_shader_map[name] = jgl::Shader::compile_from_file(vertex_shader_path, fragment_shader_path);
+		return (_shader_map[name]);
+	}
+
+	jgl::Shader* Application::add_shader(jgl::String name, jgl::String vertex_content, jgl::String fragment_content)
+	{
+		THROW_INFORMATION("Creating shader [" + name + "] from source");
+		_shader_map[name] = jgl::Shader::compile(vertex_content, fragment_content);
+		return (_shader_map[name]);
+	}
+
+	void jgl::Application::_update_input()
+	{
+		_keyboard._actualize_entry('\0');
+		_mouse._update();
+		_keyboard._update();
+	}
+}
