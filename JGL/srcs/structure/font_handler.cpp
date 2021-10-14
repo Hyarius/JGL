@@ -324,6 +324,7 @@ namespace jgl
 		tmp_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
+
 		return (delta);
 	}
 

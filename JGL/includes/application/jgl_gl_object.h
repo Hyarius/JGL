@@ -336,7 +336,7 @@ namespace jgl
 			_type(p_type),
 			_size(p_size)
 		{
-			THROW_INFORMATION("Creating a uniform (" + _name + ") at location " + jgl::itoa(_location) + " of mode " + str(_mode) + " and type " + str(_type, _size));
+
 		}
 
 		Uniform* copy() const

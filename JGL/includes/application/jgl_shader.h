@@ -38,6 +38,19 @@ namespace jgl
 		void _load_shaders(jgl::String vertex_content, jgl::String fragment_content);
 
 	public:
+		void extract(jgl::Map<jgl::String, jgl::Uniform*>& uniforms_dest, jgl::Map<jgl::String, jgl::Buffer*>& buffers_dest, jgl::Buffer*& element_buffer_dest)
+		{
+			for (auto tmp : _uniforms)
+			{
+				uniforms_dest[tmp.first] = tmp.second->copy();
+			}
+			for (auto tmp : _buffers)
+			{
+				buffers_dest[tmp.first] = tmp.second->copy();
+			}
+			element_buffer_dest = _element_buffer->copy();
+		}
+
 		void activate()
 		{
 			glUseProgram(_program);

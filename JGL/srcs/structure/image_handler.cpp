@@ -137,11 +137,6 @@ namespace jgl
 		uv_content[2] = uv_c;
 		uv_content[3] = uv_d;
 
-		for (int i = 0; i < 4; i++)
-		{
-			std::cout << "Uv[" << i << "] = " << uv_content[i] << std::endl;
-		}
-
 		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
 
 		if (tmp_shader == nullptr)
@@ -206,5 +201,29 @@ namespace jgl
 		tmp_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
+	}
+
+	void Image::prepare_draw(jgl::Array<jgl::Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uv_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& element_array,
+		jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha)
+	{
+		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
+		static jgl::Vector2Int delta_pos[4] = {
+			jgl::Vector2Int(0, 0),
+			jgl::Vector2Int(1, 0),
+			jgl::Vector2Int(0, 1),
+			jgl::Vector2Int(1, 1)
+		};
+		jgl::Size_t vertex_array_entry_size = vertex_array.size();
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			vertex_array.push_back(convert_screen_to_opengl(pos + size * delta_pos[i], depth));
+			uv_array.push_back(uv_pos + uv_size * delta_pos[i]);
+			alpha_array.push_back(alpha);
+		}
+		for (jgl::Size_t i = 0; i < 6; i++)
+		{
+			element_array.push_back(element_index[i] + vertex_array_entry_size);
+		}
 	}
 }
