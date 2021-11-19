@@ -21,5 +21,7 @@ namespace jgl
 		Frame(jgl::Color p_back, jgl::Color p_front, jgl::Widget* p_parent = nullptr);
 		Frame(jgl::String p_path, jgl::Widget* p_parent = nullptr);
 		Frame(jgl::Sprite_sheet* p_background_tileset, jgl::Widget* p_parent = nullptr);
+
+		Widget_component::Box& box() { return (_box); }
 	};
 }

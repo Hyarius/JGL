@@ -103,17 +103,18 @@ namespace jgl
 		}
 
 		const jgl::String shader_name = "Texture_text_shader_2D";
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
 
-		if (tmp_shader == nullptr)
+		_shader = jgl::Application::active_application()->shader(shader_name);
+
+		if (_shader == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
 
-		_vertex_buffer = tmp_shader->buffer("model_space");
-		_uvs_buffer = tmp_shader->buffer("vertexUV");
-		_color_buffer = tmp_shader->buffer("color_space");
-		_color_outline_buffer = tmp_shader->buffer("color_outline_space");
-		_alpha_buffer = tmp_shader->buffer("alpha_value");
-		_indexes_buffer = tmp_shader->indexes_buffer();
+		_vertex_buffer = _shader->buffer("model_space");
+		_uvs_buffer = _shader->buffer("vertexUV");
+		_color_buffer = _shader->buffer("color_space");
+		_color_outline_buffer = _shader->buffer("color_outline_space");
+		_alpha_buffer = _shader->buffer("alpha_value");
+		_indexes_buffer = _shader->indexes_buffer();
 
 		THROW_INFORMATION("Font created successfully with truetypefile [" + path + "] at id [" + jgl::itoa(_id) + "]");
 	}
@@ -169,13 +170,7 @@ namespace jgl
 
 		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
 
-		const jgl::String shader_name = "Texture_text_shader_2D";
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
-
-		if (tmp_shader == nullptr)
-			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
-
-		tmp_shader->activate();
+		_shader->activate();
 
 		activate();
 
@@ -185,9 +180,9 @@ namespace jgl
 		_color_outline_buffer->send(color_outline_content, 4);
 		_alpha_buffer ->send(alpha_content, 4);
 		_indexes_buffer->send(element_index, 6);
-		tmp_shader->uniform("textureID")->send(0);
+		_shader->uniform("textureID")->send(0);
 
-		tmp_shader->launch(jgl::Shader::Mode::Triangle);
+		_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
 
@@ -302,17 +297,16 @@ namespace jgl
 		}
 		delta.y = size;
 
-		const jgl::String shader_name = "Texture_text_shader_2D";
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
-
-		if (tmp_shader == nullptr)
-			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
-
-		tmp_shader->activate();
+		_shader->activate();
 
 		activate(GL_TEXTURE0);
 
-		tmp_shader->uniform("textureID")->send(0);
+		static jgl::Uniform* texture_uniform = nullptr;
+
+		if (texture_uniform == nullptr)
+			texture_uniform = _shader->uniform("textureID");
+		
+		texture_uniform->send(0);
 
 		_vertex_buffer->send(vertex_array.all(), vertex_array.size());
 		_uvs_buffer->send(uvs.all(), uvs.size());
@@ -321,7 +315,7 @@ namespace jgl
 		_alpha_buffer ->send(alphas.all(), alphas.size());
 		_indexes_buffer->send(indexes.all(), indexes.size());
 
-		tmp_shader->launch(jgl::Shader::Mode::Triangle);
+		_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
 
@@ -408,18 +402,16 @@ namespace jgl
 
 		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
 
-
-		const jgl::String shader_name = "Texture_text_shader_2D";
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
-
-		if (tmp_shader == nullptr)
-			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
-
-		tmp_shader->activate();
+		_shader->activate();
 
 		activate(GL_TEXTURE0);
 
-		tmp_shader->uniform("textureID")->send(0);
+		static jgl::Uniform* texture_uniform;
+
+		if (texture_uniform == nullptr)
+			texture_uniform = _shader->uniform("textureID");
+
+		texture_uniform->send(0);
 
 		_vertex_buffer->send(vertex_content, 4);
 		_uvs_buffer->send(uv_content, 4);
@@ -428,7 +420,7 @@ namespace jgl
 		_alpha_buffer ->send(alpha_content, 4);
 		_indexes_buffer->send(element_index, 6);
 
-		tmp_shader->launch(jgl::Shader::Mode::Triangle);
+		_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
 

@@ -6,7 +6,7 @@
 #include "structure/jgl_vector.h"
 #include "structure/jgl_color.h"
 #include "structure/jgl_image.h"
-
+#include "application/jgl_shader.h"
 #include "application/jgl_gl_object.h"
 
 namespace jgl
@@ -24,6 +24,7 @@ namespace jgl
 
 		jgl::Map<jgl::Glyph, Glyph_data> _atlas;
 
+		Shader* _shader = nullptr;
 		jgl::Buffer* _vertex_buffer = nullptr;
 		jgl::Buffer* _uvs_buffer = nullptr;
 		jgl::Buffer* _color_buffer = nullptr;

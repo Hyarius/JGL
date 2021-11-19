@@ -7,6 +7,14 @@
 
 namespace jgl
 {
+	jgl::Shader* Image_handler::_shader = nullptr;
+
+	jgl::Buffer* Image_handler::_model_space_buffer = nullptr;
+	jgl::Buffer* Image_handler::_vertexUV_buffer = nullptr;
+	jgl::Buffer* Image_handler::_alpha_value_buffer = nullptr;
+	jgl::Buffer* Image_handler::_element_index_buffer = nullptr;
+	jgl::Uniform* Image_handler::_texture_uniform = nullptr;
+
 	void Image_handler::_draw(
 		jgl::Vector2Int pos_a, jgl::Vector2Int pos_b, jgl::Vector2Int pos_c,
 		jgl::Vector2 uv_a, jgl::Vector2 uv_b, jgl::Vector2 uv_c,
@@ -33,17 +41,34 @@ namespace jgl
 			alpha, alpha, alpha
 		};
 
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
+		if (_shader == nullptr)
+			_shader = jgl::Application::active_application()->shader(shader_name);
 
-		if (tmp_shader == nullptr)
+		if (_shader == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
 
-		tmp_shader->buffer("model_space")->send(vertex_content, 3);
-		tmp_shader->buffer("vertexUV")->send(uv_content, 3);
-		tmp_shader->buffer("alpha_value")->send(alpha_content, 3);
-		tmp_shader->indexes_buffer()->send(element_index, 3);
-		tmp_shader->uniform("textureID")->send(0);
-		tmp_shader->launch(jgl::Shader::Mode::Triangle);
+		if (_model_space_buffer == nullptr)
+			_model_space_buffer = _shader->buffer("model_space");
+
+		if (_vertexUV_buffer == nullptr)
+			_vertexUV_buffer = _shader->buffer("vertexUV");
+
+		if (_alpha_value_buffer == nullptr)
+			_alpha_value_buffer = _shader->buffer("alpha_value");
+
+		if (_element_index_buffer == nullptr)
+			_element_index_buffer = _shader->indexes_buffer();
+
+		if (_texture_uniform == nullptr)
+			_texture_uniform = _shader->uniform("textureID");
+
+		_model_space_buffer->send(vertex_content, 3);
+		_vertexUV_buffer->send(uv_content, 3);
+		_alpha_value_buffer->send(alpha_content, 3);
+		_element_index_buffer->send(element_index, 3);
+		_texture_uniform->send(0);
+
+		_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
 	}
@@ -89,6 +114,7 @@ namespace jgl
 	{
 
 	}
+
 	Image::Image(jgl::String path) : jgl::Image_handler(path)
 	{
 
@@ -109,14 +135,14 @@ namespace jgl
 	}
 
 	static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
-	static jgl::Vector2Int delta_pos[4] = {
-		jgl::Vector2Int(0, 0),
-		jgl::Vector2Int(1, 0),
-		jgl::Vector2Int(0, 1),
-		jgl::Vector2Int(1, 1)
+	static jgl::Vector2Uint delta_pos[4] = {
+		jgl::Vector2Uint(0, 0),
+		jgl::Vector2Uint(1, 0),
+		jgl::Vector2Uint(0, 1),
+		jgl::Vector2Uint(1, 1)
 	};
 
-	void Image::draw(jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Vector2 uv_a, jgl::Vector2 uv_b, jgl::Vector2 uv_c, jgl::Vector2 uv_d, jgl::Float depth, jgl::Float alpha)
+	void Image::draw(jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_a, jgl::Vector2 uv_b, jgl::Vector2 uv_c, jgl::Vector2 uv_d, jgl::Float depth, jgl::Float alpha)
 	{
 		activate();
 
@@ -129,7 +155,8 @@ namespace jgl
 
 		for (size_t i = 0; i < 4; i++)
 		{
-			vertex_content[i] = convert_screen_to_opengl(pos + size * delta_pos[i], depth);
+			jgl::Vector2Uint tmp_delta = size * delta_pos[i];
+			vertex_content[i] = convert_screen_to_opengl(pos + jgl::Vector2Int(tmp_delta.x, tmp_delta.y), depth);
 			alpha_content[i] = alpha;
 		}
 		uv_content[0] = uv_a;
@@ -137,32 +164,50 @@ namespace jgl
 		uv_content[2] = uv_c;
 		uv_content[3] = uv_d;
 
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
+		if (_shader == nullptr)
+			_shader = jgl::Application::active_application()->shader(shader_name);
 
-		if (tmp_shader == nullptr)
+		if (_shader == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
 
-		tmp_shader->buffer("model_space")->send(vertex_content, 4);
-		tmp_shader->buffer("vertexUV")->send(uv_content, 4);
-		tmp_shader->buffer("alpha_value")->send(alpha_content, 4);
-		tmp_shader->indexes_buffer()->send(element_index, 6);
-		tmp_shader->uniform("textureID")->send(static_cast<GLint>(0));
-		tmp_shader->launch(jgl::Shader::Mode::Triangle);
+
+		if (_model_space_buffer == nullptr)
+			_model_space_buffer = _shader->buffer("model_space");
+
+		if (_vertexUV_buffer == nullptr)
+			_vertexUV_buffer = _shader->buffer("vertexUV");
+
+		if (_alpha_value_buffer == nullptr)
+			_alpha_value_buffer = _shader->buffer("alpha_value");
+
+		if (_element_index_buffer == nullptr)
+			_element_index_buffer = _shader->indexes_buffer();
+
+		if (_texture_uniform == nullptr)
+			_texture_uniform = _shader->uniform("textureID");
+
+		_model_space_buffer->send(vertex_content, 4);
+		_vertexUV_buffer->send(uv_content, 4);
+		_alpha_value_buffer->send(alpha_content, 4);
+		_element_index_buffer->send(element_index, 6);
+		_texture_uniform->send(0);
+
+		_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
 	}
 
-	void Image::draw(jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha)
+	void Image::draw(jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha)
 	{
 
 		const jgl::String shader_name = "Texture_shader_2D";
 
 		//static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
-		static jgl::Vector2Int delta_pos[4] = {
-			jgl::Vector2Int(0, 0),
-			jgl::Vector2Int(1, 0),
-			jgl::Vector2Int(0, 1),
-			jgl::Vector2Int(1, 1)
+		static jgl::Vector2Uint delta_pos[4] = {
+			jgl::Vector2Uint(0, 0),
+			jgl::Vector2Uint(1, 0),
+			jgl::Vector2Uint(0, 1),
+			jgl::Vector2Uint(1, 1)
 		};
 
 		Vector3 vertex_content[4];
@@ -171,53 +216,70 @@ namespace jgl
 
 		for (size_t i = 0; i < 4; i++)
 		{
-			vertex_content[i] = (convert_screen_to_opengl(pos + size * delta_pos[i], depth));
+			jgl::Vector2Uint tmp_delta = size * delta_pos[i];
+			vertex_content[i] = convert_screen_to_opengl(pos + jgl::Vector2Int(tmp_delta.x, tmp_delta.y), depth);
 			uv_content[i] = (uv_pos + uv_size * delta_pos[i]);
 			alpha_content[i] = (alpha);
 		}
 
 
+		if (_shader == nullptr)
+			_shader = jgl::Application::active_application()->shader(shader_name);
 
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
-
-		if (tmp_shader == nullptr)
+		if (_shader == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
 
 		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
 
 
-		tmp_shader->activate();
+		_shader->activate();
 
 		activate();
 
-		tmp_shader->buffer("model_space")->send(vertex_content, 4);
-		tmp_shader->buffer("vertexUV")->send(uv_content, 4);
-		tmp_shader->buffer("alpha_value")->send(alpha_content, 4);
 
-		tmp_shader->uniform("textureID")->send(0);
 
-		tmp_shader->indexes_buffer()->send(element_index, 6);
+		if (_model_space_buffer == nullptr)
+			_model_space_buffer = _shader->buffer("model_space");
 
-		tmp_shader->launch(jgl::Shader::Mode::Triangle);
+		if (_vertexUV_buffer == nullptr)
+			_vertexUV_buffer = _shader->buffer("vertexUV");
+
+		if (_alpha_value_buffer == nullptr)
+			_alpha_value_buffer = _shader->buffer("alpha_value");
+
+		if (_element_index_buffer == nullptr)
+			_element_index_buffer = _shader->indexes_buffer();
+
+		if (_texture_uniform == nullptr)
+			_texture_uniform = _shader->uniform("textureID");
+
+		_model_space_buffer->send(vertex_content, 4);
+		_vertexUV_buffer->send(uv_content, 4);
+		_alpha_value_buffer->send(alpha_content, 4);
+		_element_index_buffer->send(element_index, 6);
+		_texture_uniform->send(0);
+
+		_shader->launch(jgl::Shader::Mode::Triangle);
 
 		desactivate();
 	}
 
 	void Image::prepare_draw(jgl::Array<jgl::Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uv_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& element_array,
-		jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha)
+		jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha)
 	{
 		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
-		static jgl::Vector2Int delta_pos[4] = {
-			jgl::Vector2Int(0, 0),
-			jgl::Vector2Int(1, 0),
-			jgl::Vector2Int(0, 1),
-			jgl::Vector2Int(1, 1)
+		static jgl::Vector2Uint delta_pos[4] = {
+			jgl::Vector2Uint(0, 0),
+			jgl::Vector2Uint(1, 0),
+			jgl::Vector2Uint(0, 1),
+			jgl::Vector2Uint(1, 1)
 		};
 		jgl::Size_t vertex_array_entry_size = vertex_array.size();
 
 		for (size_t i = 0; i < 4; i++)
 		{
-			vertex_array.push_back(convert_screen_to_opengl(pos + size * delta_pos[i], depth));
+			jgl::Vector2Uint tmp_delta = size * delta_pos[i];
+			vertex_array.push_back(convert_screen_to_opengl(pos + jgl::Vector2Int(tmp_delta.x, tmp_delta.y), depth));
 			uv_array.push_back(uv_pos + uv_size * delta_pos[i]);
 			alpha_array.push_back(alpha);
 		}

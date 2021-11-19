@@ -44,7 +44,7 @@ namespace jgl
 
 		asio::ip::tcp::acceptor _acceptor;
 
-		std::map<T, std::function< void(jgl::Connection<T>*, jgl::Message<T>&, jgl::Data_contener) >> _activity_map;
+		std::map<T, std::function< void(jgl::Connection<T>*, jgl::Message<T>&, jgl::Data_contener&) >> _activity_map;
 		std::map<T, jgl::Data_contener> _activity_param_map;
 
 		jgl::Uint _id_count = 10000;
@@ -172,7 +172,7 @@ namespace jgl
 		/*
 			Define the functer [funct] with [param] parameter to use when receiving a message of id [msg_type]
 		*/
-		void add_activity(T msg_type, std::function< void(jgl::Connection<T>*, jgl::Message<T>&, jgl::Data_contener) > funct, jgl::Data_contener param = jgl::Data_contener())
+		void add_activity(T msg_type, std::function< void(jgl::Connection<T>*, jgl::Message<T>&, jgl::Data_contener&) > funct, jgl::Data_contener param = jgl::Data_contener())
 		{
 			_activity_map[msg_type] = funct;
 			_activity_param_map[msg_type] = param;
@@ -181,7 +181,7 @@ namespace jgl
 		/*
 			Define the functer [funct] with [param] parameter to use when validating a new connection
 		*/
-		void set_login_function(std::function< void(jgl::Connection<T>*, jgl::Data_contener) > p_login_funct, jgl::Data_contener param = jgl::Data_contener())
+		void set_login_function(std::function< void(jgl::Connection<T>*, jgl::Data_contener&) > p_login_funct, jgl::Data_contener param = jgl::Data_contener())
 		{
 			_login_funct = p_login_funct;
 			_login_param = param;
@@ -190,7 +190,7 @@ namespace jgl
 		/*
 			Define the functer [funct] with [param] parameter to use when disconnecting a client
 		*/
-		void set_logout_function(std::function< void(jgl::Connection<T>*, jgl::Data_contener) > p_logout_funct, jgl::Data_contener param = jgl::Data_contener())
+		void set_logout_function(std::function< void(jgl::Connection<T>*, jgl::Data_contener&) > p_logout_funct, jgl::Data_contener param = jgl::Data_contener())
 		{
 			_logout_funct = p_logout_funct;
 			_logout_param = param;

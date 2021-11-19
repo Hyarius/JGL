@@ -29,13 +29,13 @@ namespace jgl
 		return (_owner->cumuled_anchor());
 	}
 
-	void Viewport::use()
+	void Viewport::use() const
 	{
 		if (jgl::Application::active_application()->active_viewport() != this)
 		{
 			jgl::Application::active_application()->set_active_viewport(this);
 
-			jgl::Vector2Int tmp = cumuled_anchor();
+			jgl::Vector2Int tmp = (_owner != nullptr ? cumuled_anchor() : 0);
 			jgl::Vector2Int pos = jgl::Vector2(tmp.x, jgl::Application::active_application()->size().y - _area.y - tmp.y);
 			glViewport(static_cast<jgl::Int>(pos.x), static_cast<jgl::Int>(pos.y), static_cast<jgl::Int>(_area.x), static_cast<jgl::Int>(_area.y));
 		}

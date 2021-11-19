@@ -37,6 +37,6 @@ namespace jgl
 
 		void reset();
 
-		void use();
+		void use() const;
 	};
 }

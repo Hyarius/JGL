@@ -24,7 +24,9 @@ namespace jgl::Widget_component
 		jgl::Color _background = jgl::Color(100, 100, 100);
 		jgl::Color _frontground = jgl::Color(150, 150, 150);
 		jgl::Int _border_size = 5;
+		jgl::Int _angle_size = 16;
 
+		void _init_texture();
 		void _init();
 		void _compute_texture();
 		void _render_color();
@@ -36,11 +38,21 @@ namespace jgl::Widget_component
 		Box(jgl::String p_path, jgl::Widget* p_owner);
 		Box(jgl::Sprite_sheet* p_background_tileset, jgl::Widget* p_owner);
 
+		void set_background_texture(jgl::Sprite_sheet* p_texture) { _background_tileset = p_texture; }
+		jgl::Sprite_sheet* background_texture() { return _background_tileset; }
+
 		void set_front_color(jgl::Color p_frontground) { _frontground = p_frontground; }
+		jgl::Color front_color() { return (_frontground); }
+
 		void set_back_color(jgl::Color p_background) { _background = p_background; }
+		jgl::Color back_color() { return (_background); }
+
+		void set_angle_size(jgl::Int p_angle_size) { _angle_size = p_angle_size; _compute_texture(); }
+		jgl::Int angle_size() { return (_angle_size); }
 
 		void set_border_size(jgl::Int p_border_size) { _border_size = p_border_size; }
 		jgl::Int border_size() { return (_border_size); }
+
 		void set_geometry(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area, jgl::Float p_depth);
 		void render();
 	};

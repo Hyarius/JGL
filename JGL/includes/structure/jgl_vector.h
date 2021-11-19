@@ -31,20 +31,36 @@ namespace jgl
 			y = p_y;
 		}
 
+		//Convert non-float to float
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == false>::type* = nullptr>
-		operator Vector2_base<jgl::Float>()
+		operator Vector2_base<jgl::Float>() const
 		{
 			return (Vector2_base<jgl::Float>(static_cast<jgl::Float>(x), static_cast<jgl::Float>(y)));
 		}
+		//Convert float to int
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
-		operator Vector2_base<jgl::Int>()
+		operator Vector2_base<jgl::Int>() const
 		{
 			return (Vector2_base<jgl::Int>(static_cast<jgl::Int>(x), static_cast<jgl::Int>(y)));
 		}
+		//Convert float to uint
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
-		operator Vector2_base<jgl::Uint>()
+		operator Vector2_base<jgl::Uint>() const
 		{
 			return (Vector2_base<jgl::Uint>(static_cast<jgl::Uint>(x), static_cast<jgl::Uint>(y)));
+		}
+
+		//Convert non-float and signed to unsigned
+		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == false>::type* = nullptr, typename std::enable_if<std::is_unsigned<U>::value == false>::type* = nullptr>
+		operator Vector2_base<jgl::Uint>() const
+		{
+			return (Vector2_base<jgl::Uint>(static_cast<jgl::Uint>(x), static_cast<jgl::Uint>(y)));
+		}
+		//Convert non-float and unsigned to signed
+		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == false>::type* = nullptr, typename std::enable_if<std::is_unsigned<U>::value == true>::type* = nullptr>
+		operator Vector2_base<jgl::Int>() const
+		{
+			return (Vector2_base<jgl::Int>(static_cast<jgl::Int>(x), static_cast<jgl::Int>(y)));
 		}
 
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
@@ -53,6 +69,33 @@ namespace jgl
 		}
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
 		jgl::Int iy() const {
+			return (static_cast<jgl::Int>(y));
+		}
+
+		template <typename U = T, typename std::enable_if<std::is_unsigned<U>::value == true>::type* = nullptr>
+		jgl::Int ix() const {
+			return (static_cast<jgl::Int>(x));
+		}
+		template <typename U = T, typename std::enable_if<std::is_unsigned<U>::value == true>::type* = nullptr>
+		jgl::Int iy() const {
+			return (static_cast<jgl::Int>(y));
+		}
+
+		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
+		jgl::Uint ux() const {
+			return (static_cast<jgl::Int>(x));
+		}
+		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
+		jgl::Uint uy() const {
+			return (static_cast<jgl::Int>(y));
+		}
+
+		template <typename U = T, typename std::enable_if<std::is_signed<U>::value == true>::type* = nullptr>
+		jgl::Uint ux() const {
+			return (static_cast<jgl::Int>(x));
+		}
+		template <typename U = T, typename std::enable_if<std::is_signed<U>::value == true>::type* = nullptr>
+		jgl::Uint uy() const {
 			return (static_cast<jgl::Int>(y));
 		}
 
@@ -272,6 +315,32 @@ namespace jgl
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
 		jgl::Int iz() const {
 			return (static_cast<jgl::Int>(z));
+		}
+
+		template <typename U = T, typename std::enable_if<std::is_unsigned<U>::value == true>::type* = nullptr>
+		jgl::Int ix() const {
+			return (static_cast<jgl::Int>(x));
+		}
+		template <typename U = T, typename std::enable_if<std::is_unsigned<U>::value == true>::type* = nullptr>
+		jgl::Int iy() const {
+			return (static_cast<jgl::Int>(y));
+		}
+		template <typename U = T, typename std::enable_if<std::is_unsigned<U>::value == true>::type* = nullptr>
+		jgl::Int iz() const {
+			return (static_cast<jgl::Int>(z));
+		}
+
+		template <typename U = T, typename std::enable_if<std::is_signed<U>::value == true>::type* = nullptr>
+		jgl::Uint ix() const {
+			return (static_cast<jgl::Uint>(x));
+		}
+		template <typename U = T, typename std::enable_if<std::is_signed<U>::value == true>::type* = nullptr>
+		jgl::Uint iy() const {
+			return (static_cast<jgl::Uint>(y));
+		}
+		template <typename U = T, typename std::enable_if<std::is_signed<U>::value == true>::type* = nullptr>
+		jgl::Uint iz() const {
+			return (static_cast<jgl::Uint>(z));
 		}
 
 		const T* decompose() const

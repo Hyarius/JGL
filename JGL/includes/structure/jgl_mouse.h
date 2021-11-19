@@ -12,18 +12,10 @@ namespace jgl
 		friend class Application;
 		jgl::Vector2Int _pos;
 		jgl::Float _wheel[MOUSE_WHEEL_AXIS_COUNT];
+		jgl::Ulong _wheel_timer[MOUSE_WHEEL_AXIS_COUNT];
 		jgl::Input_status _button[MOUSE_BUTTON_COUNT];
 
-		void _update()
-		{
-			for (jgl::Size_t i = 0; i < MOUSE_BUTTON_COUNT; i++)
-			{
-				if (_button[i] == jgl::Input_status::Pressed)
-					_button[i] = jgl::Input_status::Down;
-				else if (_button[i] == jgl::Input_status::Release)
-					_button[i] = jgl::Input_status::Up;
-			}
-		}
+		void _update();
 
 	public:
 		/*

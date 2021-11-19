@@ -121,14 +121,36 @@ namespace jgl
 		_play = false;
 	}
 
+	jgl::Ulong getTime()
+	{
+		auto epoch = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch();
+
+		return (std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count());
+	}
+
 	jgl::Int Application::run()
 	{
-		jgl::Ulong next_tick = GetTickCount();
+		jgl::Ulong next_tick = getTime();
 		_opengl_context.setup(_background);
+
+		jgl::Ulong old_time = getTime();
+
+		jgl::Ulong delta_time = 0;
+
+		jgl::Ulong frame = 0;
 
 		while (_play == true)
 		{
-			_time = GetTickCount();
+			_time = getTime();
+
+			if ((_time - old_time) > 1000.0f)
+			{
+				_fps = frame;
+				frame = 0;
+				old_time = _time;
+			}
+			else
+				frame++;
 
 			_central_widget->viewport()->use();
 
@@ -148,6 +170,7 @@ namespace jgl
 			_central_widget->_render_children();
 
 			_render();
+
 		}
 		return (1);
 	}

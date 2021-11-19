@@ -20,13 +20,13 @@ namespace jgl
 		}
 	}
 
-	void Sprite_sheet::draw(jgl::Uint sprite_id, jgl::Vector2Int pos, jgl::Vector2Int size,
+	void Sprite_sheet::draw(jgl::Uint sprite_id, jgl::Vector2Int pos, jgl::Vector2Uint size,
 		jgl::Float depth, jgl::Float alpha)
 	{
 		jgl::Image::draw(pos, size, _sprites[sprite_id], _unit, depth, alpha);
 	}
 
-	void Sprite_sheet::draw(jgl::Vector2Int sprite, jgl::Vector2Int pos, jgl::Vector2Int size,
+	void Sprite_sheet::draw(jgl::Vector2Int sprite, jgl::Vector2Int pos, jgl::Vector2Uint size,
 		jgl::Float depth, jgl::Float alpha)
 	{
 		jgl::Uint sprite_id = (_size.x * sprite.y) + sprite.x;
@@ -35,13 +35,13 @@ namespace jgl
 
 
 	void Sprite_sheet::prepare_draw(jgl::Array<jgl::Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uv_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& element_array,
-		jgl::Uint sprite_id, jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float depth, jgl::Float alpha)
+		jgl::Uint sprite_id, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Float depth, jgl::Float alpha)
 	{
 		jgl::Image::prepare_draw(vertex_array, uv_array, alpha_array, element_array, pos, size, _sprites[sprite_id], _unit, depth, alpha);
 	}
 
 	void Sprite_sheet::prepare_draw(jgl::Array<jgl::Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uv_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& element_array,
-		jgl::Vector2Int sprite, jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float depth, jgl::Float alpha)
+		jgl::Vector2Int sprite, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Float depth, jgl::Float alpha)
 	{
 		jgl::Uint sprite_id = (_size.x * sprite.y) + sprite.x;
 		jgl::Image::prepare_draw(vertex_array, uv_array, alpha_array, element_array, pos, size, _sprites[sprite_id], _unit, depth, alpha);

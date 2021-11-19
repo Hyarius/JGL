@@ -202,6 +202,7 @@ namespace jgl
 		jgl::Bool _masked = false;
 
 		jgl::Ulong _time = 0u;
+		jgl::Ulong _fps = 0u;
 		jgl::Ulong _tick_delta = 1000 / 60;
 
 		jgl::Mouse _mouse;
@@ -209,7 +210,7 @@ namespace jgl
 
 		Central_widget* _central_widget;
 
-		jgl::Viewport* _active_viewport;
+		const jgl::Viewport* _active_viewport;
 
 	private:
 		void _create_window(jgl::String title, jgl::Int width, jgl::Int height, jgl::Uint major, jgl::Uint minor);
@@ -224,8 +225,9 @@ namespace jgl
 		Application(const jgl::String& p_title, const jgl::Vector2Int& p_size, jgl::Color p_background);
 		~Application();
 
-		jgl::Viewport* active_viewport() { return (_active_viewport); }
-		void set_active_viewport(jgl::Viewport* p_viewport) { _active_viewport = p_viewport; }
+		const jgl::Viewport* viewport() const { return (_central_widget->viewport()); }
+		const jgl::Viewport* active_viewport() const { return (_active_viewport); }
+		void set_active_viewport(const jgl::Viewport* p_viewport) { _active_viewport = p_viewport; }
 
 		jgl::Font * default_font() { return (_default_font); }
 		void set_default_font(jgl::String path) { _default_font = new jgl::Font(path); }
@@ -234,6 +236,7 @@ namespace jgl
 		void set_masked(jgl::Bool p_masked) { _masked = p_masked; }
 		void set_max_fps(jgl::Ulong nb_fps) { _tick_delta = 1000 / nb_fps; }
 
+		const jgl::Ulong& fps() const { return (_fps); }
 		const jgl::Ulong& max_fps() const { return (1000 * _tick_delta); }
 		const jgl::Vector2Int size() const { return (_size); }
 		const jgl::String& title() const { return (_title); }

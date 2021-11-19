@@ -7,9 +7,22 @@ namespace jgl
 	{
 		if (jgl::Application::active_application() == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Critical, 0, "jgl::Application not created");
-		jgl::Float x = (source.x) / (jgl::Application::active_application()->active_viewport()->area().x / 2.0f) - 1.0f;
-		jgl::Float y = -((source.y) / (jgl::Application::active_application()->active_viewport()->area().y / 2.0f) - 1.0f);
+		GLint viewport_info[4];
+		glGetIntegerv(GL_VIEWPORT, viewport_info);
+		jgl::Float x = (source.x) / (viewport_info[2] / 2.0f) - 1.0f;
+		jgl::Float y = -((source.y) / (viewport_info[3] / 2.0f) - 1.0f);
 		return (Vector3(x, y, level / 10000.0f));
+	}
+
+	Vector2 convert_screen_to_opengl(const Vector2Int source)
+	{
+		if (jgl::Application::active_application() == nullptr)
+			THROW_EXCEPTION(jgl::Error_level::Critical, 0, "jgl::Application not created");
+		GLint viewport_info[4];
+		glGetIntegerv(GL_VIEWPORT, viewport_info);
+		jgl::Float x = (source.x) / (viewport_info[2] / 2.0f) - 1.0f;
+		jgl::Float y = -((source.y) / (viewport_info[3] / 2.0f) - 1.0f);
+		return (Vector2(x, y));
 	}
 
 	Vector2Int convert_opengl_to_screen(const Vector2Int source)
@@ -49,14 +62,24 @@ namespace jgl
 			color_content[i] = color;
 		}
 
-
-		jgl::Shader* tmp_shader = jgl::Application::active_application()->shader(shader_name);
+		static jgl::Shader* tmp_shader = nullptr;
+		
+		if (tmp_shader == nullptr)
+			tmp_shader = jgl::Application::active_application()->shader(shader_name);
 
 		if (tmp_shader == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
 
-		tmp_shader->buffer("model_space")->send(vertex_content, 4);
-		tmp_shader->buffer("color_space")->send(color_content, 4);
+		static jgl::Buffer* model_buffer = nullptr;
+		static jgl::Buffer* color_buffer = nullptr;
+
+		if (model_buffer == nullptr)
+			model_buffer = tmp_shader->buffer("model_space");
+		if (color_buffer == nullptr)
+			color_buffer = tmp_shader->buffer("color_space");
+
+		model_buffer->send(vertex_content, 4);
+		color_buffer->send(color_content, 4);
 		tmp_shader->indexes_buffer()->send(element_index, 6);
 		tmp_shader->launch(jgl::Shader::Mode::Triangle);
 	}

@@ -26,6 +26,9 @@ namespace jgl
 
 		void define_action(std::function< void(jgl::Data_contener) > p_funct, jgl::Data_contener p_param);
 
+		std::function< void(jgl::Data_contener) > function() const { return (_funct); }
+		jgl::Data_contener param() const { return (_param); }
+
 		Widget_component::Box& selected_box() { return (_box[1]); }
 		Widget_component::Box& unselected_box() { return (_box[0]); }
 		Widget_component::Box* boxes() { return (_box); }

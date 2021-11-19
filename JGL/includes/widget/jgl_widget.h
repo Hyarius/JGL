@@ -44,14 +44,14 @@ namespace jgl
 		Widget(jgl::Widget* p_parent);
 		~Widget();
 
-		jgl::Viewport* viewport() { return (_viewport); }
+		const jgl::Viewport* viewport() const { return (_viewport); }
 
-		jgl::Widget* parent() const { return (_parent); }
-		const jgl::Float& depth() { return (_depth); }
-		const jgl::Bool active() { return _active; }
-		const jgl::Vector2Int& area() const { return (_area); }
-		const jgl::Vector2Int& anchor() const { return (_anchor); }
-		const jgl::Vector2Int cumuled_anchor() const { return ((_parent == nullptr ? 0 : _anchor + _parent->cumuled_anchor())); }
+		const jgl::Widget* parent() const { return (_parent); }
+		jgl::Float depth() { return (_depth); }
+		jgl::Bool active() { return _active; }
+		jgl::Vector2Int area() const { return (_area); }
+		jgl::Vector2Int anchor() const { return (_anchor); }
+		jgl::Vector2Int cumuled_anchor() const { return ((_parent == nullptr ? 0 : _anchor + _parent->cumuled_anchor())); }
 
 		void set_active(jgl::Bool p_state) { _active = p_state; }
 		void activate() { _active = true; }
@@ -63,7 +63,7 @@ namespace jgl
 
 		void set_parent(jgl::Widget* p_parent);
 
-		void set_depth(jgl::Float p_depth) { _depth = p_depth; }
+		void set_depth(jgl::Float p_depth) { jgl::Float delta = p_depth - _depth; _depth = p_depth; for (jgl::Size_t i = 0; i < _childrens.size(); i++) _childrens[i]->set_depth(p_depth + 1.0f + delta); }
 		void set_geometry(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area);
 	};
 }

@@ -8,6 +8,7 @@ namespace jgl::Widget_component
 		_frontground = jgl::Color(150, 150, 150);
 		_depth = 0;
 		_background_tileset = nullptr;
+		_init_texture();
 	}
 
 	Box::Box(jgl::Color p_background, jgl::Color p_frontground, jgl::Widget* p_owner) : Box(p_owner)
@@ -16,10 +17,8 @@ namespace jgl::Widget_component
 		_frontground = p_frontground;
 	}
 
-	Box::Box(jgl::String p_path, jgl::Widget* p_owner) : Box(p_owner)
+	void Box::_init_texture()
 	{
-		_background_tileset = new jgl::Sprite_sheet(p_path, 3);
-
 		_shader = jgl::Application::active_application()->shader("Texture_shader_2D");
 
 		_element_buffer = _shader->indexes_buffer()->copy();
@@ -39,28 +38,14 @@ namespace jgl::Widget_component
 
 		_compute_texture();
 	}
+
+	Box::Box(jgl::String p_path, jgl::Widget* p_owner) : Box(p_owner)
+	{
+		_background_tileset = new jgl::Sprite_sheet(p_path, 3);
+	}
 	Box::Box(jgl::Sprite_sheet* p_background_tileset, jgl::Widget* p_owner) : Box(p_owner)
 	{
 		_background_tileset = p_background_tileset;
-
-		_shader = jgl::Application::active_application()->shader("Texture_shader_2D");
-
-		_element_buffer = _shader->indexes_buffer()->copy();
-		const jgl::Map<jgl::String, jgl::Uniform*> uniforms = _shader->uniforms();
-		for (auto it = uniforms.begin(); it != uniforms.end(); it++)
-		{
-			THROW_INFORMATION("Copying uniform : " + it->first);
-			_uniforms[it->first] = it->second->copy();
-		}
-
-		const jgl::Map<jgl::String, jgl::Buffer*>& buffers = _shader->buffers();
-		for (auto it = buffers.begin(); it != buffers.end(); it++)
-		{
-			THROW_INFORMATION("Copying buffer : " + it->first);
-			_buffers[it->first] = it->second->copy();
-		}
-
-		_compute_texture();
 	}
 
 	void Box::set_geometry(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area, jgl::Float p_depth)
@@ -121,23 +106,23 @@ namespace jgl::Widget_component
 
 		jgl::Vector3 tmp_vertex[16] = {
 			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, 0), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(16, 0), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - 16, 0), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, 0), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, 0), _depth),
 			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, 0), _depth),
 
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, 16), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(16, 16), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - 16, 16), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, 16), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, _angle_size), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, _angle_size), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, _angle_size), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, _angle_size), _depth),
 
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, _area.y - 16), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(16, _area.y - 16), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - 16, _area.y - 16), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, _area.y - 16), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, _area.y - _angle_size), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, _area.y - _angle_size), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, _area.y - _angle_size), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, _area.y - _angle_size), _depth),
 
 			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, _area.y), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(16, _area.y), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - 16, _area.y), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, _area.y), _depth),
+			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, _area.y), _depth),
 			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, _area.y), _depth),
 		};
 

@@ -8,16 +8,14 @@ namespace jgl
 	}
 	void actualize_wheel(jgl::Mouse& mouse, jgl::Mouse_wheel_axis p_axis, jgl::Float delta)
 	{
+		mouse._wheel_timer[static_cast<jgl::Int>(p_axis)] = jgl::Application::active_application()->time();
 		mouse._wheel[static_cast<jgl::Int>(p_axis)] += delta;
 	}
 	void actualize_pos(jgl::Mouse& mouse, jgl::Vector2Int delta)
 	{
-		mouse._pos += delta;
+		mouse._pos = delta;
 	}
-}
 
-namespace jgl
-{
 	void actualize_key(jgl::Keyboard& keyboard, jgl::Key p_key, jgl::Input_status p_status)
 	{
 		jgl::Input_status& tmp = keyboard._data[static_cast<jgl::Int>(p_key)];
@@ -32,13 +30,20 @@ namespace jgl
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+
 	switch (message) {
 		// ----- Application part
 		case WM_SIZE: // En cas de redimensionnement
 		{
+			if (wParam == SIZE_RESTORED)
+				jgl::Application::active_application()->set_masked(false);
+
 			UINT width = LOWORD(lParam);
 			UINT height = HIWORD(lParam);
-			jgl::Application::active_application()->resize(width, height);
+
+			if (width != 0 && height != 0)
+				jgl::Application::active_application()->resize(width, height);
+
 			break;
 		}
 		case WM_SHOWWINDOW:
@@ -65,14 +70,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		{
 			break;
 		}
+		case WM_MDIRESTORE:
+		{
+			THROW_INFORMATION("Restoring the application " + jgl::Application::active_application()->title());
+			break;
+		}
 		case WM_SETFOCUS:
 		{
-			THROW_INFORMATION("Set keyboard focus on application " + jgl::Application::active_application()->title());
+			THROW_INFORMATION("Set focus on application " + jgl::Application::active_application()->title());
 			break;
 		}
 		case WM_KILLFOCUS:
 		{
-			THROW_INFORMATION("Keyboard focus lost on application " + jgl::Application::active_application()->title());
+			THROW_INFORMATION("Lost focus on application " + jgl::Application::active_application()->title());
 			break;
 		}
 		case WM_DESTROY: // En cas de fermeture

@@ -51,7 +51,7 @@ jgl::String color_model_shader_frag = {
 	"uniform float material_d;"
 	"uniform int material_illum;"
 	//	---	Output variable ---
-	"out vec4 color;"
+	"layout(location = 0) out vec4 color;"
 	""
 	"void main()"
 	"{"
@@ -129,7 +129,7 @@ jgl::String texture_model_shader_frag = {
 	"uniform sampler2D alpha_texture;"
 	"uniform sampler2D bump_texture;"
 	//	---	Output variable ---
-	"out vec4 color;"
+	"layout(location = 0) out vec4 color;"
 	""
 	"float linearize_depth(float depth)"
 	"{"
@@ -142,6 +142,8 @@ jgl::String texture_model_shader_frag = {
 	"}"
 	"void main()"
 	"{"
+		"if (UV.x < 0 || UV.x > 1 || UV.y < 0 || UV.y > 1)"
+			"discard;"
 		"float value = (((dot(computed_normal, light_dir) + 1) / 2) - 1) * -1;"
 		"value = clamp(value, 0.3f, 1.0f);"
 		"vec4 source_color = texture(diffuse_texture, UV).rgba;"

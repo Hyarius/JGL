@@ -129,6 +129,9 @@
     <ClCompile Include="srcs\widget\component\graphical_component_handler.cpp">
       <Filter>Source Files\widget\Component</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\structure\image_output_handler.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">

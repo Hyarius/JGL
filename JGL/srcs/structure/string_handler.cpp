@@ -184,6 +184,15 @@ namespace jgl
 	String::~String()
 	{
 		_delete_array_content();
+		
+		jgl::Size_t nb_to_remove = _max_size / JGL_STRING_BUFFER_SIZE;
+
+		if (_content != nullptr)
+		{
+			for (jgl::Size_t i = 1; i < nb_to_remove; i++)
+				delete _content[i];
+			delete[] _content;
+		}
 	}
 
 	const Size_t String::size() const

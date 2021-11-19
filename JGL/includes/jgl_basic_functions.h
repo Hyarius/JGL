@@ -141,12 +141,35 @@ namespace jgl
 	jgl::String glGetTypeString(GLenum type);
 
 	/*
-		Convert a screen coord (in pixel) to an OpenGL coord (from -1 to 1 in both axis)
+		Convert a screen coord (in pixel) to an OpenGL coord (from -1 to 1 in both axis, and 0 to 10000 for level)
 	*/
 	Vector3 convert_screen_to_opengl(const Vector2Int source, jgl::Float level);
+
+	/*
+		Convert a screen coord (in pixel) to an OpenGL coord, without depth value (from -1 to 1 in both axis and 0 as depth)
+	*/
+	Vector2 convert_screen_to_opengl(const Vector2Int source);
 
 	/*
 		Convert a OpenGL coord (from -1 to 1 in both axis) to a screen coord (in pixel)
 	*/
 	Vector2Int convert_opengl_to_screen(const Vector2Int source);
+
+	/*
+		Lerp between 2 datas with time
+	*/
+	template<typename T>
+	T lerp(T p_start_value, T p_final_value, jgl::Ulong p_duration, jgl::Ulong p_total_duration)
+	{
+		jgl::Float ratio = 1.0f / (static_cast<jgl::Float>(p_total_duration) / static_cast<jgl::Float>(p_duration));
+		return (lerp(p_start_value, p_final_value, ratio));
+	}
+	/*
+		Lerp between 2 datas with a ratio
+	*/
+	template<typename T>
+	T lerp(T p_start_value, T p_final_value, jgl::Float p_ratio)
+	{
+		return (p_start_value * (1.0f - p_ratio) + p_final_value * p_ratio);
+	}
 }

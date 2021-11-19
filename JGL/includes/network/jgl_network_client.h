@@ -71,7 +71,7 @@ namespace jgl
 		/*
 			Define the function [funct] to use with [param], when receiving message type [msg_type]
 		*/
-		void add_activity(T msg_type, std::function< void(jgl::Message<T>&, jgl::Data_contener&) >& funct, jgl::Data_contener param = jgl::Data_contener())
+		void add_activity(T msg_type, std::function< void(jgl::Message<T>&, jgl::Data_contener) > funct, jgl::Data_contener param = jgl::Data_contener())
 		{
 			_activity_map[msg_type] = funct;
 			_activity_param_map[msg_type] = param;
@@ -266,6 +266,14 @@ namespace jgl
 		jgl::Locked_queue<jgl::Input_message<T>>& input()
 		{
 			return (_input);
+		}
+
+		/*
+			Return the const pointer of the client's connection
+		*/
+		jgl::Connection<T>* connection() const
+		{
+			return (_connection);
 		}
 	};
 }

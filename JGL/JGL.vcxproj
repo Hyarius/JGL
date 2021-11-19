@@ -171,6 +171,7 @@
     <ClCompile Include="srcs\structure\exception_handler.cpp" />
     <ClCompile Include="srcs\structure\font_handler.cpp" />
     <ClCompile Include="srcs\structure\image_handler.cpp" />
+    <ClCompile Include="srcs\structure\image_output_handler.cpp" />
     <ClCompile Include="srcs\structure\keyboard_handler.cpp" />
     <ClCompile Include="srcs\structure\mouse_handler.cpp" />
     <ClCompile Include="srcs\structure\perlin_handler.cpp" />
