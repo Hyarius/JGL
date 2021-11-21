@@ -289,7 +289,9 @@ namespace jgl
 		{
 			it->second->activate();
 		}
+
 		_element_buffer->activate();
+
 		cast(type, _element_buffer->size() / sizeof(jgl::Uint));
 	}
 }

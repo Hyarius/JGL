@@ -60,6 +60,11 @@ namespace jgl
 
 		~Image();
 
+		static void draw(GLuint p_id, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size,
+			jgl::Float depth, jgl::Float alpha);
+
+
+
 		void draw(jgl::Vector2Int pos_a, jgl::Vector2Int pos_b, jgl::Vector2Int pos_c,
 			jgl::Vector2 uv_a, jgl::Vector2 uv_b, jgl::Vector2 uv_c,
 			jgl::Float depth, jgl::Float alpha);
@@ -116,7 +121,6 @@ namespace jgl
 		GLuint _frameBuffer;
 		GLuint _id;
 		GLenum _drawBuffers[1];
-		class Viewport* _viewport;
 
 	public:
 		Image_output(jgl::Vector2Uint p_size);
@@ -130,5 +134,7 @@ namespace jgl
 		void desassociate();
 
 		jgl::Image* save();
+	
+		static void check_framebuffer_status(jgl::String msg);
 	};
 } 

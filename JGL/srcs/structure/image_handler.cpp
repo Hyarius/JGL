@@ -142,6 +142,73 @@ namespace jgl
 		jgl::Vector2Uint(1, 1)
 	};
 
+	void Image::draw(GLuint p_id, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size,
+		jgl::Float depth, jgl::Float alpha)
+	{
+		const jgl::String shader_name = "Texture_shader_2D";
+
+		//static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
+		static jgl::Vector2Uint delta_pos[4] = {
+			jgl::Vector2Uint(0, 0),
+			jgl::Vector2Uint(1, 0),
+			jgl::Vector2Uint(0, 1),
+			jgl::Vector2Uint(1, 1)
+		};
+
+		Vector3 vertex_content[4];
+		Vector2 uv_content[4];
+		Float alpha_content[4];
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			jgl::Vector2Uint tmp_delta = size * delta_pos[i];
+			vertex_content[i] = convert_screen_to_opengl(pos + jgl::Vector2Int(tmp_delta.x, tmp_delta.y), depth);
+			uv_content[i] = (uv_pos + uv_size * delta_pos[i]);
+			alpha_content[i] = (alpha);
+		}
+
+
+		if (_shader == nullptr)
+			_shader = jgl::Application::active_application()->shader(shader_name);
+
+		if (_shader == nullptr)
+			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
+
+		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
+
+
+		_shader->activate();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, p_id);
+
+		if (_model_space_buffer == nullptr)
+			_model_space_buffer = _shader->buffer("model_space");
+
+		if (_vertexUV_buffer == nullptr)
+			_vertexUV_buffer = _shader->buffer("vertexUV");
+
+		if (_alpha_value_buffer == nullptr)
+			_alpha_value_buffer = _shader->buffer("alpha_value");
+
+		if (_element_index_buffer == nullptr)
+			_element_index_buffer = _shader->indexes_buffer();
+
+		if (_texture_uniform == nullptr)
+			_texture_uniform = _shader->uniform("textureID");
+
+		_model_space_buffer->send(vertex_content, 4);
+		_vertexUV_buffer->send(uv_content, 4);
+		_alpha_value_buffer->send(alpha_content, 4);
+		_element_index_buffer->send(element_index, 6);
+		_texture_uniform->send(0);
+
+		_shader->launch(jgl::Shader::Mode::Triangle);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	void Image::draw(jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_a, jgl::Vector2 uv_b, jgl::Vector2 uv_c, jgl::Vector2 uv_d, jgl::Float depth, jgl::Float alpha)
 	{
 		activate();

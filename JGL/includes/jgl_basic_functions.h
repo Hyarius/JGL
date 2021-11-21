@@ -161,8 +161,11 @@ namespace jgl
 	template<typename T>
 	T lerp(T p_start_value, T p_final_value, jgl::Ulong p_duration, jgl::Ulong p_total_duration)
 	{
-		jgl::Float ratio = 1.0f / (static_cast<jgl::Float>(p_total_duration) / static_cast<jgl::Float>(p_duration));
-		return (lerp(p_start_value, p_final_value, ratio));
+		if (p_duration >= p_total_duration)
+			return (p_final_value);
+		if (p_duration == 0)
+			return (p_start_value);
+		return (lerp(p_start_value, p_final_value, 1.0f / (static_cast<jgl::Float>(p_total_duration) / static_cast<jgl::Float>(p_duration))));
 	}
 	/*
 		Lerp between 2 datas with a ratio
@@ -170,6 +173,10 @@ namespace jgl
 	template<typename T>
 	T lerp(T p_start_value, T p_final_value, jgl::Float p_ratio)
 	{
+		if (p_ratio >= 1.0f)
+			return (p_final_value);
+		if (p_ratio == 0)
+			return (p_start_value);
 		return (p_start_value * (1.0f - p_ratio) + p_final_value * p_ratio);
 	}
 }
