@@ -20,6 +20,7 @@ namespace jgl::Widget_component
 		jgl::Color _text_color;
 		jgl::Color _text_outline_color;
 
+		jgl::Bool _hidden = false;
 
 		void _calc_text_size(jgl::Font* tmp_font);
 		void _calc_text_pos_horizontal(jgl::Vector2Int& tmp_size);
@@ -33,6 +34,7 @@ namespace jgl::Widget_component
 		const jgl::String& text() { return (_text); }
 		const jgl::Size_t& text_size() { return (_text_size); }
 		const jgl::Vector2Int& text_pos() { return (_text_pos); }
+		const jgl::Bool& hidden() { return (_hidden); }
 		jgl::Font* font()
 		{
 			jgl::Font* tmp_font = _font;
@@ -41,6 +43,7 @@ namespace jgl::Widget_component
 			return (tmp_font);
 		}
 
+		void set_hidden(jgl::Bool p_hidden) { _hidden = p_hidden; }
 		void set_text_size(jgl::Size_t p_text_size);
 		void set_font(jgl::Font* p_font) { _font = p_font; _recalc(); }
 		void set_text(jgl::String p_text);

@@ -10,7 +10,7 @@ namespace jgl
 	class Button : public jgl::Widget
 	{
 	private:
-		std::function< void(jgl::Data_contener) > _funct = nullptr;
+		std::function< void(jgl::Data_contener&) > _funct = nullptr;
 		jgl::Data_contener _param = jgl::Data_contener();
 
 		jgl::Bool _selected;
@@ -22,12 +22,12 @@ namespace jgl
 		void _render();
 
 	public:
-		Button(std::function< void(jgl::Data_contener) > p_funct = nullptr, jgl::Data_contener p_param = jgl::Data_contener(), jgl::Widget* p_parent = nullptr);
+		Button(std::function< void(jgl::Data_contener&) > p_funct = nullptr, jgl::Data_contener p_param = jgl::Data_contener(), jgl::Widget* p_parent = nullptr);
 
-		void define_action(std::function< void(jgl::Data_contener) > p_funct, jgl::Data_contener p_param);
+		void define_action(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param);
 
-		std::function< void(jgl::Data_contener) > function() const { return (_funct); }
-		jgl::Data_contener param() const { return (_param); }
+		const std::function< void(jgl::Data_contener&) >& function() const { return (_funct); }
+		const jgl::Data_contener& param() const { return (_param); }
 
 		Widget_component::Box& selected_box() { return (_box[1]); }
 		Widget_component::Box& unselected_box() { return (_box[0]); }

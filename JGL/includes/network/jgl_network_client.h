@@ -34,7 +34,7 @@ namespace jgl
 		/*
 			Maps ranged activity ID, define by template T, and activity/data to used with it
 		*/
-		std::map<T, std::function< void(jgl::Message<T>&, jgl::Data_contener) >> _activity_map;
+		std::map<T, std::function< void(jgl::Message<T>&, jgl::Data_contener&) >> _activity_map;
 		std::map<T, jgl::Data_contener> _activity_param_map;
 		// -----------------------------
 
@@ -71,7 +71,7 @@ namespace jgl
 		/*
 			Define the function [funct] to use with [param], when receiving message type [msg_type]
 		*/
-		void add_activity(T msg_type, std::function< void(jgl::Message<T>&, jgl::Data_contener) > funct, jgl::Data_contener param = jgl::Data_contener())
+		void add_activity(T msg_type, std::function< void(jgl::Message<T>&, jgl::Data_contener&) > funct, jgl::Data_contener param = jgl::Data_contener())
 		{
 			_activity_map[msg_type] = funct;
 			_activity_param_map[msg_type] = param;
@@ -197,13 +197,13 @@ namespace jgl
 			{
 				if (_input.empty() == false)
 				{
-					THROW_INFORMATION("Validation process begin : message received");
 					auto msg = _input.pop_front().msg;
-					
-					if (msg.size() == sizeof(jgl::Uint))
+
+					THROW_INFORMATION("Validation process begin : message received of size (" + jgl::itoa(msg.size()) + ")");
+					if (msg.size() == sizeof(jgl::Long))
 					{
 						THROW_INFORMATION("Validation process begin : magic number message");
-						jgl::Uint key;
+						jgl::Long key;
 						jgl::Long result;
 
 						msg >> key;
@@ -212,20 +212,25 @@ namespace jgl
 						THROW_INFORMATION("Key received : " + jgl::itoa(key) + " of size " + jgl::itoa(sizeof(key)));
 						result = _compute_magic_number(key);
 						THROW_INFORMATION("Awsner : " + jgl::itoa(result) + " of size " + jgl::itoa(sizeof(result)));
-						msg << result;
 						msg << key;
+						msg << result;
 						send(msg);
 					}
 					else if (msg.size() == sizeof(bool))
 					{
-						THROW_INFORMATION("Validation process begin : confirmation type");
 						bool Accepted;
 
 						msg >> Accepted;
 						if (Accepted == true)
+						{
+							THROW_INFORMATION("Validation process begin : confirmation type [Accepted]");
 							_connection->accepted_by_server();
+						}
 						else
+						{
+							THROW_INFORMATION("Validation process begin : confirmation type [Rejected]");
 							_connection->refused_by_server();
+						}
 					}
 					else
 					{

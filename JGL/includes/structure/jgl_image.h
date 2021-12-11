@@ -131,6 +131,8 @@ namespace jgl
 
 		void associate();
 
+		void clear();
+
 		void desassociate();
 
 		jgl::Image* save();

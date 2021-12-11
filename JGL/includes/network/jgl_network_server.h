@@ -17,16 +17,16 @@ namespace jgl
 		/*
 			Tuple Functer-Data to use when validating a new client
 		*/
-		std::function< void(jgl::Connection<T>*, jgl::Data_contener) > _login_funct = nullptr;
+		std::function< void(jgl::Connection<T>*, jgl::Data_contener&) > _login_funct = nullptr;
 		jgl::Data_contener _login_param;
 
 		/*
 			Tuple Functer-Data to use when disconnecting a client
 		*/
-		std::function< void(jgl::Connection<T>*, jgl::Data_contener) > _logout_funct = nullptr;
+		std::function< void(jgl::Connection<T>*, jgl::Data_contener&) > _logout_funct = nullptr;
 		jgl::Data_contener _logout_param;
 
-		jgl::Int _key = 0;
+		jgl::Long _key = 0;
 		jgl::Long _major_version_key_number = 0;
 		jgl::Long _medium_version_key_number = 0;
 		jgl::Long _minor_version_key_number = 0;
@@ -49,7 +49,7 @@ namespace jgl
 
 		jgl::Uint _id_count = 10000;
 
-		jgl::Long _compute_magic_number(jgl::Int value)
+		jgl::Long _compute_magic_number(jgl::Long value)
 		{
 			return (((_major_version_key_number << 48) ^ value) + ((_medium_version_key_number << 32) & value) + ((_minor_version_key_number << 16) | value) + (_abstract_version_key_number));
 		}
@@ -103,17 +103,19 @@ namespace jgl
 
 		void _client_connect(jgl::Connection<T>* client)
 		{
-			THROW_INFORMATION("Received connection from a new client [" + jgl::itoa(client->id()) + "]");
 			jgl::Message<T> msg;
 
+			THROW_INFORMATION("Received connection from a new client [" + jgl::itoa(client->id()) + "] -> sending key [" + jgl::itoa(_key) + "]");
+
 			msg << _key;
+
 			client->send(msg);
 		};
 
 		jgl::Bool _valid_client_connect(jgl::Connection<T>* client, jgl::Message<T>& msg)
 		{
 			THROW_INFORMATION("Validation connection from a client [" + jgl::itoa(client->id()) + "]");
-			jgl::Int key;
+			jgl::Long key;
 			jgl::Long presumed_result;
 			jgl::Long real_result;
 
@@ -127,19 +129,27 @@ namespace jgl
 			THROW_INFORMATION("Magic number send : " + jgl::itoa(key) + " -> result proposed : " + jgl::itoa(presumed_result) + " vs espected " + jgl::itoa(real_result));
 			if (real_result == presumed_result)
 			{
+				THROW_INFORMATION("Connection accepted, send confirmation to client [" + jgl::itoa(client->id()) + "]");
 				client->accepted_by_server();
 				if (_login_funct != nullptr)
 					_login_funct(client, _login_param);
+
 				msg.clear();
-				msg << true;
+				jgl::Bool response = true;
+				msg << response;
+
+				THROW_INFORMATION("Send a message of size : " + jgl::itoa(msg.size()));
 				client->send(msg);
 				return (true);
 			}
 			else
 			{
+				THROW_INFORMATION("Connection rejected, send rejection to client [" + jgl::itoa(client->id()) + "]");
 				client->refused_by_server();
 				msg.clear();
-				msg << false;
+				jgl::Bool response = false;
+				msg << response;
+				THROW_INFORMATION("Send a message of size : " + jgl::itoa(msg.size()));
 				client->send(msg);
 				return (false);
 			}
@@ -308,6 +318,22 @@ namespace jgl
 			{
 				_active_connection.erase(std::remove(_active_connection.begin(), _active_connection.end(), nullptr), _active_connection.end());
 				_accepted_connection.erase(std::remove(_accepted_connection.begin(), _accepted_connection.end(), nullptr), _accepted_connection.end());
+			}
+		}
+
+		/*
+			Send a message to connection stored in an array of connection.
+		*/
+		void send_to_array(const jgl::Message<T>& p_msg, jgl::Array<jgl::Connection<T> *>* p_list)
+		{
+			if (p_list != nullptr)
+			{
+				for (jgl::Size_t i = 0; i < p_list->size(); i++)
+				{
+					if (p_list->operator[](i) != nullptr)
+						send_to(p_list->operator[](i), p_msg);
+
+				}
 			}
 		}
 

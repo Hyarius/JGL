@@ -241,7 +241,7 @@ namespace jgl
 		_size = 0;
 	}
 
-	void String::resize(Size_t new_size)
+	void String::resize(const Size_t& new_size)
 	{
 		_resize(new_size);
 		//On defini la nouvelle size a celle desirée
@@ -254,7 +254,7 @@ namespace jgl
 		return (_size == 0);
 	}
 
-	const Int String::find(String to_find) const
+	const Int String::find(const String& to_find) const
 	{
 		for (Size_t i = 0; i < size(); i++)
 		{
@@ -270,7 +270,7 @@ namespace jgl
 		return (npos);
 	}
 
-	const jgl::Bool String::compose_only(String& to_find) const
+	const jgl::Bool String::compose_only(const String& to_find) const
 	{
 		jgl::Bool result = false;
 		for (uint32_t i = 0; i < size(); i++)
@@ -285,7 +285,7 @@ namespace jgl
 		return (true);
 	}
 
-	String String::substr(const Size_t start, const Size_t size) const
+	String String::substr(const Size_t& start, const Size_t& size) const
 	{
 		String result;
 
@@ -294,7 +294,7 @@ namespace jgl
 		return (result);
 	}
 
-	void String::substr(String& result, const Size_t start, const Size_t size) const
+	void String::substr(String& result, const Size_t& start, const Size_t& size) const
 	{
 		if (start >= _size)
 		{
@@ -316,7 +316,7 @@ namespace jgl
 		_clear_str();
 	}
 
-	void String::insert(const Glyph to_add, Size_t index)
+	void String::insert(const Glyph& to_add, const Size_t& index)
 	{
 		if (index > size())
 			THROW_EXCEPTION(jgl::Error_level::Critical, 1, "String too short to add a glyph at pos " + jgl::itoa(index));
@@ -370,7 +370,7 @@ namespace jgl
 		return (reinterpret_cast<const unsigned char*>(c_str()));
 	}
 
-	void String::split(jgl::Array<String>& tab, const String delim, const jgl::Bool regroup)
+	void String::split(jgl::Array<String>& tab, const String& delim, const jgl::Bool& regroup)
 	{
 		jgl::Size_t tmp = size();
 		jgl::Size_t tmp2 = delim.size();
@@ -393,7 +393,7 @@ namespace jgl
 		}
 	}
 
-	jgl::Array<String> String::split(const String delim, const jgl::Bool regroup)
+	jgl::Array<String> String::split(const String& delim, const jgl::Bool& regroup)
 	{
 		jgl::Array<String>	tab(40);
 
@@ -417,8 +417,28 @@ namespace jgl
 		Size_t nb_index = index % JGL_STRING_BUFFER_SIZE;
 		return (_content[nb_line][nb_index]);
 	}
+	
+	String& String::operator = (const String& p_value)
+	{
+		clear();
 
-	String String::operator + (const String& other)
+		for (uint32_t i = 0; i < p_value.size(); i++)
+			push_back(p_value[i]);
+
+		return (*this);
+	}
+
+	String& String::operator = (const char* p_value)
+	{
+		clear();
+
+		for (uint32_t i = 0; p_value[i] != '\0'; i++)
+			push_back(p_value[i]);
+
+		return (*this);
+	}
+
+	String String::operator + (const String& other) const
 	{
 		String result;
 
@@ -436,7 +456,7 @@ namespace jgl
 		return (result);
 	}
 
-	String operator + (const char* str, const String& delta)
+	String operator + (const char* str, const String& delta) 
 	{
 		String result;
 
@@ -456,7 +476,7 @@ namespace jgl
 			push_back(other[i]);
 	}
 
-	jgl::Bool String::operator == (const String other) const
+	jgl::Bool String::operator == (const String& other) const
 	{
 		if (size() != other.size())
 			return (false);
@@ -465,12 +485,12 @@ namespace jgl
 				return (false);
 		return (true);
 	}
-	jgl::Bool String::operator != (const String other) const
+	jgl::Bool String::operator != (const String& other) const
 	{
 		return (!(*this == other));
 	}
 
-	jgl::Bool String::operator < (const jgl::String other) const
+	jgl::Bool String::operator < (const jgl::String& other) const
 	{
 		for (uint32_t i = 0; i < size(); i++)
 		{
@@ -496,7 +516,7 @@ namespace jgl
 		return (false);
 	}
 
-	jgl::Bool String::operator > (const jgl::String other) const
+	jgl::Bool String::operator > (const jgl::String& other) const
 	{
 		for (uint32_t i = 0; i < size(); i++)
 		{

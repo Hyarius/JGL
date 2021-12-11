@@ -17,6 +17,8 @@ namespace jgl
 	{
 		T id{};
 		jgl::Size_t size = 0;
+		jgl::Size_t readed = 0;
+
 		Message_header()
 		{
 
@@ -25,6 +27,7 @@ namespace jgl
 		{
 			id = type;
 			size = 0;
+			readed = 0;
 		}
 	};
 
@@ -47,7 +50,7 @@ namespace jgl
 		*/
 		jgl::Uint size() const
 		{
-			return (static_cast<jgl::Uint>(content.size()));
+			return (static_cast<jgl::Uint>(header.size - header.readed));
 		}
 
 		/*
@@ -55,7 +58,7 @@ namespace jgl
 		*/
 		jgl::Bool empty()
 		{
-			return (header.size == 0);
+			return (header.size == header.readed);
 		}
 
 		/*
@@ -82,6 +85,7 @@ namespace jgl
 		void clear()
 		{
 			header.size = 0;
+			header.readed = 0;
 			content.clear();
 		}
 
@@ -108,7 +112,7 @@ namespace jgl
 			{
 				jgl::Glyph c;
 				*this >> c;
-				text.insert(c, 0);
+				text.push_back(c);
 				i++;
 			}
 
@@ -120,9 +124,35 @@ namespace jgl
 		*/
 		void add_string(jgl::String text)
 		{
+			*this << text.size();
 			for (jgl::Uint i = 0; i < text.size(); i++)
 				*this << text[i];
-			*this << text.size();
+		}
+
+		/*
+			Add an array of data into the message
+		*/
+		void add_in_array(jgl::Uchar* p_array, jgl::Size_t p_length)
+		{
+			jgl::Size_t old_size = content.size();
+
+			content.resize(content.size() + p_length);
+
+			std::memcpy(content.data() + old_size, p_array, p_length);
+
+			header.size = content.size();
+		}
+
+		/*
+			Load an array of data from the message
+		*/
+		void load_from_array(void *p_address, jgl::Size_t p_length)
+		{
+			jgl::Size_t next_size = header.readed;// content.size() - sizeof(DataType);
+
+			std::memcpy(p_address, content.data() + next_size, p_length);
+
+			header.readed += p_length;
 		}
 
 		/*
@@ -132,18 +162,14 @@ namespace jgl
 		friend Message<T>& operator << (Message<T>& msg, const DataType& data)
 		{
 			static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pushed into vector");
-#if _WIN64
-			size_t i;
-#else
-			jgl::Size_t i;
-#endif
-			i = msg.content.size();
+			
+			jgl::Size_t old_size = msg.content.size();
 
 			msg.content.resize(msg.content.size() + sizeof(DataType));
 
-			std::memcpy(msg.content.data() + i, &data, sizeof(DataType));
+			std::memcpy(msg.content.data() + old_size, &data, sizeof(DataType));
 
-			msg.header.size = msg.size();
+			msg.header.size = msg.content.size();
 
 			return msg;
 		}
@@ -155,19 +181,12 @@ namespace jgl
 		friend Message<T>& operator >> (Message<T>& msg, DataType& data)
 		{
 			static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
-#if _WIN64
-			size_t i;
-#else
-			jgl::Size_t i;
-#endif
 
-			i = msg.content.size() - sizeof(DataType);
+			jgl::Size_t next_size = msg.header.readed;// msg.content.size() - sizeof(DataType);
 
-			std::memcpy(&data, msg.content.data() + i, sizeof(DataType));
+			std::memcpy(&data, msg.content.data() + next_size, sizeof(DataType));
 
-			msg.content.resize(i);
-
-			msg.header.size = msg.size();
+			msg.header.readed += sizeof(DataType);
 
 			return msg;
 		}

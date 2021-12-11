@@ -221,7 +221,7 @@ namespace jgl
 		/*
 			Print the glyph
 		*/
-		friend std::ostream& operator<<(std::ostream& os, const jgl::Glyph value)
+		friend std::ostream& operator<<(std::ostream& os, const jgl::Glyph& value)
 		{
 			os << value.content();
 			return os;

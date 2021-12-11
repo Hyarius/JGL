@@ -75,7 +75,7 @@ namespace jgl
 		jgl::Uniform* uniform(jgl::String name)
 		{
 			if (_uniforms.count(name) == 0)
-				THROW_EXCEPTION(jgl::Error_level::Error, 0, "No data buffer named " + name + " in shader");
+				THROW_EXCEPTION(jgl::Error_level::Error, 0, "No uniform named " + name + " in shader");
 			return (_uniforms[name]);
 		}
 

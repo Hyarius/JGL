@@ -80,7 +80,10 @@ namespace jgl
 		_cursor_pos.x = 0;
 		for (jgl::Size_t i = _low_cursor; i < _text.size() && i < _cursor; i++)
 		{
-			_cursor_pos.x += _label.font()->calc_char_offset(_text[i], _label.text_size()).x;
+			if (_label.hidden() == true)
+				_cursor_pos.x += _label.font()->calc_char_offset('*', _label.text_size()).x;
+			else
+				_cursor_pos.x += _label.font()->calc_char_offset(_text[i], _label.text_size()).x;
 		}
 	}
 

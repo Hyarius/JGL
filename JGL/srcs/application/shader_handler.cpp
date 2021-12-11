@@ -26,33 +26,36 @@ namespace jgl
 		glBindVertexArray(_buffer_array); 
 		if (tab.size() >= 2)
 		{
-			jgl::Array<jgl::String> tab2 = tab[1].split(";", false);
-			for (jgl::Size_t i = 0; i < tab2.size(); i++)
+			for (jgl::Size_t j = 1; j < tab.size(); j++)
 			{
-				if (tab2[i].size() >= 6u && (tab2[i].substr(0, 3) == "in " || tab2[i].substr(0, 6) == "layout"))
+				jgl::Array<jgl::String> tab2 = tab[j].split(";", false);
+				for (jgl::Size_t i = 0; i < tab2.size(); i++)
 				{
-					jgl::Array<jgl::String> tab = tab2[i].split(" ", false);
-					jgl::String name = tab.last();
-
-					GLint location_id = glGetAttribLocation(_program, name.c_str());
-					if (location_id == GL_INVALID_OPERATION)
-						THROW_EXCEPTION(jgl::Error_level::Critical, location_id, "Error while getting a new attrib location");
-
-					jgl::Size_t nb_component = 0;
-					jgl::Size_t tmp_element_type = 0;
-					for (jgl::Size_t i = 0; i < element_type.size() && nb_component == 0; i++)
+					if (tab2[i].size() >= 6u && (tab2[i].substr(0, 3) == "in " || tab2[i].substr(0, 6) == "layout"))
 					{
-						for (jgl::Size_t j = 0; j < element_type[i].size() && nb_component == 0; j++)
+						jgl::Array<jgl::String> tab = tab2[i].split(" ", false);
+						jgl::String name = tab.last();
+
+						GLint location_id = glGetAttribLocation(_program, name.c_str());
+						if (location_id == GL_INVALID_OPERATION)
+							THROW_EXCEPTION(jgl::Error_level::Critical, location_id, "Error while getting a new attrib location");
+
+						jgl::Size_t nb_component = 0;
+						jgl::Size_t tmp_element_type = 0;
+						for (jgl::Size_t i = 0; i < element_type.size() && nb_component == 0; i++)
 						{
-							if (tab[tab.size() - 2] == element_type[i][j])
+							for (jgl::Size_t j = 0; j < element_type[i].size() && nb_component == 0; j++)
 							{
-								nb_component = j;
-								tmp_element_type = i + 1;
+								if (tab[tab.size() - 2] == element_type[i][j])
+								{
+									nb_component = j;
+									tmp_element_type = i + 1;
+								}
 							}
 						}
+						THROW_INFORMATION("Creating a new location[" + name + "] at location[" + jgl::itoa(location_id) + "] with nb_component[" + jgl::itoa(tmp_element_type) + " x " + jgl::glGetTypeString(static_cast<GLenum>(element_type_result[nb_component])) + "]");
+						_buffers[name] = new Buffer(name, location_id, tmp_element_type, element_type_result[nb_component], jgl::Buffer::Mode::Array);
 					}
-					THROW_INFORMATION("Creating a new location[" + name + "] at location[" + jgl::itoa(location_id) + "] with nb_component[" + jgl::itoa(tmp_element_type) + " x " + jgl::glGetTypeString(static_cast<GLenum>(element_type_result[nb_component])) + "]");
-					_buffers[name] = new Buffer(name, location_id, tmp_element_type, element_type_result[nb_component], jgl::Buffer::Mode::Array);
 				}
 			}
 		}
@@ -162,19 +165,22 @@ namespace jgl
 		glBindVertexArray(_buffer_array);
 		if (tab.size() >= 2)
 		{
-			jgl::Array<jgl::String> tab2 = tab[1].split(";", false);
-			for (jgl::Size_t i = 0; i < tab2.size(); i++)
+			for (jgl::Size_t j = 1; j < tab.size(); j++)
 			{
-				if (tab2[i].size() >= 8)
+				jgl::Array<jgl::String> tab2 = tab[j].split(";", false);
+				for (jgl::Size_t i = 0; i < tab2.size(); i++)
 				{
-					if (tab2[i].substr(0, 7) == "uniform")
+					if (tab2[i].size() >= 8)
 					{
-						jgl::Array<jgl::String> tab = tab2[i].split(" ", false);
-						GLint id = glGetUniformLocation(_program, tab[2].c_str());
-						if (id == GL_INVALID_VALUE || id == GL_INVALID_OPERATION)
-							THROW_EXCEPTION(jgl::Error_level::Critical, 0, "Error while getting a new attrib location");
+						if (tab2[i].substr(0, 7) == "uniform")
+						{
+							jgl::Array<jgl::String> tab = tab2[i].split(" ", false);
+							GLint id = glGetUniformLocation(_program, tab[2].c_str());
+							if (id == GL_INVALID_VALUE || id == GL_INVALID_OPERATION)
+								THROW_EXCEPTION(jgl::Error_level::Critical, 0, "Error while getting a new attrib location");
 
-						_parse_uniform_information(id, tab);
+							_parse_uniform_information(id, tab);
+						}
 					}
 				}
 			}
@@ -212,16 +218,27 @@ namespace jgl
 		jgl::String vertex_content;
 		jgl::String frag_content;
 
-		jgl::File vertex_file = jgl::open_file(vertex_content_path, jgl::File_mode::in);
-		jgl::File frag_file = jgl::open_file(vertex_content_path, jgl::File_mode::in);
-
-		while (vertex_file.eof() == false)
+		std::ifstream vShaderFile;
+		std::ifstream fShaderFile;
+		try
 		{
-			vertex_content += jgl::get_str(vertex_file);
+			// open files
+			vShaderFile.open(vertex_content_path.c_str());
+			fShaderFile.open(fragment_content_path.c_str());
+			std::stringstream vShaderStream, fShaderStream;
+			// read file's buffer contents into streams
+			vShaderStream << vShaderFile.rdbuf();
+			fShaderStream << fShaderFile.rdbuf();
+			// close file handlers
+			vShaderFile.close();
+			fShaderFile.close();
+			// convert stream into string
+			vertex_content = vShaderStream.str();
+			frag_content = fShaderStream.str();
 		}
-		while (frag_file.eof() == false)
+		catch (...)
 		{
-			frag_content += jgl::get_str(frag_file);
+			THROW_EXCEPTION(jgl::Error_level::Error, 1, "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ");
 		}
 		return (compile(vertex_content, frag_content));
 	}

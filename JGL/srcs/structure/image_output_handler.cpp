@@ -39,6 +39,12 @@ namespace jgl
 
 	}
 
+	void Image_output::clear()
+	{
+		glViewport(0, 0, _size.x, _size.y);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	}
+
 	void Image_output::desassociate()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

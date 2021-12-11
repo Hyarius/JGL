@@ -20,12 +20,12 @@ namespace jgl
 			x = {};
 			y = {};
 		}
-		Vector2_base(T value)
+		Vector2_base(const T& value)
 		{
 			x = value;
 			y = value;
 		}
-		Vector2_base(T p_x, T p_y)
+		Vector2_base(const T& p_x, const T& p_y)
 		{
 			x = p_x;
 			y = p_y;
@@ -166,40 +166,40 @@ namespace jgl
 			return (result + center);
 		}
 
-		Vector2_base operator + (const Vector2_base other) const
+		Vector2_base operator + (const Vector2_base& other) const
 		{
 			return (Vector2_base(x + other.x, y + other.y));
 		}
-		Vector2_base operator - (const Vector2_base other) const
+		Vector2_base operator - (const Vector2_base& other) const
 		{
 			return (Vector2_base(x - other.x, y - other.y));
 		}
-		Vector2_base operator * (const Vector2_base other) const
+		Vector2_base operator * (const Vector2_base& other) const
 		{
 			return (Vector2_base(x * other.x, y * other.y));
 		}
-		Vector2_base operator / (const Vector2_base other) const
+		Vector2_base operator / (const Vector2_base& other) const
 		{
 			if (other.x == 0 || other.y == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
 			return (Vector2_base(x / other.x, y / other.y));
 		}
-		void operator += (const Vector2_base other)
+		void operator += (const Vector2_base& other)
 		{
 			x += other.x;
 			y += other.y;
 		}
-		void operator -= (const Vector2_base other)
+		void operator -= (const Vector2_base& other)
 		{
 			x -= other.x;
 			y -= other.y;
 		}
-		void operator *= (const Vector2_base other)
+		void operator *= (const Vector2_base& other)
 		{
 			x *= other.x;
 			y *= other.y;
 		}
-		void operator /= (const Vector2_base other)
+		void operator /= (const Vector2_base& other)
 		{
 			if (other.x == 0 || other.y == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
@@ -208,22 +208,22 @@ namespace jgl
 		}
 
 		template <typename U = T, typename std::enable_if<!std::is_floating_point<U>::value == true>::type* = nullptr>
-		Vector2_base operator % (const Vector2_base delta) const {
+		Vector2_base operator % (const Vector2_base& delta) const {
 			return (Vector2_base(
 				x % delta.x,
 				y % delta.y)
 				);
 		}
 
-		bool operator == (const Vector2_base delta) const
+		bool operator == (const Vector2_base& delta) const
 		{
 			return ((x == delta.x && y == delta.y) ? true : false);
 		}
-		bool operator != (const Vector2_base delta) const
+		bool operator != (const Vector2_base& delta) const
 		{
 			return ((x == delta.x && y == delta.y) ? false : true);
 		}
-		bool operator < (const Vector2_base other) const
+		bool operator < (const Vector2_base& other) const
 		{
 			if (y < other.y)
 				return (true);
@@ -231,7 +231,7 @@ namespace jgl
 				return (true);
 			return (false);
 		}
-		bool operator > (const Vector2_base other) const
+		bool operator > (const Vector2_base& other) const
 		{
 			if (y < other.y || x < other.x)
 				return (false);
@@ -246,7 +246,7 @@ namespace jgl
 			return (tmp);
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector2_base<T> point)
+		friend std::ostream& operator<<(std::ostream& os, const Vector2_base<T>& point)
 		{
 			os << point.x << " / " << point.y;
 			return os;
@@ -266,7 +266,7 @@ namespace jgl
 		{
 			return (Vector2_base<T>(std::round(x), std::round(y)));
 		}
-		bool is_middle(const Vector2_base min, const Vector2_base max) const
+		bool is_middle(const Vector2_base& min, const Vector2_base& max) const
 		{
 			return (x >= min.x && x <= max.x &&
 				y >= min.y && y <= max.y);
@@ -353,7 +353,7 @@ namespace jgl
 				+ pow(y, 2.0f)
 				+ pow(z, 2.0f)));
 		}
-		jgl::Float distance(const Vector3_base other) const
+		jgl::Float distance(const Vector3_base& other) const
 		{
 			return (std::sqrt(pow(other.x - x, 2) + pow(other.y - y, 2) + pow(other.z - z, 2)));
 		}
@@ -369,7 +369,7 @@ namespace jgl
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
 			return (Vector3_base(x / length, y / length, z / length));
 		}
-		Vector3_base cross(Vector3_base other) const //Produit vectoriel / cross product
+		Vector3_base cross(const Vector3_base& other) const //Produit vectoriel / cross product
 		{
 			Vector3_base	result = Vector3_base(
 				y * other.z - z * other.y,
@@ -379,7 +379,7 @@ namespace jgl
 
 			return (result);
 		}
-		jgl::Float dot(Vector3_base other, const Vector3_base center = 0) const
+		jgl::Float dot(const Vector3_base& other, const Vector3_base& center = 0) const
 		{
 			float		result;
 
@@ -389,7 +389,7 @@ namespace jgl
 
 			return (result);
 		}
-		jgl::Float angle(Vector3_base other, const Vector3_base center = 0) const
+		jgl::Float angle(const Vector3_base& other, const Vector3_base center = 0) const
 		{
 			jgl::Float rdot = dot(other, center);
 
@@ -403,50 +403,50 @@ namespace jgl
 		{
 			return (Vector3_base(x * -1, y * -1, z * -1));
 		}
-		bool is_middle(const Vector3_base min, const Vector3_base max) const
+		bool is_middle(const Vector3_base& min, const Vector3_base& max) const
 		{
 			return (x >= min.x && x <= max.x &&
 				y >= min.y && y <= max.y &&
 				z >= min.z && z <= max.z);
 		}
 
-		Vector3_base operator + (const Vector3_base other) const
+		Vector3_base operator + (const Vector3_base& other) const
 		{
 			return (Vector3_base(x + other.x, y + other.y, z + other.z));
 		}
-		Vector3_base operator - (const Vector3_base other) const
+		Vector3_base operator - (const Vector3_base& other) const
 		{
 			return (Vector3_base(x - other.x, y - other.y, z - other.z));
 		}
-		Vector3_base operator * (const Vector3_base other) const
+		Vector3_base operator * (const Vector3_base& other) const
 		{
 			return (Vector3_base(x * other.x, y * other.y, z * other.z));
 		}
-		Vector3_base operator / (const Vector3_base other) const
+		Vector3_base operator / (const Vector3_base& other) const
 		{
 			if (other.x == 0 || other.y == 0 || other.z == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
 			return (Vector3_base(x / other.x, y / other.y, z / other.z));
 		}
-		void operator += (const Vector3_base other)
+		void operator += (const Vector3_base& other)
 		{
 			x += other.x;
 			y += other.y;
 			z += other.z;
 		}
-		void operator -= (const Vector3_base other)
+		void operator -= (const Vector3_base& other)
 		{
 			x -= other.x;
 			y -= other.y;
 			z -= other.z;
 		}
-		void operator *= (const Vector3_base other)
+		void operator *= (const Vector3_base& other)
 		{
 			x *= other.x;
 			y *= other.y;
 			z *= other.z;
 		}
-		void operator /= (const Vector3_base other)
+		void operator /= (const Vector3_base& other)
 		{
 			if (other.x == 0 || other.y == 0 || other.z == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
@@ -456,7 +456,7 @@ namespace jgl
 		}
 
 		template <typename U = T, typename std::enable_if<!std::is_floating_point<U>::value == true>::type* = nullptr>
-		Vector3_base operator % (const Vector3_base delta) const {
+		Vector3_base operator % (const Vector3_base& delta) const {
 			return (Vector3_base(
 				x % delta.x,
 				y % delta.y,
@@ -464,15 +464,15 @@ namespace jgl
 				);
 		}
 
-		bool operator == (const Vector3_base delta) const {
+		bool operator == (const Vector3_base& delta) const {
 			return ((x == delta.x && y == delta.y && z == delta.z) ?
 				true : false);
 		}
-		bool operator != (const Vector3_base delta) const {
+		bool operator != (const Vector3_base& delta) const {
 			return ((x == delta.x && y == delta.y && z == delta.z) ?
 				false : true);
 		}
-		bool operator < (const Vector3_base other) const
+		bool operator < (const Vector3_base& other) const
 		{
 			if (z < other.z)
 				return (true);
@@ -482,7 +482,7 @@ namespace jgl
 				return (true);
 			return (false);
 		}
-		bool operator > (const Vector3_base other) const
+		bool operator > (const Vector3_base& other) const
 		{
 			if (z < other.z || y < other.y || x < other.x)
 				return (false);
@@ -497,7 +497,7 @@ namespace jgl
 			return (tmp);
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector3_base<T> point)
+		friend std::ostream& operator<<(std::ostream& os, const Vector3_base<T>& point)
 		{
 			os << point.x << " / " << point.y << " / " << point.z;
 			return os;
@@ -583,7 +583,7 @@ namespace jgl
 				+ pow(y, 2.0f)
 				+ pow(z, 2.0f)));
 		}
-		jgl::Float distance(Vector4_base point) const
+		jgl::Float distance(const Vector4_base& point) const
 		{
 			return (sqrt(pow(point.x - x, 2.0f)
 				+ pow(point.y - y, 2.0f)
@@ -602,7 +602,7 @@ namespace jgl
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
 			return (Vector4_base(x / length, y / length, z / length, 1.0f));
 		}
-		Vector4_base cross(Vector4_base other) const //Produit vectoriel / cross product
+		Vector4_base cross(const Vector4_base& other) const //Produit vectoriel / cross product
 		{
 			return (Vector4_base(
 				y * other.z - z * other.y,
@@ -611,11 +611,11 @@ namespace jgl
 				1.0f
 			));
 		}
-		jgl::Float dot(Vector4_base b) const
+		jgl::Float dot(const Vector4_base& b) const
 		{
 			return (x * b.x + y * b.y + z * b.z);
 		}
-		jgl::Float angle(const Vector4_base other, const Vector4_base center = 0) const
+		jgl::Float angle(const Vector4_base& other, const Vector4_base& center = 0) const
 		{
 			jgl::Float rdot = dot(other, center);
 
@@ -629,53 +629,53 @@ namespace jgl
 		{
 			return (Vector4_base(x * -1, y * -1, z * -1, w));
 		}
-		bool is_middle(const Vector4_base min, const Vector4_base max) const
+		bool is_middle(const Vector4_base& min, const Vector4_base& max) const
 		{
 			return (x >= min.x && x <= max.x &&
 				y >= min.y && y <= max.y &&
 				z >= min.z && z <= max.z);
 		}
 
-		Vector4_base operator + (const Vector4_base other) const
+		Vector4_base operator + (const Vector4_base& other) const
 		{
 			return (Vector4_base(x + other.x, y + other.y, z + other.z, w + other.w));
 		}
-		Vector4_base operator - (const Vector4_base other) const
+		Vector4_base operator - (const Vector4_base& other) const
 		{
 			return (Vector4_base(x - other.x, y - other.y, z - other.z, w - other.w));
 		}
-		Vector4_base operator * (const Vector4_base other) const
+		Vector4_base operator * (const Vector4_base& other) const
 		{
 			return (Vector4_base(x * other.x, y * other.y, z * other.z, w * other.w));
 		}
-		Vector4_base operator / (const Vector4_base other) const
+		Vector4_base operator / (const Vector4_base& other) const
 		{
 			if (other.x == 0 || other.y == 0 || other.z == 0 || other.w == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
 			return (Vector4_base(x / other.x, y / other.y, z / other.z, w / other.w));
 		}
-		void operator += (const Vector4_base other)
+		void operator += (const Vector4_base& other)
 		{
 			x += other.x;
 			y += other.y;
 			z += other.z;
 			w += other.w;
 		}
-		void operator -= (const Vector4_base other)
+		void operator -= (const Vector4_base& other)
 		{
 			x -= other.x;
 			y -= other.y;
 			z -= other.z;
 			w -= other.w;
 		}
-		void operator *= (const Vector4_base other)
+		void operator *= (const Vector4_base& other)
 		{
 			x *= other.x;
 			y *= other.y;
 			z *= other.z;
 			w *= other.w;
 		}
-		void operator /= (const Vector4_base other)
+		void operator /= (const Vector4_base& other)
 		{
 			if (other.x == 0 || other.y == 0 || other.z == 0 || other.w == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
@@ -686,7 +686,7 @@ namespace jgl
 		}
 
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == false>::type* = nullptr>
-		Vector4_base operator % (const Vector4_base delta) const {
+		Vector4_base operator % (const Vector4_base& delta) const {
 			return (Vector4_base(
 				x % delta.x,
 				y % delta.y,
@@ -695,15 +695,15 @@ namespace jgl
 				);
 		}
 
-		bool operator == (const Vector4_base delta) const {
+		bool operator == (const Vector4_base& delta) const {
 			return ((x == delta.x && y == delta.y && z == delta.z) ?
 				true : false);
 		}
-		bool operator != (const Vector4_base delta) const {
+		bool operator != (const Vector4_base& delta) const {
 			return ((x == delta.x && y == delta.y && z == delta.z) ?
 				false : true);
 		}
-		bool operator < (const Vector4_base other) const
+		bool operator < (const Vector4_base& other) const
 		{
 			if (z < other.z)
 				return (true);
@@ -713,7 +713,7 @@ namespace jgl
 				return (true);
 			return (false);
 		}
-		bool operator > (const Vector4_base other) const
+		bool operator > (const Vector4_base& other) const
 		{
 			if (z < other.z || y < other.y || x < other.x)
 				return (false);
@@ -728,7 +728,7 @@ namespace jgl
 			return (tmp);
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector4_base<T> point)
+		friend std::ostream& operator<<(std::ostream& os, const Vector4_base<T>& point)
 		{
 			os << point.x << " / " << point.y << " / " << point.z << " / " << point.w;
 			return os;

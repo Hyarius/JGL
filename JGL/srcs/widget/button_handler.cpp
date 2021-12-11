@@ -28,7 +28,7 @@ namespace jgl
 	{
 		_box[0].set_geometry(_anchor, _area, _depth);
 		_box[1].set_geometry(_anchor, _area, _depth);
-		_label.set_geometry(_anchor, _area, _depth);
+		_label.set_geometry(_anchor + _box[0].border_size(), _area - _box[0].border_size() * 2, _depth);
 	}
 
 	void Button::_render()
@@ -40,7 +40,7 @@ namespace jgl
 		_label.render();
 	}
 
-	Button::Button(std::function< void(jgl::Data_contener) > p_funct, jgl::Data_contener p_param, jgl::Widget* p_parent) : jgl::Widget(p_parent)
+	Button::Button(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param, jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	{
 		_funct = p_funct;
 		_param = p_param;
@@ -51,7 +51,7 @@ namespace jgl
 		_label.set_vertical_align(jgl::Vertical_alignment::Centred);
 	}
 
-	void Button::define_action(std::function< void(jgl::Data_contener) > p_funct, jgl::Data_contener p_param)
+	void Button::define_action(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param)
 	{
 		_funct = p_funct;
 		_param = p_param;

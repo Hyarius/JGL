@@ -13,6 +13,13 @@ namespace jgl::Widget_component
 			return;
 		}
 
+		jgl::String tmp_text;
+
+		if (_hidden == true)
+			tmp_text = jgl::String(jgl::Glyph('*'), _text.size());
+		else
+			tmp_text = _text;
+
 		for (int i = 0; i < 5; i++)
 		{
 			bool enough = false;
@@ -21,7 +28,7 @@ namespace jgl::Widget_component
 				if (tmp_font == nullptr)
 					THROW_EXCEPTION(jgl::Error_level::Error, 1, "No font give to label component");
 
-				jgl::Vector2Int tmp_size = tmp_font->calc_text_size(_text, _text_size + delta[i]);
+				jgl::Vector2Int tmp_size = tmp_font->calc_text_size(tmp_text, _text_size + delta[i]);
 				if (tmp_size.x >= _area.x || tmp_size.y >= _area.y)
 					enough = true;
 				else
@@ -130,6 +137,13 @@ namespace jgl::Widget_component
 		if (tmp_font != _computed_font)
 			_recalc();
 
-		jgl::Vector2Int tmp = _computed_font->draw_text(_text, _anchor + _text_pos, _text_size, _depth +0.05f, 1.0f, _text_color, _text_outline_color);
+		jgl::String tmp_text;
+
+		if (_hidden == true)
+			tmp_text = jgl::String(jgl::Glyph('*'), _text.size());
+		else
+			tmp_text = _text;
+			
+		_computed_font->draw_text(tmp_text, _anchor + _text_pos, _text_size, _depth +0.05f, 1.0f, _text_color, _text_outline_color);
 	}
 }

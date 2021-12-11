@@ -84,21 +84,21 @@ namespace jgl
 
 		void clear();
 
-		void resize(Size_t new_size);
+		void resize(const Size_t& new_size);
 
 		const jgl::Bool empty() const;
 
-		const Int find(String to_find) const;
+		const Int find(const String& to_find) const;
 
-		const jgl::Bool compose_only(String& to_find) const;
+		const jgl::Bool compose_only(const String& to_find) const;
 
-		String substr(const Size_t start, const Size_t size) const;
+		String substr(const Size_t& start, const Size_t& size) const;
 
-		void substr(String& result, const Size_t start, const Size_t size) const;
+		void substr(String& result, const Size_t& start, const Size_t& size) const;
 
 		void pop_back();
 
-		void insert(const Glyph to_add, Size_t index);
+		void insert(const Glyph& to_add, const Size_t& index);
 
 		void erase(Size_t index);
 
@@ -106,47 +106,31 @@ namespace jgl
 
 		const unsigned char* uc_str();
 
-		void split(jgl::Array<String>& tab, const String delim, const jgl::Bool regroup = true);
+		void split(jgl::Array<String>& tab, const String& delim, const jgl::Bool& regroup = true);
 
-		jgl::Array<String> split(const String delim, const jgl::Bool regroup = true);
+		jgl::Array<String> split(const String& delim, const jgl::Bool& regroup = true);
 
 		Glyph& operator [](const Size_t index);
 
 		const Glyph& operator [](const Size_t index) const;
 
-		String& operator = (const String p_value)
-		{
-			clear();
+		String& operator = (const String& p_value);
 
-			for (uint32_t i = 0; i < p_value.size(); i++)
-				push_back(p_value[i]);
+		String& operator = (const char* p_value);
 
-			return (*this);
-		}
-
-		String& operator = (const char *p_value)
-		{
-			clear();
-
-			for (uint32_t i = 0; p_value[i] != '\0'; i++)
-				push_back(p_value[i]);
-
-			return (*this);
-		}
-
-		String operator + (const String& other);
+		String operator + (const String& other) const;
 
 		friend String operator + (const char* str, const String& delta);
 
 		void operator += (const String& other);
 
-		jgl::Bool operator == (const String other) const;
+		jgl::Bool operator == (const String& other) const;
 
-		jgl::Bool operator != (const String other) const;
+		jgl::Bool operator != (const String& other) const;
 
-		jgl::Bool operator < (const jgl::String other) const;
+		jgl::Bool operator < (const jgl::String& other) const;
 
-		jgl::Bool operator > (const jgl::String other) const;
+		jgl::Bool operator > (const jgl::String& other) const;
 
 		friend std::ostream& operator<<(std::ostream& os, const String& value)
 		{
