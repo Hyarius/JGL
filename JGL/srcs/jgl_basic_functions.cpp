@@ -1,5 +1,8 @@
 #include "jgl.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "external_lib/stb_image_write.h"
+
 jgl::Exception e_exception;
 
 namespace jgl
@@ -7,7 +10,6 @@ namespace jgl
 	jgl::Int jgl::String::npos = -1;
 	Glyph jgl::String::nullchar = '\0';
 	jgl::Error_level Exception::_minimal_error_level = jgl::Error_level::Error;
-
 
 	jgl::String glGetTypeString(GLenum type)
 	{
@@ -390,5 +392,44 @@ namespace jgl
 	jgl::Int generate_nbr(const jgl::Int min, const jgl::Int max)
 	{
 		return((rand() % (max - min)) + min);
+	}
+
+	jgl::String _compose_file_path(jgl::String p_path, jgl::String p_extension)
+	{
+		jgl::String result = p_path;
+
+		if (p_path.size() < 5 || p_path.substr(p_path.size() - 4, 4) != p_extension)
+			result.append(p_extension);
+
+		return (result);
+	}
+
+
+	void save_to_tga(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data)
+	{
+		jgl::String full_path = _compose_file_path(p_path, ".tga");
+
+		stbi_write_tga(full_path.c_str(), p_image_size.x, p_image_size.y, 4, p_buffer_data);
+	}
+
+	void save_to_png(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data)
+	{
+		jgl::String full_path = _compose_file_path(p_path, ".png");
+
+		stbi_write_png(full_path.c_str(), p_image_size.x, p_image_size.y, 4, p_buffer_data, p_image_size.x * 4);
+	}
+
+	void save_to_jpg(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data)
+	{
+		jgl::String full_path = _compose_file_path(p_path, ".jpg");
+
+		stbi_write_jpg(full_path.c_str(), p_image_size.x, p_image_size.y, 4, p_buffer_data, 100);
+	}
+
+	void save_to_bmp(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data)
+	{
+		jgl::String full_path = _compose_file_path(p_path, ".bmp");
+
+		stbi_write_bmp(full_path.c_str(), p_image_size.x, p_image_size.y, 4, p_buffer_data);
 	}
 }

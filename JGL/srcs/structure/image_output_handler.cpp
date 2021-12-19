@@ -1,7 +1,10 @@
 #include "jgl.h"
 
+#include "jgl_drawing_function.h"
+
 namespace jgl
 {
+	extern jgl::Vector2Int g_viewport_actual_size;
 
 	Image_output::Image_output(jgl::Vector2Uint p_size)
 	{
@@ -35,13 +38,13 @@ namespace jgl
 	void Image_output::associate()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
-		glViewport(0u, 0u, _size.x, _size.y);
-
+		clear();
 	}
 
 	void Image_output::clear()
 	{
 		glViewport(0, 0, _size.x, _size.y);
+		g_viewport_actual_size = jgl::Vector2Int(_size.x, _size.y);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
@@ -81,8 +84,6 @@ namespace jgl
 
 	jgl::Image* Image_output::save()
 	{
-		associate();
-
 		//Creation of the texture output
 		GLuint output_texture;
 
@@ -104,8 +105,72 @@ namespace jgl
 		//Render
 		jgl::Image::draw(_id, jgl::Vector2Int(0, 0), jgl::Vector2Int(_size.x, _size.y), jgl::Vector2(0, 0), jgl::Vector2(1, 1), 0, 1.0f);
 
-		desassociate();
-
 		return (new jgl::Image(output_texture));
+	}
+
+	void Image_output::print()
+	{
+		GLsizei nrChannels = 4;
+		GLsizei stride = nrChannels * _size.x;
+		GLsizei bufferSize = stride * _size.y;
+		std::vector<char> buffer(bufferSize);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, _id);
+
+		glPixelStorei(GL_PACK_ALIGNMENT, 4);
+		glGetTextureImage(_id, 0, GL_RGBA, GL_UNSIGNED_BYTE, bufferSize, buffer.data());
+
+		std::cout << "Image output buffer : " << std::endl;
+		for (jgl::Size_t y = 0; y < _size.y; y++)
+		{
+			for (jgl::Size_t x = 0; x < _size.x; x++)
+			{
+				if (x != 0)
+					std::cout << " - ";
+
+				for (jgl::Size_t i = 0; i < 4; i++)
+				{
+					std::cout << "[" << jgl::normalize_int(static_cast<unsigned char>(buffer[i + x * 4 + y * _size.x * 4]), ' ', 3) << "]";
+				}
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	}
+
+	void Image_output::save_to_png(jgl::String p_path)
+	{
+		GLsizei nrChannels = 4;
+		GLsizei stride = nrChannels * _size.x;
+		GLsizei bufferSize = stride * _size.y;
+		std::vector<char> buffer(bufferSize);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, _id);
+
+		glPixelStorei(GL_PACK_ALIGNMENT, 4);
+		glGetTextureImage(_id, 0, GL_RGBA, GL_UNSIGNED_BYTE, bufferSize, buffer.data());
+
+		if (p_path.size() > 4 && p_path.substr(p_path.size() - 4, 4) != ".png")
+		{
+			jgl::save_to_png(p_path, _size, buffer.data());
+		}
+		else if (p_path.size() > 4 && p_path.substr(p_path.size() - 4, 4) != ".jpg")
+		{
+			jgl::save_to_jpg(p_path, _size, buffer.data());
+		}
+		else if (p_path.size() > 4 && p_path.substr(p_path.size() - 4, 4) != ".bmp")
+		{
+			jgl::save_to_bmp(p_path, _size, buffer.data());
+		}
+		else if (p_path.size() > 4 && p_path.substr(p_path.size() - 4, 4) != ".tga")
+		{
+			jgl::save_to_tga(p_path, _size, buffer.data());
+		}
+		else
+		{
+			THROW_EXCEPTION(jgl::Error_level::Warning, 1, "Can't save such image");
+		}
 	}
 }

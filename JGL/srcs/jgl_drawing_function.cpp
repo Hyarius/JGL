@@ -2,6 +2,7 @@
 
 namespace jgl
 {
+	extern jgl::Vector2Int g_viewport_actual_size;
 
 	Vector3 convert_screen_to_opengl(const Vector2Int source, jgl::Float level)
 	{

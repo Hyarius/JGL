@@ -148,9 +148,9 @@ namespace jgl
 
 			return (jgl::radian_to_degree(angle));
 		}
-		Vector2_base invert() const
+		Vector2_base<T> invert() const
 		{
-			return (Vector2_base(x * -1, y * -1));
+			return (Vector2_base<T>(x * -1, y * -1));
 		}
 		Vector2_base rotate(Vector2_base center, float angle) const
 		{
@@ -166,23 +166,23 @@ namespace jgl
 			return (result + center);
 		}
 
-		Vector2_base operator + (const Vector2_base& other) const
+		Vector2_base<T> operator + (const Vector2_base& other) const
 		{
-			return (Vector2_base(x + other.x, y + other.y));
+			return (Vector2_base<T>(x + other.x, y + other.y));
 		}
-		Vector2_base operator - (const Vector2_base& other) const
+		Vector2_base<T> operator - (const Vector2_base& other) const
 		{
-			return (Vector2_base(x - other.x, y - other.y));
+			return (Vector2_base<T>(x - other.x, y - other.y));
 		}
-		Vector2_base operator * (const Vector2_base& other) const
+		Vector2_base<T> operator * (const Vector2_base& other) const
 		{
-			return (Vector2_base(x * other.x, y * other.y));
+			return (Vector2_base<T>(x * other.x, y * other.y));
 		}
-		Vector2_base operator / (const Vector2_base& other) const
+		Vector2_base<T> operator / (const Vector2_base& other) const
 		{
 			if (other.x == 0 || other.y == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
-			return (Vector2_base(x / other.x, y / other.y));
+			return (Vector2_base<T>(x / other.x, y / other.y));
 		}
 		void operator += (const Vector2_base& other)
 		{
@@ -208,8 +208,8 @@ namespace jgl
 		}
 
 		template <typename U = T, typename std::enable_if<!std::is_floating_point<U>::value == true>::type* = nullptr>
-		Vector2_base operator % (const Vector2_base& delta) const {
-			return (Vector2_base(
+		Vector2_base<T> operator % (const Vector2_base& delta) const {
+			return (Vector2_base<T>(
 				x % delta.x,
 				y % delta.y)
 				);
@@ -252,17 +252,17 @@ namespace jgl
 			return os;
 		}
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
-		Vector2_base floor()
+		Vector2_base<T> floor()
 		{
 			return (Vector2_base<T>(std::floor(x), std::floor(y)));
 		}
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
-		Vector2_base ceiling()
+		Vector2_base<T> ceiling()
 		{
 			return (Vector2_base<T>(std::ceil(x), std::ceil(y)));
 		}
 		template <typename U = T, typename std::enable_if<std::is_floating_point<U>::value == true>::type* = nullptr>
-		Vector2_base round()
+		Vector2_base<T> round()
 		{
 			return (Vector2_base<T>(std::round(x), std::round(y)));
 		}
@@ -270,6 +270,22 @@ namespace jgl
 		{
 			return (x >= min.x && x <= max.x &&
 				y >= min.y && y <= max.y);
+		}
+
+		static Vector2_base<T> compose_min(const Vector2_base& v1, const Vector2_base& v2)
+		{
+			return (Vector2_base<T>(
+				v1.x < v2.x ? v1.x : v2.x,
+				v1.y < v2.y ? v1.y : v2.y
+			));
+		}
+
+		static Vector2_base<T> compose_max(const Vector2_base& v1, const Vector2_base& v2)
+		{
+			return (Vector2_base<T>(
+				v1.x > v2.x ? v1.x : v2.x,
+				v1.y > v2.y ? v1.y : v2.y
+			));
 		}
 	};
 
@@ -519,6 +535,23 @@ namespace jgl
 			return (Vector3_base<T>(std::round(x), std::round(y), std::round(z)));
 		}
 
+		static Vector3_base compose_min(const Vector3_base& v1, const Vector3_base& v2)
+		{
+			return (Vector3_base(
+				v1.x < v2.x ? v1.x : v2.x,
+				v1.y < v2.y ? v1.y : v2.y,
+				v1.z < v2.z ? v1.z : v2.z
+			));
+		}
+
+		static Vector3_base compose_max(const Vector3_base& v1, const Vector3_base& v2)
+		{
+			return (Vector3_base(
+				v1.x > v2.x ? v1.x : v2.x,
+				v1.y > v2.y ? v1.y : v2.y,
+				v1.z > v2.z ? v1.z : v2.z
+			));
+		}
 	};
 
 	template <typename T, typename std::enable_if<std::is_arithmetic<T>::value == true>::type* = nullptr>
@@ -748,6 +781,26 @@ namespace jgl
 		Vector4_base round() const
 		{
 			return (Vector4_base<T>(std::round(x), std::round(y), std::round(z), std::round(w)));
+		}
+
+		static Vector4_base compose_min(const Vector4_base& v1, const Vector4_base& v2)
+		{
+			return (Vector4_base(
+				v1.x < v2.x ? v1.x : v2.x,
+				v1.y < v2.y ? v1.y : v2.y,
+				v1.z < v2.z ? v1.z : v2.z,
+				v1.w < v2.w ? v1.w : v2.w
+			));
+		}
+
+		static Vector4_base compose_max(const Vector4_base& v1, const Vector4_base& v2)
+		{
+			return (Vector4_base(
+				v1.x > v2.x ? v1.x : v2.x,
+				v1.y > v2.y ? v1.y : v2.y,
+				v1.z > v2.z ? v1.z : v2.z,
+				v1.w > v2.w ? v1.w : v2.w
+			));
 		}
 	};
 

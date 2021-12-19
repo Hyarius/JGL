@@ -2,6 +2,7 @@
 
 namespace jgl
 {
+	jgl::Vector2Int g_viewport_actual_size;
 	jgl::Map< jgl::Uint, bool> jgl::Viewport::_allocated_id;
 
 	Viewport::Viewport(jgl::Widget* p_owner)
@@ -38,6 +39,8 @@ namespace jgl
 			jgl::Vector2Int tmp = (_owner != nullptr ? cumuled_anchor() : 0);
 			jgl::Vector2Int pos = jgl::Vector2(tmp.x, jgl::Application::active_application()->size().y - _area.y - tmp.y);
 			glViewport(static_cast<jgl::Int>(pos.x), static_cast<jgl::Int>(pos.y), static_cast<jgl::Int>(_area.x), static_cast<jgl::Int>(_area.y));
+
+			g_viewport_actual_size = jgl::Vector2Int(_area.x, _area.y);
 		}
 	}
 }

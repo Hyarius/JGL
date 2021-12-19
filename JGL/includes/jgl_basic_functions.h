@@ -179,4 +179,9 @@ namespace jgl
 			return (p_start_value);
 		return (p_start_value * (1.0f - p_ratio) + p_final_value * p_ratio);
 	}
+
+	void save_to_tga(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
+	void save_to_png(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
+	void save_to_jpg(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
+	void save_to_bmp(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
 }
