@@ -264,7 +264,6 @@ namespace jgl
 		_opengl_context.create_opengl_context(_window_frame, major, minor);
 		THROW_INFORMATION("Opengl context created");
 
-		jgl::Vector2 tmp_size = _size;
 		ShowWindow(_window_frame, SW_SHOW);
 		UpdateWindow(_window_frame);
 		wglSwapIntervalEXT(0);

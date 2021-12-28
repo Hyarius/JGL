@@ -97,7 +97,7 @@ namespace jgl
 	void Application::resize(jgl::Int x, jgl::Int y)
 	{
 		_size = jgl::Vector2Int(x, y);
-		jgl::Vector2 old_size = _opengl_context.size();
+
 		_opengl_context.resize(x, y);
 		if (_central_widget != nullptr)
 		{

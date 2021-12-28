@@ -474,7 +474,7 @@ namespace jgl
 			return (Iterator(this, size()));
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, const jgl::Array<T> value)
+		friend std::ostream& operator<<(std::ostream& os, const jgl::Array<T>& value)
 		{
 			for (jgl::Size_t i = 0; i < value.size(); i++)
 			{

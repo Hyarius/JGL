@@ -117,6 +117,11 @@ namespace jgl
 	/*
 		Check if [value] is between [min] and [max]. Return true if yes, false if not
 	*/
+	jgl::Bool is_middle(const jgl::Double min, const jgl::Double value, const jgl::Double max);
+
+	/*
+		Check if [value] is between [min] and [max]. Return true if yes, false if not
+	*/
 	jgl::Bool is_middle(const jgl::Vector2 min, const jgl::Vector2 value, const jgl::Vector2 max);
 
 	/*

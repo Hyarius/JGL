@@ -317,10 +317,10 @@ namespace jgl
 		return (jgl::String(out.str()));
 	}
 	// Converts a floating pojgl::Int number tostring.
-	jgl::String ftoa(const jgl::Double n, const jgl::Int afterpoint, const jgl::Int length)
+	/*jgl::String ftoa(const jgl::Double n, const jgl::Int afterpoint, const jgl::Int length)
 	{
 		return (ftoa((jgl::Float)n, afterpoint, length));
-	}
+	}*/
 
 
 	jgl::Float stof(jgl::String text)
@@ -344,6 +344,15 @@ namespace jgl
 	}
 
 	bool is_middle(const jgl::Float min, const jgl::Float value, const jgl::Float max)
+	{
+		if (value < min)
+			return (false);
+		if (value >= max)
+			return (false);
+		return (true);
+	}
+
+	bool is_middle(const jgl::Double min, const jgl::Double value, const jgl::Double max)
 	{
 		if (value < min)
 			return (false);
