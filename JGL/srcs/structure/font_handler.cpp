@@ -99,7 +99,9 @@ namespace jgl
 			data.uvs[2] = { quad.s0 - width_delta, quad.t1 + height_delta };
 			data.uvs[3] = { quad.s1 + width_delta, quad.t1 + height_delta };
 
-			_atlas[c] = data;
+			if (_atlas.size() <= c.value())
+				_atlas.resize(c.value() + 1);
+			_atlas[c.value()] = data;
 		}
 
 		const jgl::String shader_name = "Texture_text_shader_2D";
@@ -126,9 +128,9 @@ namespace jgl
 
 	Font::Glyph_data& Font::_get_data(jgl::Glyph to_draw)
 	{
-		if (_atlas.count(to_draw) == 0)
+		if (_atlas.size() <= to_draw.value())
 			THROW_EXCEPTION(jgl::Error_level::Error, 1, "Trying to print unespected glyph");
-		return (_atlas[to_draw]);
+		return (_atlas[to_draw.value()]);
 	}
 	void Font::draw(jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float level, jgl::Float alpha)
 	{

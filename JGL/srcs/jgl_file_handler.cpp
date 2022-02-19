@@ -82,7 +82,7 @@ namespace jgl
 			if (extension == "*")
 				files.push_back(tmp);
 			else if ((type == jgl::File_type::File && file_extension == extension) ||
-					 (type == jgl::File_type::Directory && name != "."))
+					 (type == jgl::File_type::Directory && name != "." && name != ".."))
 				files.push_back(tmp);
 		}
 		closedir(dir);
@@ -91,8 +91,8 @@ namespace jgl
 
 	jgl::Bool				check_file_exist(jgl::String path)
 	{
-		jgl::File file(path.c_str());
-		return file.good();
+		struct stat buffer;
+		return (stat(path.c_str(), &buffer) == 0);
 	}
 
 	void				copy_file(jgl::String src_path, jgl::String dest_path)
@@ -114,14 +114,14 @@ namespace jgl
 
 	void				write_on_file(jgl::File& file, jgl::String text)
 	{
-		file << text << std::endl;
+		file << text << jgl::endl;
 	}
 
 	void				write_on_file(jgl::String path, jgl::String text)
 	{
 		jgl::File file;
 		file.open(path.c_str(), std::ios::app);
-		file << text << std::endl;
+		file << text << jgl::endl;
 		file.close();
 	}
 
@@ -129,7 +129,7 @@ namespace jgl
 	{
 		jgl::File file;
 		file.open(path.c_str());
-		file << text << std::endl;
+		file << text << jgl::endl;
 		file.close();
 	}
 

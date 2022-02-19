@@ -12,18 +12,9 @@ namespace jgl
 		_box.render();
 	}
 
-	Frame::Frame(jgl::Color p_back, jgl::Color p_front, jgl::Widget* p_parent) : jgl::Widget(p_parent)
+	Frame::Frame(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	{
-		_box = jgl::Widget_component::Box(p_back, p_front, this);
-	}
-
-	Frame::Frame(jgl::String p_path, jgl::Widget* p_parent) : jgl::Widget(p_parent)
-	{
-		_box = jgl::Widget_component::Box(p_path, this);
-	}
-
-	Frame::Frame(jgl::Sprite_sheet* p_background_tileset, jgl::Widget* p_parent) : jgl::Widget(p_parent)
-	{
-		_box = jgl::Widget_component::Box(p_background_tileset, this);
+		_box = jgl::Widget_component::Box(this);
+		_box.set_color(jgl::Color(150, 150, 150), jgl::Color(100, 100, 100));
 	}
 }

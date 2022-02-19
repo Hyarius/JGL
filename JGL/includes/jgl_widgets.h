@@ -6,6 +6,6 @@
 #include "widget/jgl_check_box.h"
 #include "widget/jgl_contener.h"
 #include "widget/jgl_frame.h"
-#include "widget/jgl_image_label.h"
+#include "widget/jgl_sprite_label.h"
 #include "widget/jgl_text_entry.h"
 #include "widget/jgl_text_label.h"

@@ -190,8 +190,19 @@ namespace jgl
 		_cursor = 0;
 
 		_box = jgl::Widget_component::Box(this);
+		_box.set_color(jgl::Color(150, 150, 150), jgl::Color(100, 100, 100));
 		_label = jgl::Widget_component::Text_label(p_text, this);
 		_label.set_vertical_align(jgl::Vertical_alignment::Down);
+	}
+
+	void Text_entry::set_text(jgl::String p_text)
+	{
+		_cursor = 0;
+		_text = p_text;
+		_compute_high_cursor();
+		_compute_low_cursor();
+		_compute_text();
+		_compute_cursor_pos();
 	}
 
 	void Text_entry::select()

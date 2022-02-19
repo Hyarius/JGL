@@ -3,6 +3,7 @@
 #include "jgl_basic_types.h"
 #include "jgl_glyph.h"
 #include "jgl_array.h"
+#include "jgl_stream.h"
 
 #define JGL_STRING_BUFFER_SIZE 100
 
@@ -11,7 +12,7 @@ namespace jgl
 	class String
 	{
 	private:
-		char* _str;
+		mutable char* _str;
 
 		Glyph _buffer[JGL_STRING_BUFFER_SIZE];
 		Glyph** _content;
@@ -102,9 +103,9 @@ namespace jgl
 
 		void erase(Size_t index);
 
-		const char* c_str();
+		const char* c_str() const;
 
-		const unsigned char* uc_str();
+		const unsigned char* uc_str() const;
 
 		void split(jgl::Array<String>& tab, const String& delim, const jgl::Bool& regroup = true);
 

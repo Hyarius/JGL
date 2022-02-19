@@ -39,12 +39,18 @@ namespace jgl
 	void Widget::resize(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area)
 	{
 		jgl::Vector2 ratio = jgl::Vector2(static_cast<float>(p_area.x) / static_cast<float>(_area.x), static_cast<float>(p_area.y) / static_cast<float>(_area.y));
+		if (ratio == 1)
+			return;
+		
+		_viewport->set_geometry(_anchor, _area);
+
 		for (jgl::Size_t i = 0; i < _childrens.size(); i++)
 		{
 			jgl::Vector2 tmp_anchor = jgl::Vector2(_childrens[i]->anchor().x, _childrens[i]->anchor().y);
 			jgl::Vector2 tmp_area = jgl::Vector2(_childrens[i]->area().x, _childrens[i]->area().y);
 			_childrens[i]->resize((tmp_anchor * ratio).round(), (tmp_area * ratio).round());
 		}
+
 		set_geometry(p_anchor, p_area);
 	}
 

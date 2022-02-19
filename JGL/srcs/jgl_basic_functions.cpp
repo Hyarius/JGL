@@ -1,5 +1,8 @@
 #include "jgl.h"
 
+#include <time.h>
+#include <stdlib.h>
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "external_lib/stb_image_write.h"
 
@@ -160,6 +163,7 @@ namespace jgl
 		if (is_started == false)
 			THROW_EXCEPTION(jgl::Error_level::Critical, 0, "Error while starting JGL data");
 
+		srand(time(NULL));
 
 		SetConsoleOutputCP(1252);
 		SetConsoleCP(1252);
@@ -187,7 +191,7 @@ namespace jgl
 		e_exception.set_function(jgl::String(__FUNCTION__));
 		e_exception.set_line(__LINE__);
 		e_exception.define(id, msg);
-		std::cout << e_exception.partial() << std::endl;
+		jgl::cout << e_exception.partial() << jgl::endl;
 		if (static_cast<jgl::Int>(jgl::Exception::minimal_error_level()) <= static_cast<jgl::Int>(level))
 		{
 			throw (e_exception);
@@ -391,16 +395,23 @@ namespace jgl
 		src = result;
 	}
 
-	jgl::Int generate_nbr_from_2D(const jgl::Long seed, const jgl::Int x, const jgl::Int y)
+	jgl::Long generate_nbr_from_2D(const jgl::Long seed, const jgl::Long x, const jgl::Long y)
 	{
 		jgl::Size_t h = static_cast<jgl::Uint>(seed + static_cast<jgl::Ulong>(x) * 374761393 + static_cast<jgl::Ulong>(y) * 668265263); //all constants are prime
 		h = (h ^ (h >> 13)) * 1274126177;
 		return h ^ (h >> 16);
 	}
 
-	jgl::Int generate_nbr(const jgl::Int min, const jgl::Int max)
+	jgl::Long generate_nbr(const jgl::Long min, const jgl::Long max)
 	{
-		return((rand() % (max - min)) + min);
+		jgl::Long value = 0;
+
+		for (jgl::Size_t i = 0; i < 4; i++)
+		{
+			value = value << 8;
+			value += rand();
+		}
+		return((value % (max - min)) + min);
 	}
 
 	jgl::String _compose_file_path(jgl::String p_path, jgl::String p_extension)
@@ -440,5 +451,11 @@ namespace jgl
 		jgl::String full_path = _compose_file_path(p_path, ".bmp");
 
 		stbi_write_bmp(full_path.c_str(), p_image_size.x, p_image_size.y, 4, p_buffer_data);
+	}
+
+	Stream& endl(jgl::Stream& p_stream)
+	{
+		p_stream.flush();
+		return (p_stream);
 	}
 }

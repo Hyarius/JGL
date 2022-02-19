@@ -16,7 +16,6 @@ namespace jgl
 
 	public:
 		Text_label(jgl::String p_text, jgl::Widget* p_parent);
-		void set_text_size(jgl::Uint text_size) { _label.set_text_size(text_size); }
 
 		jgl::Widget_component::Text_label& label() { return (_label); }
 		jgl::Widget_component::Box& box() { return (_box);}

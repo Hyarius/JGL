@@ -56,30 +56,30 @@ namespace jgl
 
 	void Image_output::check_framebuffer_status(jgl::String msg)
 	{
-		std::cout << msg << " - Framebuffer status : ";
+		jgl::cout << msg << " - Framebuffer status : ";
 
 		switch (glCheckFramebufferStatus(GL_FRAMEBUFFER))
 		{
 		case (GL_FRAMEBUFFER_UNDEFINED): {
-			std::cout << "GL_FRAMEBUFFER_UNDEFINED"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_UNDEFINED"; break; }
 		case (GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT): {
-			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break; }
 		case (GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT): {
-			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break; }
 		case (GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER): {
-			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER"; break; }
 		case (GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER): {
-			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER"; break; }
 		case (GL_FRAMEBUFFER_UNSUPPORTED): {
-			std::cout << "GL_FRAMEBUFFER_UNSUPPORTED"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_UNSUPPORTED"; break; }
 		case (GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE): {
-			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE"; break; }
 		case (GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS): {
-			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS"; break; }
 		case (GL_FRAMEBUFFER_COMPLETE): {
-			std::cout << "GL_FRAMEBUFFER_COMPLETE"; break; }
+			jgl::cout << "GL_FRAMEBUFFER_COMPLETE"; break; }
 		}
-		std::cout << std::endl;
+		jgl::cout << jgl::endl;
 	}
 
 	jgl::Image* Image_output::save()
@@ -121,22 +121,22 @@ namespace jgl
 		glPixelStorei(GL_PACK_ALIGNMENT, 4);
 		glGetTextureImage(_id, 0, GL_RGBA, GL_UNSIGNED_BYTE, bufferSize, buffer.data());
 
-		std::cout << "Image output buffer : " << std::endl;
+		jgl::cout << "Image output buffer : " << jgl::endl;
 		for (jgl::Size_t y = 0; y < _size.y; y++)
 		{
 			for (jgl::Size_t x = 0; x < _size.x; x++)
 			{
 				if (x != 0)
-					std::cout << " - ";
+					jgl::cout << " - ";
 
 				for (jgl::Size_t i = 0; i < 4; i++)
 				{
-					std::cout << "[" << jgl::normalize_int(static_cast<unsigned char>(buffer[i + x * 4 + y * _size.x * 4]), ' ', 3) << "]";
+					jgl::cout << "[" << jgl::normalize_int(static_cast<unsigned char>(buffer[i + x * 4 + y * _size.x * 4]), ' ', 3) << "]";
 				}
 			}
-			std::cout << std::endl;
+			jgl::cout << jgl::endl;
 		}
-		std::cout << std::endl;
+		jgl::cout << jgl::endl;
 	}
 
 	void Image_output::save_to_png(jgl::String p_path)

@@ -99,37 +99,6 @@ namespace jgl
 		}
 
 		/*
-			Take out a string stored in the message
-		*/
-		jgl::String get_string()
-		{
-			jgl::String text;
-			jgl::Uint size;
-			jgl::Uint i = 0;
-
-			*this >> size;
-			while (empty() == false && i < size)
-			{
-				jgl::Glyph c;
-				*this >> c;
-				text.push_back(c);
-				i++;
-			}
-
-			return (text);
-		}
-
-		/*
-			Add a string in the message
-		*/
-		void add_string(jgl::String text)
-		{
-			*this << text.size();
-			for (jgl::Uint i = 0; i < text.size(); i++)
-				*this << text[i];
-		}
-
-		/*
 			Add an array of data into the message
 		*/
 		void add_in_array(jgl::Uchar* p_array, jgl::Size_t p_length)
@@ -155,40 +124,80 @@ namespace jgl
 			header.readed += p_length;
 		}
 
+		void print(jgl::String p_text)
+		{
+			jgl::cout << p_text << " : ";
+			for (jgl::Size_t i = 0; i < content.size(); i++)
+			{
+				if (i != 0)
+					jgl::cout << "-";
+				std::bitset<8> y(content[i]);
+				jgl::cout << "[" << y << "]";
+			}
+			jgl::cout << jgl::endl;
+		}
+
 		/*
 			Add a data to the message, storing bytes in content for transmition
 		*/
 		template<typename DataType>
-		friend Message<T>& operator << (Message<T>& msg, const DataType& data)
+		Message<T>& operator << (const DataType& data)
 		{
 			static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pushed into vector");
-			
-			jgl::Size_t old_size = msg.content.size();
 
-			msg.content.resize(msg.content.size() + sizeof(DataType));
+			jgl::Size_t old_size = (*this).content.size();
 
-			std::memcpy(msg.content.data() + old_size, &data, sizeof(DataType));
+			(*this).content.resize((*this).content.size() + sizeof(DataType));
 
-			msg.header.size = msg.content.size();
+			std::memcpy((*this).content.data() + old_size, &data, sizeof(DataType));
 
-			return msg;
+			(*this).header.size = (*this).content.size();
+
+			return (*this);
 		}
 
 		/*
 			Take out a set of bytes, and store it in the data variable
 		*/
 		template<typename DataType>
-		friend Message<T>& operator >> (Message<T>& msg, DataType& data)
+		Message<T>& operator >> (DataType& data)
 		{
 			static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
 
-			jgl::Size_t next_size = msg.header.readed;// msg.content.size() - sizeof(DataType);
+			jgl::Size_t next_size = (*this).header.readed;// (*this).content.size() - sizeof(DataType);
 
-			std::memcpy(&data, msg.content.data() + next_size, sizeof(DataType));
+			std::memcpy(&data, (*this).content.data() + next_size, sizeof(DataType));
 
-			msg.header.readed += sizeof(DataType);
+			(*this).header.readed += sizeof(DataType);
 
-			return msg;
+			return (*this);
+		}
+
+		template<>
+		Message<T>& operator << <jgl::String>	(const jgl::String& text)
+		{
+			*this << text.size();
+			for (jgl::Uint i = 0; i < text.size(); i++)
+				*this << text[i];
+			return *this;
+		}
+
+		template<>
+		Message<T>& operator >> <jgl::String>	(jgl::String& text)
+		{
+			jgl::Uint size;
+			jgl::Uint i = 0;
+
+			*this >> size;
+			while (empty() == false && i < size)
+			{
+				jgl::Glyph c;
+				*this >> c;
+				text.push_back(c);
+				i++;
+			}
+
+			return *this;
 		}
 	};
 

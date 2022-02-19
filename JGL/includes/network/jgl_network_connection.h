@@ -197,7 +197,7 @@ namespace jgl
 					}
 					else
 					{
-						std::cout << "[" << _id << "] Write Header Fail.\n";
+						jgl::cout << "[" << _id << "] Write Header Fail.\n";
 						_socket.close();
 					}
 				});
@@ -217,7 +217,7 @@ namespace jgl
 					}
 					else
 					{
-						std::cout << "[" << _id << "] Write Body Fail.\n";
+						jgl::cout << "[" << _id << "] Write Body Fail.\n";
 						_socket.close();
 					}
 				});
@@ -242,7 +242,7 @@ namespace jgl
 					}
 					else
 					{
-						std::cout << "[" << _id << "] Read Header Fail.\n";
+						jgl::cout << "[" << _id << "] Read Header Fail.\n";
 						_socket.close();
 					}
 				});
@@ -259,7 +259,7 @@ namespace jgl
 					}
 					else
 					{
-						std::cout << "[" << _id << "] Read Body Fail.\n";
+						jgl::cout << "[" << _id << "] Read Body Fail.\n";
 						_socket.close();
 					}
 				});

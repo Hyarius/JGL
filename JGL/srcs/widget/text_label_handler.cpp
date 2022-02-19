@@ -15,7 +15,9 @@ namespace jgl
 
 	Text_label::Text_label(jgl::String p_text, jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	{
-		_box = jgl::Widget_component::Box(jgl::Color(60, 60, 60), jgl::Color(100, 100, 100), this);
+		_box = jgl::Widget_component::Box(this);
+		_box.set_color(jgl::Color(150, 150, 150), jgl::Color(100, 100, 100));
 		_label = jgl::Widget_component::Text_label(p_text, this);
+		_label.set_depth(_depth + 1);
 	}
 }

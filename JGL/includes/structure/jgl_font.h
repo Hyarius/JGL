@@ -22,7 +22,7 @@ namespace jgl
 			jgl::Vector2 offset = 0;
 		};
 
-		jgl::Map<jgl::Glyph, Glyph_data> _atlas;
+		jgl::Array<Glyph_data> _atlas;
 
 		Shader* _shader = nullptr;
 		jgl::Buffer* _vertex_buffer = nullptr;

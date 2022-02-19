@@ -30,7 +30,7 @@ namespace jgl
 			jgl::Float Y - 2D value for more complex result
 			jgl::Float Z - 3D value for more complex result
 		*/
-		jgl::Float noise(jgl::Float x, jgl::Float y = 0, jgl::Float z = 0);
+		jgl::Float noise(jgl::Float x, jgl::Float y = 0, jgl::Float z = 0, jgl::Float p_zoom = 1);
 
 		/*
 			Generate a n-pass value on coord X
@@ -42,6 +42,6 @@ namespace jgl
 			jgl::Float Y - 2D value for more complex result
 			jgl::Float Z - 3D value for more complex result
 		*/
-		jgl::Float accumulated_noise(jgl::Int  octaves, jgl::Float x, jgl::Float y = 0, jgl::Float z = 0);
+		jgl::Float accumulated_noise(jgl::Int  octaves, jgl::Float x, jgl::Float y = 0, jgl::Float z = 0, jgl::Float p_zoom = 1);
 	};
 }

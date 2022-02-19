@@ -342,7 +342,7 @@ namespace jgl
 		_clear_str();
 	}
 
-	const char* String::c_str()
+	const char* String::c_str() const
 	{
 		if (_str == nullptr)
 		{
@@ -365,7 +365,7 @@ namespace jgl
 		return (_str);
 	}
 
-	const unsigned char* String::uc_str()
+	const unsigned char* String::uc_str() const
 	{
 		return (reinterpret_cast<const unsigned char*>(c_str()));
 	}

@@ -4,180 +4,204 @@ namespace jgl::Widget_component
 {
 	Box::Box(jgl::Widget* p_owner) : Graphical_component(p_owner)
 	{
-		_background = jgl::Color(100, 100, 100);
-		_frontground = jgl::Color(150, 150, 150);
-		_depth = 0;
-		_background_tileset = nullptr;
-		_init_texture();
-	}
-
-	Box::Box(jgl::Color p_background, jgl::Color p_frontground, jgl::Widget* p_owner) : Box(p_owner)
-	{
-		_background = p_background;
-		_frontground = p_frontground;
-	}
-
-	void Box::_init_texture()
-	{
-		_shader = jgl::Application::active_application()->shader("Texture_shader_2D");
-
-		_element_buffer = _shader->indexes_buffer()->copy();
-		const jgl::Map<jgl::String, jgl::Uniform*> uniforms = _shader->uniforms();
-		for (auto it = uniforms.begin(); it != uniforms.end(); it++)
-		{
-			THROW_INFORMATION("Copying uniform : " + it->first);
-			_uniforms[it->first] = it->second->copy();
-		}
-
-		const jgl::Map<jgl::String, jgl::Buffer*>& buffers = _shader->buffers();
-		for (auto it = buffers.begin(); it != buffers.end(); it++)
-		{
-			THROW_INFORMATION("Copying buffer : " + it->first);
-			_buffers[it->first] = it->second->copy();
-		}
-
-		_compute_texture();
-	}
-
-	Box::Box(jgl::String p_path, jgl::Widget* p_owner) : Box(p_owner)
-	{
-		_background_tileset = new jgl::Sprite_sheet(p_path, 3);
-	}
-	Box::Box(jgl::Sprite_sheet* p_background_tileset, jgl::Widget* p_owner) : Box(p_owner)
-	{
-		_background_tileset = p_background_tileset;
+		_border_size = 5;
+		_composed_texture_data = Composed_texture_data();
+		_image_data = Single_image_data();
+		_color_data = Color_data();
 	}
 
 	void Box::set_geometry(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area, jgl::Float p_depth)
 	{
 		Graphical_component::set_geometry(p_anchor, p_area, p_depth);
-
-		if (_background_tileset != nullptr)
-		{
-			_computed = false;
-			_compute_texture();
-		}
+		_composed_texture_data.computed = false;
+		_image_data.computed = false;
+		_color_data.computed = false;
 	}
 
-	void Box::render()
+	void Box::_compute_composed_texture_data()
 	{
-		if (_background_tileset == nullptr)
-			_render_color();
-		else
-			_render_texture();
+		jgl::Array<jgl::Vector3> vertex_content;
+		jgl::Array<jgl::Vector2> uvs_content;
+		jgl::Array<jgl::Float> alpha_content;
+		jgl::Array<jgl::Uint> element_content;
+
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(0, 0), _anchor, _border_size, _depth, 1.0f);
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(1, 0), _anchor + jgl::Vector2Int(_border_size, 0), jgl::Vector2Int(_area.x - _border_size * 2, _border_size), _depth, 1.0f);
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(2, 0), _anchor + jgl::Vector2Int(_area.x - _border_size, 0), _border_size, _depth, 1.0f);
+
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(0, 1), _anchor + jgl::Vector2Int(0, _border_size), jgl::Vector2Int(_border_size, _area.y - _border_size * 2), _depth, 1.0f);
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(1, 1), _anchor + _border_size, jgl::Vector2Int(_area.x - _border_size * 2, _area.y - _border_size * 2), _depth, 1.0f);
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(2, 1), _anchor + jgl::Vector2Int(_area.x - _border_size, _border_size), jgl::Vector2Int(_border_size, _area.y - _border_size * 2), _depth, 1.0f);
+
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(0, 2), _anchor + jgl::Vector2Int(0, _area.y - _border_size), _border_size, _depth, 1.0f);
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(1, 2), _anchor + jgl::Vector2Int(_border_size, _area.y - _border_size), jgl::Vector2Int(_area.x - _border_size * 2, _border_size), _depth, 1.0f);
+		_composed_texture_data.sprite_sheet->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			jgl::Vector2Int(2, 2), _anchor + jgl::Vector2Int(_area.x - _border_size, _area.y - _border_size), _border_size, _depth, 1.0f);
+
+		if (_composed_texture_data.shader == nullptr)
+			_composed_texture_data.shader = jgl::Application::active_application()->shader("Texture_shader_2D");
+		if (_composed_texture_data.model_buffer == nullptr)
+			_composed_texture_data.model_buffer = _composed_texture_data.shader->buffer("model_space")->copy();
+		if (_composed_texture_data.uvs_buffer == nullptr)
+			_composed_texture_data.uvs_buffer = _composed_texture_data.shader->buffer("vertexUV")->copy();
+		if (_composed_texture_data.alpha_buffer == nullptr)
+			_composed_texture_data.alpha_buffer = _composed_texture_data.shader->buffer("alpha_value")->copy();
+		if (_composed_texture_data.indexes_buffer == nullptr)
+			_composed_texture_data.indexes_buffer = _composed_texture_data.shader->indexes_buffer()->copy();
+		if (_composed_texture_data.texture_uniform == nullptr)
+			_composed_texture_data.texture_uniform = _composed_texture_data.shader->uniform("textureID")->copy();
+
+		_composed_texture_data.model_buffer->send(vertex_content.all(), vertex_content.size());
+		_composed_texture_data.uvs_buffer->send(uvs_content.all(), uvs_content.size());
+		_composed_texture_data.alpha_buffer->send(alpha_content.all(), alpha_content.size());
+		_composed_texture_data.indexes_buffer->send(element_content.all(), element_content.size());
+
+		_composed_texture_data.computed = true;
 	}
 
-	void Box::_init()
+	void Box::_render_composed_texture()
 	{
-		if (_initialize == true)
-			return;
-
-		if (_shader == nullptr || _element_buffer == nullptr || _uniforms.size() == 0 || _buffers.size() == 0)
+		if (_composed_texture_data.computed == false)
 		{
-			THROW_EXCEPTION(jgl::Error_level::Error, 1, "Trying to compute a widget texture without the shader needed");
+			_compute_composed_texture_data();
 		}
+		_composed_texture_data.shader->activate();
 
-		_buffers["vertexUV"]->send(C_UV_BUFFER_CONTENT, 16);
-		_buffers["alpha_value"]->send(C_ALPHA_BUFFER_CONTENT, 16);
-		_element_buffer->send(C_ELEMENT_BUFFER_CONTENT, 54);
+		_composed_texture_data.sprite_sheet->activate();
+		_composed_texture_data.texture_uniform->send(0);
 
-		_initialize = true;
+		_composed_texture_data.model_buffer->activate();
+		_composed_texture_data.uvs_buffer->activate();
+		_composed_texture_data.alpha_buffer->activate();
+		_composed_texture_data.indexes_buffer->activate();
+
+		_composed_texture_data.shader->cast(jgl::Shader::Mode::Triangle, _composed_texture_data.indexes_buffer->size() / sizeof(jgl::Uint));
 	}
 
-	void Box::_compute_texture()
+	void Box::_compute_image_data()
 	{
-		if (_shader == nullptr || _element_buffer == nullptr || _uniforms.size() == 0 || _buffers.size() == 0)
+		jgl::Array<jgl::Vector3> vertex_content;
+		jgl::Array<jgl::Vector2> uvs_content;
+		jgl::Array<jgl::Float> alpha_content;
+		jgl::Array<jgl::Uint> element_content;
+
+		_image_data.image->prepare_draw(
+			vertex_content, uvs_content, alpha_content, element_content,
+			_anchor, _area, 0, 1, _depth, 1.0f);
+
+		if (_image_data.shader == nullptr)
+			_image_data.shader = jgl::Application::active_application()->shader("Texture_shader_2D");
+		if (_image_data.model_buffer == nullptr)
+			_image_data.model_buffer = _image_data.shader->buffer("model_space")->copy();
+		if (_image_data.uvs_buffer == nullptr)
+			_image_data.uvs_buffer = _image_data.shader->buffer("vertexUV")->copy();
+		if (_image_data.alpha_buffer == nullptr)
+			_image_data.alpha_buffer = _image_data.shader->buffer("alpha_value")->copy();
+		if (_image_data.indexes_buffer == nullptr)
+			_image_data.indexes_buffer = _image_data.shader->indexes_buffer()->copy();
+		if (_image_data.texture_uniform == nullptr)
+			_image_data.texture_uniform = _image_data.shader->uniform("textureID")->copy();
+
+		_image_data.model_buffer->send(vertex_content.all(), vertex_content.size());
+		_image_data.uvs_buffer->send(uvs_content.all(), uvs_content.size());
+		_image_data.alpha_buffer->send(alpha_content.all(), alpha_content.size());
+		_image_data.indexes_buffer->send(element_content.all(), element_content.size());
+
+		_image_data.computed = true;
+	}
+
+	void Box::_render_image()
+	{
+		if (_image_data.computed == false)
 		{
-			THROW_EXCEPTION(jgl::Error_level::Error, 1, "Trying to compute a widget texture without the shader needed");
+			_compute_image_data();
 		}
+		_image_data.shader->activate();
 
-		_init();
+		_image_data.image->activate();
+		_image_data.texture_uniform->send(0);
 
-		if (_area == 0)
-			return;
+		_image_data.model_buffer->activate();
+		_image_data.uvs_buffer->activate();
+		_image_data.alpha_buffer->activate();
+		_image_data.indexes_buffer->activate();
 
-		if (_computed == true)
-			return;
-		
-		if (_owner->parent() != nullptr && _owner->parent()->viewport() != nullptr)
-		{
-			_owner->parent()->viewport()->use();
-		}
+		_image_data.shader->cast(jgl::Shader::Mode::Triangle, _image_data.indexes_buffer->size() / sizeof(jgl::Uint));
+	}
 
-		jgl::Vector3 tmp_vertex[16] = {
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, 0), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, 0), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, 0), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, 0), _depth),
+	void Box::_compute_color_data()
+	{
+		jgl::Array<jgl::Vector3> vertex_content;
+		jgl::Array<jgl::Color> color_content;
+		jgl::Array<jgl::Uint> element_content;
 
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, _angle_size), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, _angle_size), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, _angle_size), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, _angle_size), _depth),
 
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, _area.y - _angle_size), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, _area.y - _angle_size), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, _area.y - _angle_size), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, _area.y - _angle_size), _depth),
+		jgl::prepare_rectangle_color(vertex_content, color_content, element_content,
+			_color_data.border_color, _anchor, _area, _depth);
+		jgl::prepare_rectangle_color(vertex_content, color_content, element_content,
+			_color_data.background_color, _anchor + _border_size, _area - _border_size * 2, _depth + 0.01f);
 
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(0, _area.y), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_angle_size, _area.y), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x - _angle_size, _area.y), _depth),
-			jgl::convert_screen_to_opengl(_anchor + jgl::Vector2Int(_area.x, _area.y), _depth),
-		};
+		if (_color_data.shader == nullptr)
+			_color_data.shader = jgl::Application::active_application()->shader("Color_shader_2D");
+		if (_color_data.model_buffer == nullptr)
+			_color_data.model_buffer = _color_data.shader->buffer("model_space")->copy();
+		if (_color_data.color_buffer == nullptr)
+			_color_data.color_buffer = _color_data.shader->buffer("color_space")->copy();
+		if (_color_data.indexes_buffer == nullptr)
+			_color_data.indexes_buffer = _color_data.shader->indexes_buffer()->copy();
 
-		_buffers["model_space"]->send(tmp_vertex, 16);
+		_color_data.model_buffer->send(vertex_content.all(), vertex_content.size());
+		_color_data.color_buffer->send(color_content.all(), color_content.size());
+		_color_data.indexes_buffer->send(element_content.all(), element_content.size());
 
-		_computed = true;
+		_color_data.computed = true;
 	}
 
 	void Box::_render_color()
 	{
-		jgl::draw_rectangle_color(_frontground, _anchor + _border_size, _area - _border_size * 2, _depth);
-		jgl::draw_rectangle_color(_background, _anchor, _area, _depth);
-	}
-	void Box::_render_texture()
-	{
-		_shader->activate();
-
-		_background_tileset->activate();
-
-		_shader->uniform("textureID")->send(0);
-
-		for (auto it = _buffers.begin(); it != _buffers.end(); it++)
+		if (_color_data.computed == false)
 		{
-			it->second->activate();
+			_compute_color_data();
 		}
-		_element_buffer->activate();
-		_shader->cast(jgl::Shader::Mode::Triangle, _element_buffer->size() / sizeof(jgl::Uint));
+		_color_data.shader->activate();
 
-		_background_tileset->desactivate();
+		_color_data.model_buffer->activate();
+		_color_data.color_buffer->activate();
+		_color_data.indexes_buffer->activate();
+
+		_color_data.shader->cast(jgl::Shader::Mode::Triangle, _color_data.indexes_buffer->size() / sizeof(jgl::Uint));
 	}
 
-	const jgl::Vector2 jgl::Widget_component::Box::C_UV_UNIT = jgl::Vector2(1.0f / 3.0f, 1.0f / 3.0f);
-	const jgl::Vector2 jgl::Widget_component::Box::C_UV_BUFFER_CONTENT[16] = {
-		jgl::Vector2(0, 0) * C_UV_UNIT, jgl::Vector2(1, 0) * C_UV_UNIT, jgl::Vector2(2, 0) * C_UV_UNIT, jgl::Vector2(3, 0) * C_UV_UNIT,
-		jgl::Vector2(0, 1) * C_UV_UNIT, jgl::Vector2(1, 1) * C_UV_UNIT, jgl::Vector2(2, 1) * C_UV_UNIT, jgl::Vector2(3, 1) * C_UV_UNIT,
-		jgl::Vector2(0, 2) * C_UV_UNIT, jgl::Vector2(1, 2) * C_UV_UNIT, jgl::Vector2(2, 2) * C_UV_UNIT, jgl::Vector2(3, 2) * C_UV_UNIT,
-		jgl::Vector2(0, 3) * C_UV_UNIT, jgl::Vector2(1, 3) * C_UV_UNIT, jgl::Vector2(2, 3) * C_UV_UNIT, jgl::Vector2(3, 3) * C_UV_UNIT,
-	};
-
-	const jgl::Float jgl::Widget_component::Box::C_ALPHA_BUFFER_CONTENT[16] = {
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-	};
-
-	const jgl::Uint jgl::Widget_component::Box::C_ELEMENT_BUFFER_CONTENT[54] = {
-		0, 4, 1, 1, 4, 5,
-		1, 5, 2, 2, 5, 6,
-		2, 6, 3, 3, 6, 7,
-		4, 8, 5, 5, 8, 9,
-		5, 9, 6, 6, 9, 10,
-		6, 10, 7, 7, 10, 11,
-		8, 12, 9, 9, 12, 13,
-		9, 13, 10, 10, 13, 14,
-		10, 14, 11, 11, 14, 15
-	};
+	void Box::render()
+	{
+		if (_image_data.image != nullptr)
+		{
+			_render_image();
+		}
+		else if (_composed_texture_data.sprite_sheet != nullptr)
+		{
+			_render_composed_texture();
+		}
+		else
+		{
+			_render_color();
+		}
+	}
 }

@@ -133,12 +133,12 @@ namespace jgl
 		Generate a pseudo-random value from a seed, with two values [x] and [y].
 		If the seed is the same, will always return the same value
 	*/
-	jgl::Int generate_nbr_from_2D(const jgl::Long seed, const jgl::Int x, const jgl::Int y);
+	jgl::Long generate_nbr_from_2D(const jgl::Long seed, const jgl::Long x, const jgl::Long y);
 
 	/*
 		Return random value from [min] to [max]
 	*/
-	jgl::Int generate_nbr(const jgl::Int min, const jgl::Int max);
+	jgl::Long generate_nbr(const jgl::Long min, const jgl::Long max);
 
 	/*
 		Return a string corresponding to the textual name of the GLenum [type]
@@ -189,4 +189,6 @@ namespace jgl
 	void save_to_png(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
 	void save_to_jpg(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
 	void save_to_bmp(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
+
+	Stream& endl(jgl::Stream& p_stream);
 }

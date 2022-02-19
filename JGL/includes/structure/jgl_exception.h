@@ -52,11 +52,13 @@ namespace jgl
 		const jgl::Int id() const;
 		jgl::String& what();
 		const jgl::String& what() const;
-		friend std::ostream& operator<<(std::ostream& os, const Exception error)
+
+		friend jgl::Stream& operator<<(jgl::Stream& os, const Exception error)
 		{
 			os << "Error [" << error.id() << "] : " << error.what();
 			return os;
 		}
+
 		jgl::String full() const;
 		jgl::String partial() const;
 	};

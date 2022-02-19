@@ -50,6 +50,22 @@ namespace jgl
 		jgl::Vector2Int(1, 1)
 	};
 
+	void prepare_rectangle_color(
+		jgl::Array<jgl::Vector3>& vertex_content, jgl::Array<jgl::Color>& color_content, jgl::Array<jgl::Uint>& indexes_array,
+		jgl::Color color, jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float depth)
+	{
+		jgl::Size_t base_index = vertex_content.size();
+		for (size_t i = 0; i < 4; i++)
+		{
+			vertex_content.push_back(convert_screen_to_opengl(pos + size * delta_pos[i], depth));
+			color_content.push_back(color);
+		}
+		for (jgl::Size_t i = 0; i < 6; i++)
+		{
+			indexes_array.push_back(base_index + element_index[i]);
+		}
+	}
+
 	void draw_rectangle_color(jgl::Color color, jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float depth)
 	{
 		const jgl::String shader_name = "Color_shader_2D";

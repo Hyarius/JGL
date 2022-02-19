@@ -14,9 +14,12 @@
 #include <iomanip>
 #include <sstream>
 #include <map>
-
+#include <direct.h>
 #include <io.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <bitset>
+#include <deque>
 
 #include "jgl_dirent.h"
 

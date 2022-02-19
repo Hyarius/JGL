@@ -28,6 +28,21 @@ namespace jgl::Widget_component
 		void _calc_text_pos(jgl::Font* tmp_font);
 		void _recalc();
 
+		jgl::Bool _baked;
+
+		Shader* _shader = nullptr;
+		jgl::Uniform* _texture_uniform = nullptr;
+		jgl::Buffer* _vertex_buffer = nullptr;
+		jgl::Buffer* _uvs_buffer = nullptr;
+		jgl::Buffer* _color_buffer = nullptr;
+		jgl::Buffer* _color_outline_buffer = nullptr;
+		jgl::Buffer* _alpha_buffer = nullptr;
+		jgl::Buffer* _indexes_buffer = nullptr;
+
+		void _unbake();
+		void _bake(jgl::Font* p_font);
+		void _render(jgl::Font* p_font);
+
 	public:
 		Text_label(jgl::String p_text = "default text", jgl::Widget* p_owner = nullptr);
 

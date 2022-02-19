@@ -101,7 +101,6 @@ namespace jgl
 		_opengl_context.resize(x, y);
 		if (_central_widget != nullptr)
 		{
-			_active_viewport = _central_widget->viewport();
 			_central_widget->resize(0, _size);
 		}
 	}
@@ -121,17 +120,50 @@ namespace jgl
 		_play = false;
 	}
 
-	jgl::Ulong getTime()
+	jgl::Ulong Application::getTime() const
 	{
 		auto epoch = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch();
 
 		return (std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count());
 	}
 
-	jgl::Int Application::run()
+
+	void Application::_renderer_run()
+	{
+		jgl::Ulong old_time = getTime();
+
+		jgl::Ulong delta_time = 0;
+
+		jgl::Ulong frame = 0;
+
+		_opengl_context.setup(_background);
+
+		while (_play == true)
+		{
+			if ((_time - old_time) > 1000.0f)
+			{
+				_fps_render = frame;
+				frame = 0;
+				old_time = _time;
+			}
+			else
+				frame++;
+
+			_handle_win_message();
+
+			_clear();
+
+			_central_widget->viewport()->use();
+
+			_central_widget->_render_children();
+
+			_render();
+		}
+	}
+
+	void Application::_updater_run()
 	{
 		jgl::Ulong next_tick = getTime();
-		_opengl_context.setup(_background);
 
 		jgl::Ulong old_time = getTime();
 
@@ -141,21 +173,19 @@ namespace jgl
 
 		while (_play == true)
 		{
+			_update_input();
 			_time = getTime();
+
+			treat_win_message();
 
 			if ((_time - old_time) > 1000.0f)
 			{
-				_fps = frame;
+				_fps_update = frame;
 				frame = 0;
 				old_time = _time;
 			}
 			else
 				frame++;
-
-			_central_widget->viewport()->use();
-
-			_clear();
-			_handle_win_message();
 
 			if (next_tick <= _time)
 			{
@@ -164,14 +194,66 @@ namespace jgl
 			}
 
 			_central_widget->_update_children();
-
-			_update_input();
-
-			_central_widget->_render_children();
-
-			_render();
-
 		}
+	}
+
+	jgl::Int Application::run()
+	{
+		if (_multithread == false)
+		{
+			jgl::Ulong next_tick = getTime();
+			_opengl_context.setup(_background);
+
+			jgl::Ulong old_time = getTime();
+
+			jgl::Ulong delta_time = 0;
+
+			jgl::Ulong frame = 0;
+
+			while (_play == true)
+			{
+				_update_input();
+
+				_time = getTime();
+
+				if ((_time - old_time) > 1000.0f)
+				{
+					_fps_render = frame;
+					_fps_update = frame;
+					frame = 0;
+					old_time = _time;
+				}
+				else
+					frame++;
+
+				_central_widget->viewport()->use();
+
+				_clear();
+				_handle_win_message();
+				treat_win_message();
+
+				if (next_tick <= _time)
+				{
+					next_tick = next_tick + _tick_delta;
+					_central_widget->_fixed_update_children();
+				}
+
+				_central_widget->_update_children();
+
+				_central_widget->_render_children();
+
+				_render();
+
+			}
+		}
+		else
+		{
+			_updater_thread = new jgl::Thread("Updater thread", [&]() {_updater_run(); });
+
+			_renderer_run();
+			_updater_thread->join();
+		}
+
 		return (1);
 	}
 

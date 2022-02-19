@@ -14,6 +14,8 @@
 #include "structure/jgl_mouse.h"
 #include "structure/jgl_keyboard.h"
 
+#include "structure/jgl_thread.h"
+
 #include "structure/jgl_viewport.h"
 
 namespace jgl
@@ -196,13 +198,15 @@ namespace jgl
 		jgl::Map<jgl::String, jgl::Shader*> _shader_map;
 
 		jgl::String _title = "Title";
+		jgl::Bool _multithread = false;
 		jgl::Vector2Int _size = jgl::Vector2Int(640, 480);
 		jgl::Color _background = jgl::Color(50, 50, 50);
 		jgl::Bool _play = true;
 		jgl::Bool _masked = false;
 
 		jgl::Ulong _time = 0u;
-		jgl::Ulong _fps = 0u;
+		jgl::Ulong _fps_render = 0u;
+		jgl::Ulong _fps_update = 0u;
 		jgl::Ulong _tick_delta = 1000 / 60;
 
 		jgl::Mouse _mouse;
@@ -211,6 +215,67 @@ namespace jgl
 		Central_widget* _central_widget;
 
 		const jgl::Viewport* _active_viewport;
+
+		public:
+		struct Win_message
+		{
+			UINT id;
+			jgl::Size_t size;
+			jgl::Size_t readed;
+			std::vector<jgl::Uchar> content;
+
+			Win_message()
+			{
+				clear();
+			}
+
+			void clear()
+			{
+				id = 0;
+				size = 0;
+				readed = 0;
+				content.clear();
+			}
+
+			template<typename DataType>
+			Win_message& operator << (const DataType& data)
+			{
+				static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pushed into vector");
+
+				jgl::Size_t old_size = (*this).content.size();
+
+				(*this).content.resize((*this).content.size() + sizeof(DataType));
+
+				std::memcpy((*this).content.data() + old_size, &data, sizeof(DataType));
+
+				(*this).size = (*this).content.size();
+
+				return (*this);
+			}
+
+			/*
+				Take out a set of bytes, and store it in the data variable
+			*/
+			template<typename DataType>
+			Win_message& operator >> (DataType& data)
+			{
+				static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
+
+				jgl::Size_t next_size = (*this).readed;// (*this).content.size() - sizeof(DataType);
+
+				std::memcpy(&data, (*this).content.data() + next_size, sizeof(DataType));
+
+				(*this).readed += sizeof(DataType);
+
+				return (*this);
+			}
+		};
+	private:
+		static std::mutex _win_message_pool_mutex;
+		jgl::Pool<Win_message> _win_message_pool;
+		static std::mutex _win_message_deque_mutex;
+		std::deque<Win_message *> _win_message_deque;
+		jgl::Thread* _updater_thread;
 
 	private:
 		void _create_window(jgl::String title, jgl::Int width, jgl::Int height, jgl::Uint major, jgl::Uint minor);
@@ -221,9 +286,16 @@ namespace jgl
 		void _update_input();
 		void _handle_win_message();
 
+		void _renderer_run();
+		void _updater_run();
+
 	public:
 		Application(const jgl::String& p_title, const jgl::Vector2Int& p_size, jgl::Color p_background);
 		~Application();
+
+		void push_win_message(Win_message* p_msg);
+		Win_message* take_win_message();
+		void treat_win_message();
 
 		const jgl::Viewport* viewport() const { return (_central_widget->viewport()); }
 		const jgl::Viewport* active_viewport() const { return (_active_viewport); }
@@ -232,14 +304,19 @@ namespace jgl
 		jgl::Font * default_font() { return (_default_font); }
 		void set_default_font(jgl::String path) { _default_font = new jgl::Font(path); }
 
+		jgl::Bool multithread() { return (_multithread); }
+		void active_multithread() { _multithread = true; }
+
 		void resize(jgl::Int x, jgl::Int y);
 		void set_masked(jgl::Bool p_masked) { _masked = p_masked; }
 		void set_max_fps(jgl::Ulong nb_fps) { _tick_delta = 1000 / nb_fps; }
 
-		const jgl::Ulong& fps() const { return (_fps); }
+		const jgl::Ulong& fps_render() const { return (_fps_render); }
+		const jgl::Ulong& fps_update() const { return (_fps_update); }
 		const jgl::Ulong& max_fps() const { return (1000 * _tick_delta); }
 		const jgl::Vector2Int size() const { return (_size); }
 		const jgl::String& title() const { return (_title); }
+		jgl::Ulong getTime() const;
 		const jgl::Ulong& time() const { return (_time); }
 		const jgl::Bool masked() const { return (_masked); }
 

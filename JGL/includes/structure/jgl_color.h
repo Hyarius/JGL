@@ -94,7 +94,7 @@ namespace jgl
 		/*
 			Print the color
 		*/
-		friend std::ostream& operator<<(std::ostream& os, const jgl::Color value)
+		friend jgl::Stream& operator<<(jgl::Stream& os, const jgl::Color value)
 		{
 			os << jgl::itoa(value.r * 255, 0) << "/" << jgl::itoa(value.g * 255, 0) << "/" << jgl::itoa(value.b * 255, 0) << "/" << jgl::itoa(value.a * 255, 0);
 			return os;

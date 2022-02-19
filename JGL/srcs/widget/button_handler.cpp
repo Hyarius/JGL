@@ -40,12 +40,27 @@ namespace jgl
 		_label.render();
 	}
 
+	Button::Button(std::function< void(jgl::Data_contener&) > p_funct, jgl::Widget* p_parent) : jgl::Widget(p_parent)
+	{
+		_funct = p_funct;
+		_param = jgl::Data_contener();
+		_box[0] = jgl::Widget_component::Box(this);
+		_box[0].set_color(jgl::Color(150, 150, 150), jgl::Color(100, 100, 100));
+		_box[1] = jgl::Widget_component::Box(this);
+		_box[1].set_color(jgl::Color(100, 100, 100), jgl::Color(60, 60, 60));
+		_label = jgl::Widget_component::Text_label("Click me", this);
+		_label.set_horizontal_align(jgl::Horizontal_alignment::Centred);
+		_label.set_vertical_align(jgl::Vertical_alignment::Centred);
+	}
+
 	Button::Button(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param, jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	{
 		_funct = p_funct;
 		_param = p_param;
-		_box[0] = jgl::Widget_component::Box(jgl::Color(100, 100, 100), jgl::Color(150, 150, 150), this);
-		_box[1] = jgl::Widget_component::Box(jgl::Color(60, 60, 60), jgl::Color(100, 100, 100), this);
+		_box[0] = jgl::Widget_component::Box(this);
+		_box[0].set_color(jgl::Color(100, 100, 100), jgl::Color(150, 150, 150));
+		_box[1] = jgl::Widget_component::Box(this);
+		_box[0].set_color(jgl::Color(60, 60, 60), jgl::Color(100, 100, 100));
 		_label = jgl::Widget_component::Text_label("Click me", this);
 		_label.set_horizontal_align(jgl::Horizontal_alignment::Centred);
 		_label.set_vertical_align(jgl::Vertical_alignment::Centred);

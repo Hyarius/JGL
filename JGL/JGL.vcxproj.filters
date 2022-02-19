@@ -114,9 +114,6 @@
     <ClCompile Include="srcs\widget\check_entry_handler.cpp">
       <Filter>Source Files\widget</Filter>
     </ClCompile>
-    <ClCompile Include="srcs\widget\image_label_handler.cpp">
-      <Filter>Source Files\widget</Filter>
-    </ClCompile>
     <ClCompile Include="srcs\widget\text_label_handler.cpp">
       <Filter>Source Files\widget</Filter>
     </ClCompile>
@@ -130,6 +127,12 @@
       <Filter>Source Files\widget\Component</Filter>
     </ClCompile>
     <ClCompile Include="srcs\structure\image_output_handler.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\structure\jgl_stream.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\structure\jgl_thread.cpp">
       <Filter>Source Files\structure</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,7 +263,7 @@
     <ClInclude Include="includes\widget\jgl_contener.h">
       <Filter>Header Files\widget</Filter>
     </ClInclude>
-    <ClInclude Include="includes\widget\jgl_image_label.h">
+    <ClInclude Include="includes\widget\jgl_sprite_label.h">
       <Filter>Header Files\widget</Filter>
     </ClInclude>
     <ClInclude Include="includes\widget\jgl_text_entry.h">
@@ -283,6 +286,12 @@
     </ClInclude>
     <ClInclude Include="includes\widget\component\jgl_component.h">
       <Filter>Header Files\widget\component</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_stream.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_thread.h">
+      <Filter>Header Files\structure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

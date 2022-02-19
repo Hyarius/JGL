@@ -55,8 +55,12 @@ namespace jgl
 	}
 
 	//Noise [0, 1]
-	jgl::Float jgl::Perlin::noise(jgl::Float x, jgl::Float y, jgl::Float z)
+	jgl::Float jgl::Perlin::noise(jgl::Float x, jgl::Float y, jgl::Float z, jgl::Float p_zoom)
 	{
+		x /= p_zoom;
+		y /= p_zoom;
+		z /= p_zoom;
+
 		const jgl::Int X = static_cast<jgl::Int>(std::floor(x)) & 255;
 		const jgl::Int Y = static_cast<jgl::Int>(std::floor(y)) & 255;
 		const jgl::Int Z = static_cast<jgl::Int>(std::floor(z)) & 255;
@@ -82,10 +86,14 @@ namespace jgl
 					grad(p[BB + 1], x - 1, y - 1, z - 1)))) + 1) / 2;
 	}
 
-	jgl::Float jgl::Perlin::accumulated_noise(jgl::Int octaves, jgl::Float x, jgl::Float y, jgl::Float z)
+	jgl::Float jgl::Perlin::accumulated_noise(jgl::Int octaves, jgl::Float x, jgl::Float y, jgl::Float z, jgl::Float p_zoom)
 	{
 		jgl::Float result = 0;
 		jgl::Float amp = 1;
+
+		x /= p_zoom;
+		y /= p_zoom;
+		z /= p_zoom;
 
 		for (jgl::Int i = 0; i < octaves; ++i)
 		{

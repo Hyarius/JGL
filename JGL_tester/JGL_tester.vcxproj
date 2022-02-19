@@ -21,32 +21,32 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0849bea7-7d08-429b-989d-34abd0925c06}</ProjectGuid>
-    <RootNamespace>JGL</RootNamespace>
+    <ProjectGuid>{30a119ff-0264-4277-b21e-059d6caed72e}</ProjectGuid>
+    <RootNamespace>JGL_tester</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -73,26 +73,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>includes;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)BUILD\$(Configuration)\$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)BUILD\OBJ\$(Configuration)\$(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>includes;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)BUILD\$(Configuration)\$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)BUILD\OBJ\$(Configuration)\$(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>includes;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)BUILD\$(Configuration)\$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)BUILD\OBJ\$(Configuration)\$(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>includes;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)BUILD\$(Configuration)\$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)BUILD\OBJ\$(Configuration)\$(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,12 +92,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Developement\JGL\JGL\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32s.lib;jgl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Developement\JGL\JGL\libs\$(Platform)\;C:\Developement\JGL\BUILD\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -116,14 +113,18 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Developement\JGL\JGL\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32s.lib;jgl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Developement\JGL\JGL\libs\$(Platform)\;C:\Developement\JGL\BUILD\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,12 +133,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Developement\JGL\JGL\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32s.lib;jgl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Developement\JGL\JGL\libs\$(Platform)\;C:\Developement\JGL\BUILD\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,102 +154,25 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Developement\JGL\JGL\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32s.lib;jgl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Developement\JGL\JGL\libs\$(Platform)\;C:\Developement\JGL\BUILD\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="srcs\application\application_handler.cpp" />
-    <ClCompile Include="srcs\application\shader_2D.cpp" />
-    <ClCompile Include="srcs\application\shader_3D.cpp" />
-    <ClCompile Include="srcs\application\shader_handler.cpp" />
-    <ClCompile Include="srcs\application\window_creation.cpp" />
-    <ClCompile Include="srcs\jgl_basic_functions.cpp" />
-    <ClCompile Include="srcs\jgl_drawing_function.cpp" />
-    <ClCompile Include="srcs\jgl_file_handler.cpp" />
-    <ClCompile Include="srcs\structure\array_handler.cpp" />
-    <ClCompile Include="srcs\structure\exception_handler.cpp" />
-    <ClCompile Include="srcs\structure\font_handler.cpp" />
-    <ClCompile Include="srcs\structure\image_handler.cpp" />
-    <ClCompile Include="srcs\structure\image_output_handler.cpp" />
-    <ClCompile Include="srcs\structure\jgl_stream.cpp" />
-    <ClCompile Include="srcs\structure\jgl_thread.cpp" />
-    <ClCompile Include="srcs\structure\keyboard_handler.cpp" />
-    <ClCompile Include="srcs\structure\mouse_handler.cpp" />
-    <ClCompile Include="srcs\structure\perlin_handler.cpp" />
-    <ClCompile Include="srcs\structure\sprite_sheet_handler.cpp" />
-    <ClCompile Include="srcs\structure\string_handler.cpp" />
-    <ClCompile Include="srcs\structure\viewport_handler.cpp" />
-    <ClCompile Include="srcs\widget\button_handler.cpp" />
-    <ClCompile Include="srcs\widget\check_entry_handler.cpp" />
-    <ClCompile Include="srcs\widget\component\box_component_handler.cpp" />
-    <ClCompile Include="srcs\widget\component\graphical_component_handler.cpp" />
-    <ClCompile Include="srcs\widget\component\text_label_component_handler.cpp" />
-    <ClCompile Include="srcs\widget\contener_handler.cpp" />
-    <ClCompile Include="srcs\widget\frame_handler.cpp" />
-    <ClCompile Include="srcs\widget\text_entry_handler.cpp" />
-    <ClCompile Include="srcs\widget\text_label_handler.cpp" />
-    <ClCompile Include="srcs\widget\widget_handler.cpp" />
+    <ClCompile Include="srcs\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="includes\application\jgl_gl_object.h" />
-    <ClInclude Include="includes\application\jgl_shader.h" />
-    <ClInclude Include="includes\application\jgl_application.h" />
-    <ClInclude Include="includes\jgl.h" />
-    <ClInclude Include="includes\jgl_basic_functions.h" />
-    <ClInclude Include="includes\jgl_drawing_function.h" />
-    <ClInclude Include="includes\jgl_enum.h" />
-    <ClInclude Include="includes\jgl_network.h" />
-    <ClInclude Include="includes\jgl_application.h" />
-    <ClInclude Include="includes\jgl_basic_types.h" />
-    <ClInclude Include="includes\jgl_define.h" />
-    <ClInclude Include="includes\jgl_dirent.h" />
-    <ClInclude Include="includes\jgl_file_handler.h" />
-    <ClInclude Include="includes\jgl_includes.h" />
-    <ClInclude Include="includes\jgl_structures.h" />
-    <ClInclude Include="includes\jgl_widgets.h" />
-    <ClInclude Include="includes\network\jgl_network_client.h" />
-    <ClInclude Include="includes\network\jgl_network_connection.h" />
-    <ClInclude Include="includes\network\jgl_network_message.h" />
-    <ClInclude Include="includes\network\jgl_network_server.h" />
-    <ClInclude Include="includes\structure\jgl_data_contener.h" />
-    <ClInclude Include="includes\structure\jgl_exception.h" />
-    <ClInclude Include="includes\structure\jgl_font.h" />
-    <ClInclude Include="includes\structure\jgl_image.h" />
-    <ClInclude Include="includes\structure\jgl_locked_queue.h" />
-    <ClInclude Include="includes\structure\jgl_perlin.h" />
-    <ClInclude Include="includes\structure\jgl_pool.h" />
-    <ClInclude Include="includes\structure\jgl_shared_object.h" />
-    <ClInclude Include="includes\structure\jgl_array.h" />
-    <ClInclude Include="includes\structure\jgl_color.h" />
-    <ClInclude Include="includes\structure\jgl_glyph.h" />
-    <ClInclude Include="includes\structure\jgl_keyboard.h" />
-    <ClInclude Include="includes\structure\jgl_matrix.h" />
-    <ClInclude Include="includes\structure\jgl_mouse.h" />
-    <ClInclude Include="includes\structure\jgl_sprite_sheet.h" />
-    <ClInclude Include="includes\structure\jgl_stream.h" />
-    <ClInclude Include="includes\structure\jgl_string.h" />
-    <ClInclude Include="includes\structure\jgl_thread.h" />
-    <ClInclude Include="includes\structure\jgl_vector.h" />
-    <ClInclude Include="includes\structure\jgl_viewport.h" />
-    <ClInclude Include="includes\widget\component\jgl_box_component.h" />
-    <ClInclude Include="includes\widget\component\jgl_component.h" />
-    <ClInclude Include="includes\widget\component\jgl_text_label_component.h" />
-    <ClInclude Include="includes\widget\jgl_widget_components.h" />
-    <ClInclude Include="includes\widget\jgl_button.h" />
-    <ClInclude Include="includes\widget\jgl_check_box.h" />
-    <ClInclude Include="includes\widget\jgl_contener.h" />
-    <ClInclude Include="includes\widget\jgl_frame.h" />
-    <ClInclude Include="includes\widget\jgl_sprite_label.h" />
-    <ClInclude Include="includes\widget\jgl_text_entry.h" />
-    <ClInclude Include="includes\widget\jgl_text_label.h" />
-    <ClInclude Include="includes\widget\jgl_widget.h" />
+    <ClInclude Include="includes\jgl_tester.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

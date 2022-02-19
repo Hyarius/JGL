@@ -36,7 +36,7 @@ namespace jgl
 	public:
 		Text_entry(jgl::String p_text = "", jgl::Widget* p_parent = nullptr);
 
-		void set_text(jgl::String p_text) { _text = p_text; }
+		void set_text(jgl::String p_text);
 
 		void set_text_size(jgl::Int p_size) { _text_size = p_size; _label.set_text_size(p_size); }
 		jgl::Widget_component::Box& box() { return (_box); }

@@ -373,22 +373,22 @@ namespace jgl
 		glPixelStorei(GL_PACK_ALIGNMENT, 4);
 		glGetTextureImage(_id, 0, GL_RGBA, GL_UNSIGNED_BYTE, bufferSize, buffer.data());
 
-		std::cout << "Image output buffer : " << std::endl;
-		for (jgl::Size_t y = 0; y < h; y++)
+		jgl::cout << "Image output buffer : " << jgl::endl;
+		for (jgl::Size_t y = 0; y < static_cast<jgl::Size_t>(h); y++)
 		{
-			for (jgl::Size_t x = 0; x < w; x++)
+			for (jgl::Size_t x = 0; x < static_cast<jgl::Size_t>(w); x++)
 			{
 				if (x != 0)
-					std::cout << " - ";
+					jgl::cout << " - ";
 
 				for (jgl::Size_t i = 0; i < 4; i++)
 				{
-					std::cout << "[" << jgl::normalize_int(static_cast<unsigned char>(buffer[i + x * 4 + y * w * 4]), ' ', 3) << "]";
+					jgl::cout << "[" << jgl::normalize_int(static_cast<unsigned char>(buffer[i + x * 4 + y * w * 4]), ' ', 3) << "]";
 				}
 			}
-			std::cout << std::endl;
+			jgl::cout << jgl::endl;
 		}
-		std::cout << std::endl;
+		jgl::cout << jgl::endl;
 	}
 
 	void Image::save_to_png(jgl::String p_path)
