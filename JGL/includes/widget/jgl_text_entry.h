@@ -38,10 +38,15 @@ namespace jgl
 
 		void set_text(jgl::String p_text);
 
+		void reset_text(jgl::String p_text = "");
+
 		void set_text_size(jgl::Int p_size) { _text_size = p_size; _label.set_text_size(p_size); }
+
 		jgl::Widget_component::Box& box() { return (_box); }
 		jgl::Widget_component::Text_label& label() { return (_label); }
+		jgl::String text() const { return (_text); }
 
+		jgl::Bool is_selected() { return (_is_selected); }
 		void select();
 		void unselect();
 	};

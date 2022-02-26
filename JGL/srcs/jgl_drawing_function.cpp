@@ -4,14 +4,17 @@ namespace jgl
 {
 	extern jgl::Vector2Int g_viewport_actual_size;
 
+
 	Vector3 convert_screen_to_opengl(const Vector2Int source, jgl::Float level)
 	{
 		if (jgl::Application::active_application() == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Critical, 0, "jgl::Application not created");
 		GLint viewport_info[4];
 		glGetIntegerv(GL_VIEWPORT, viewport_info);
-		jgl::Float x = (source.x) / (viewport_info[2] / 2.0f) - 1.0f;
-		jgl::Float y = -((source.y) / (viewport_info[3] / 2.0f) - 1.0f);
+		jgl::Float w = viewport_info[2] / 2;
+		jgl::Float h = viewport_info[3] / 2;
+		jgl::Float x = (source.x) / w - 1.0f;
+		jgl::Float y = -((source.y) / h - 1.0f);
 		return (Vector3(x, y, level / 10000.0f));
 	}
 
@@ -21,12 +24,14 @@ namespace jgl
 			THROW_EXCEPTION(jgl::Error_level::Critical, 0, "jgl::Application not created");
 		GLint viewport_info[4];
 		glGetIntegerv(GL_VIEWPORT, viewport_info);
-		jgl::Float x = (source.x) / (viewport_info[2] / 2.0f) - 1.0f;
-		jgl::Float y = -((source.y) / (viewport_info[3] / 2.0f) - 1.0f);
+		jgl::Float w = viewport_info[2] / 2;
+		jgl::Float h = viewport_info[3] / 2;
+		jgl::Float x = (source.x) / w - 1.0f;
+		jgl::Float y = -((source.y) / h - 1.0f);
 		return (Vector2(x, y));
 	}
 
-	Vector2Int convert_opengl_to_screen(const Vector2Int source)
+	Vector2Int convert_opengl_to_screen(const Vector2 source)
 	{
 		if (jgl::Application::active_application() == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Critical, 0, "jgl::Application not created");
@@ -35,6 +40,11 @@ namespace jgl
 		jgl::Float x = (source.x + 1.0f) * (jgl::Application::active_application()->active_viewport()->area().x / 2.0f);
 		jgl::Float y = (source.y - 1.0f) * (jgl::Application::active_application()->active_viewport()->area().y / -2.0f);
 		return (Vector2Int(x, y));
+	}
+
+	Vector2Int convert_opengl_to_screen(const Vector3 source)
+	{
+		return (convert_opengl_to_screen(jgl::Vector2(source.x, source.y)));
 	}
 
 	void draw_triangle_color(jgl::Color color, jgl::Vector2Int a, jgl::Vector2Int b, jgl::Vector2Int c, jgl::Float depth)
@@ -54,15 +64,28 @@ namespace jgl
 		jgl::Array<jgl::Vector3>& vertex_content, jgl::Array<jgl::Color>& color_content, jgl::Array<jgl::Uint>& indexes_array,
 		jgl::Color color, jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float depth)
 	{
-		jgl::Size_t base_index = vertex_content.size();
+		prepare_rectangle_color(&vertex_content, &color_content, &indexes_array, color, pos, size, depth);
+	}
+
+	void prepare_rectangle_color(
+		jgl::Array<jgl::Vector3>* vertex_content, jgl::Array<jgl::Color>* color_content, jgl::Array<jgl::Uint>* indexes_array,
+		jgl::Color color, jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float depth)
+	{
+		jgl::Size_t base_index = 0;
+		if (vertex_content != nullptr)
+			base_index = vertex_content->size();
+
 		for (size_t i = 0; i < 4; i++)
 		{
-			vertex_content.push_back(convert_screen_to_opengl(pos + size * delta_pos[i], depth));
-			color_content.push_back(color);
+			if (vertex_content != nullptr)
+				vertex_content->push_back(convert_screen_to_opengl(pos + size * delta_pos[i], depth));
+			if (color_content != nullptr)
+				color_content->push_back(color);
 		}
 		for (jgl::Size_t i = 0; i < 6; i++)
 		{
-			indexes_array.push_back(base_index + element_index[i]);
+			if (indexes_array != nullptr)
+				indexes_array->push_back(base_index + element_index[i]);
 		}
 	}
 
@@ -111,6 +134,13 @@ namespace jgl
 	}
 
 	jgl::Vector2Int prepare_render_text(jgl::Array<Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uvs_array, jgl::Array<jgl::Color>& color_array, jgl::Array<jgl::Color>& color_outline_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& index_array,
+		jgl::String text, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color)
+	{
+		return (jgl::Application::active_application()->default_font()->prepare_render_text(&vertex_array, &uvs_array, &color_array, &color_outline_array, &alpha_array, &index_array,
+			text, pos, size, level, alpha, text_color, outline_color));
+	}
+
+	jgl::Vector2Int prepare_render_text(jgl::Array<Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uvs_array, jgl::Array<jgl::Color>* color_array, jgl::Array<jgl::Color>* color_outline_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* index_array,
 		jgl::String text, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color)
 	{
 		if (jgl::Application::active_application() == nullptr)

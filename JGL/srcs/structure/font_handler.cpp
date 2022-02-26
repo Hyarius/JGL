@@ -193,8 +193,25 @@ namespace jgl
 	{
 		return (draw_text(text, pos, size, level, alpha, text_color, text_color));
 	}
+
 	jgl::Vector2Int Font::prepare_render_char(
 		jgl::Array<Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uvs_array, jgl::Array<jgl::Color>& color_array, jgl::Array<jgl::Color>& color_outline_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& index_array,
+		jgl::Glyph to_draw, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color)
+	{
+		return (prepare_render_char(&vertex_array, &uvs_array, &color_array, &color_outline_array, &alpha_array, &index_array,
+			to_draw, pos, size, level, alpha, text_color, outline_color));
+	}
+
+	jgl::Vector2Int Font::prepare_render_text(
+		jgl::Array<Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uvs_array, jgl::Array<jgl::Color>& color_array, jgl::Array<jgl::Color>& color_outline_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& index_array,
+		jgl::String text, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color)
+	{
+		return (prepare_render_text(&vertex_array, &uvs_array, &color_array, &color_outline_array, &alpha_array, &index_array,
+			text, pos, size, level, alpha, text_color, outline_color));
+	}
+
+	jgl::Vector2Int Font::prepare_render_char(
+		jgl::Array<Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uvs_array, jgl::Array<jgl::Color>* color_array, jgl::Array<jgl::Color>* color_outline_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* index_array,
 		jgl::Glyph to_draw, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color)
 	{
 		static jgl::Vector2 tmp_delta_pos[4] = {
@@ -202,29 +219,37 @@ namespace jgl
 		};
 		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
 
-		jgl::Uint base_index = vertex_array.size();
+		jgl::Uint base_index = 0;
+		if (vertex_array != nullptr)
+			base_index = vertex_array->size();
 		Font::Glyph_data& glyph_data = _get_data(to_draw);
 		jgl::Vector2Int tmp_size = calc_char_size(to_draw, size);
 		jgl::Vector2Int delta_pos = jgl::Vector2(0, size - tmp_size.y);
 
 		for (jgl::Size_t i = 0; i < 4; i++)
 		{
-			vertex_array.push_back(jgl::convert_screen_to_opengl(pos + delta_pos + tmp_size * tmp_delta_pos[i], level));
-			uvs_array.push_back(glyph_data.uvs[i]);
-			color_array.push_back(text_color);
-			color_outline_array.push_back(outline_color);
-			alpha_array.push_back(alpha);
+			if (vertex_array != nullptr)
+				vertex_array->push_back(jgl::convert_screen_to_opengl(pos + delta_pos + tmp_size * tmp_delta_pos[i], level));
+			if (uvs_array != nullptr)
+				uvs_array->push_back(glyph_data.uvs[i]);
+			if (color_array != nullptr)
+				color_array->push_back(text_color);
+			if (color_outline_array != nullptr)
+				color_outline_array->push_back(outline_color);
+			if (alpha_array != nullptr)
+				alpha_array->push_back(alpha);
 		}
 		for (jgl::Size_t i = 0; i < 6; i++)
 		{
-			index_array.push_back(base_index + element_index[i]);
+			if (index_array != nullptr)
+				index_array->push_back(base_index + element_index[i]);
 		}
 
 		return (glyph_data.offset * size);
 	}
 
 	jgl::Vector2Int Font::prepare_render_text(
-		jgl::Array<Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uvs_array, jgl::Array<jgl::Color>& color_array, jgl::Array<jgl::Color>& color_outline_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& index_array,
+		jgl::Array<Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uvs_array, jgl::Array<jgl::Color>* color_array, jgl::Array<jgl::Color>* color_outline_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* index_array,
 		jgl::String text, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color)
 	{
 		static jgl::Vector2 tmp_delta_pos[4] = {
@@ -235,22 +260,30 @@ namespace jgl
 		jgl::Vector2Int delta = 0;
 		for (jgl::Size_t i = 0; i < text.size(); i++)
 		{
-			jgl::Uint base_index = vertex_array.size();
+			jgl::Uint base_index = 0;
+			if (vertex_array != nullptr)
+				base_index = vertex_array->size();
 			Font::Glyph_data& glyph_data = _get_data(text[i]);
 			jgl::Vector2Int tmp_size = calc_char_size(text[i], size);
 			jgl::Vector2Int delta_pos = jgl::Vector2(0, size - tmp_size.y);
 
 			for (jgl::Size_t i = 0; i < 4; i++)
 			{
-				vertex_array.push_back(jgl::convert_screen_to_opengl(pos + delta + delta_pos + tmp_size * tmp_delta_pos[i], level));
-				uvs_array.push_back(glyph_data.uvs[i]);
-				color_array.push_back(text_color);
-				color_outline_array.push_back(outline_color);
-				alpha_array.push_back(alpha);
+				if (vertex_array != nullptr)
+					vertex_array->push_back(jgl::convert_screen_to_opengl(pos + delta + delta_pos + tmp_size * tmp_delta_pos[i], level));
+				if (uvs_array != nullptr)
+					uvs_array->push_back(glyph_data.uvs[i]);
+				if (color_array != nullptr)
+					color_array->push_back(text_color);
+				if (color_outline_array != nullptr)
+					color_outline_array->push_back(outline_color);
+				if (alpha_array != nullptr)
+					alpha_array->push_back(alpha);
 			}
 			for (jgl::Size_t i = 0; i < 6; i++)
 			{
-				index_array.push_back(base_index + element_index[i]);
+				if (index_array != nullptr)
+					index_array->push_back(base_index + element_index[i]);
 			}
 
 			delta.x += glyph_data.offset.x * size;

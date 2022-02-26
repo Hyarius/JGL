@@ -113,6 +113,9 @@ namespace jgl
 		void prepare_draw(jgl::Array<jgl::Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uv_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& element_array,
 			jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha);
 
+		void prepare_draw(jgl::Array<jgl::Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uv_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* element_array,
+			jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha);
+
 		void print();
 		void save_to_png(jgl::String p_path);
 	};

@@ -103,6 +103,8 @@ namespace jgl
 		{
 			_central_widget->resize(0, _size);
 		}
+		if (_central_widget != nullptr && _central_widget->viewport() != nullptr)
+			_central_widget->viewport()->use();
 	}
 
 	void Application::_clear()

@@ -135,6 +135,9 @@
     <ClCompile Include="srcs\structure\jgl_thread.cpp">
       <Filter>Source Files\structure</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\application\gl_object.cpp">
+      <Filter>Source Files\application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">

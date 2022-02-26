@@ -205,6 +205,13 @@ namespace jgl
 		_compute_cursor_pos();
 	}
 
+	void Text_entry::reset_text(jgl::String p_text)
+	{
+		_cursor = p_text.size();
+		_text = p_text;
+		_label.set_text("");
+	}
+
 	void Text_entry::select()
 	{
 		_is_selected = true;

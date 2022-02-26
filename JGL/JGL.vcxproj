@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="srcs\application\application_handler.cpp" />
+    <ClCompile Include="srcs\application\gl_object.cpp" />
     <ClCompile Include="srcs\application\shader_2D.cpp" />
     <ClCompile Include="srcs\application\shader_3D.cpp" />
     <ClCompile Include="srcs\application\shader_handler.cpp" />

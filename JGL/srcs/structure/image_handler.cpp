@@ -330,6 +330,12 @@ namespace jgl
 	void Image::prepare_draw(jgl::Array<jgl::Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uv_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& element_array,
 		jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha)
 	{
+		prepare_draw(&vertex_array, &uv_array, &alpha_array, &element_array, pos, size, uv_pos, uv_size, depth, alpha);
+	}
+
+	void Image::prepare_draw(jgl::Array<jgl::Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uv_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* element_array,
+		jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Vector2 uv_pos, jgl::Vector2 uv_size, jgl::Float depth, jgl::Float alpha)
+	{
 		static jgl::Uint element_index[6] = { 0, 3, 1, 2, 3, 0 };
 		static jgl::Vector2Uint delta_pos[4] = {
 			jgl::Vector2Uint(0, 0),
@@ -337,18 +343,24 @@ namespace jgl
 			jgl::Vector2Uint(0, 1),
 			jgl::Vector2Uint(1, 1)
 		};
-		jgl::Size_t vertex_array_entry_size = vertex_array.size();
+		jgl::Size_t vertex_array_entry_size = 0;
+		if (vertex_array != nullptr)
+			vertex_array_entry_size = vertex_array->size();
 
 		for (size_t i = 0; i < 4; i++)
 		{
 			jgl::Vector2Uint tmp_delta = size * delta_pos[i];
-			vertex_array.push_back(convert_screen_to_opengl(pos + jgl::Vector2Int(tmp_delta.x, tmp_delta.y), depth));
-			uv_array.push_back(uv_pos + uv_size * delta_pos[i]);
-			alpha_array.push_back(alpha);
+			if (vertex_array != nullptr)
+				vertex_array->push_back(convert_screen_to_opengl(pos + jgl::Vector2Int(tmp_delta.x, tmp_delta.y), depth));
+			if (uv_array != nullptr)
+				uv_array->push_back(uv_pos + uv_size * delta_pos[i]);
+			if (alpha_array != nullptr)
+				alpha_array->push_back(alpha);
 		}
 		for (jgl::Size_t i = 0; i < 6; i++)
 		{
-			element_array.push_back(element_index[i] + vertex_array_entry_size);
+			if (element_array != nullptr)
+				element_array->push_back(element_index[i] + vertex_array_entry_size);
 		}
 	}
 

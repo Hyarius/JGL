@@ -30,5 +30,10 @@ namespace jgl
 			jgl::Uint sprite_id, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Float depth, jgl::Float alpha);
 		void prepare_draw(jgl::Array<jgl::Vector3>& vertex_array, jgl::Array<jgl::Vector2>& uv_array, jgl::Array<jgl::Float>& alpha_array, jgl::Array<jgl::Uint>& element_array,
 			jgl::Vector2Int sprite, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Float depth, jgl::Float alpha);
+
+		void prepare_draw(jgl::Array<jgl::Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uv_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* element_array,
+			jgl::Uint sprite_id, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Float depth, jgl::Float alpha);
+		void prepare_draw(jgl::Array<jgl::Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uv_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* element_array,
+			jgl::Vector2Int sprite, jgl::Vector2Int pos, jgl::Vector2Uint size, jgl::Float depth, jgl::Float alpha);
 	};
 }

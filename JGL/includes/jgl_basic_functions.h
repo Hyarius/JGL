@@ -158,7 +158,8 @@ namespace jgl
 	/*
 		Convert a OpenGL coord (from -1 to 1 in both axis) to a screen coord (in pixel)
 	*/
-	Vector2Int convert_opengl_to_screen(const Vector2Int source);
+	Vector2Int convert_opengl_to_screen(const Vector2 source);
+	Vector2Int convert_opengl_to_screen(const Vector3 source);
 
 	/*
 		Lerp between 2 datas with time
