@@ -39,6 +39,7 @@ namespace jgl::Widget_component
 		jgl::Buffer* _alpha_buffer = nullptr;
 		jgl::Buffer* _indexes_buffer = nullptr;
 
+		void _initialize_opengl();
 		void _unbake();
 		void _bake(jgl::Font* p_font);
 		void _render(jgl::Font* p_font);
@@ -60,11 +61,11 @@ namespace jgl::Widget_component
 
 		void set_hidden(jgl::Bool p_hidden) { _hidden = p_hidden; }
 		void set_text_size(jgl::Size_t p_text_size);
-		void set_font(jgl::Font* p_font) { _font = p_font; _recalc(); }
+		void set_font(jgl::Font* p_font) { _font = p_font; _recalc(); _baked = false; }
 		void set_text(jgl::String p_text);
 		void set_text_alone(jgl::String p_text);
-		void set_horizontal_align(jgl::Horizontal_alignment p_align) { _Halign = p_align; _recalc(); }
-		void set_vertical_align(jgl::Vertical_alignment p_align) { _Valign = p_align; _recalc(); }
+		void set_horizontal_align(jgl::Horizontal_alignment p_align) { _Halign = p_align; _recalc(); _baked = false; }
+		void set_vertical_align(jgl::Vertical_alignment p_align) { _Valign = p_align; _recalc(); _baked = false; }
 		void set_text_color(jgl::Color p_color) { _text_color = p_color; }
 		void set_text_outline_color(jgl::Color p_outline_color) { _text_outline_color = p_outline_color; }
 

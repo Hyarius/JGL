@@ -11,6 +11,7 @@ namespace jgl
 	private:
 		bool _computed;
 		T* _computed_result;
+		jgl::Size_t _computed_result_size;
 
 		T** _array_content;
 		jgl::Size_t _size;
@@ -37,6 +38,11 @@ namespace jgl
 		}
 
 		void _clear_computed()
+		{
+			_computed = false;
+		}
+
+		void _delete_computed_content()
 		{
 			if (_computed = true)
 				delete _computed_result;
@@ -243,6 +249,7 @@ namespace jgl
 			_max_size = 0;
 			_computed = false;
 			_computed_result = nullptr;
+			_computed_result_size = 0;
 		}
 
 		Array(const Array<T>& other) : Array<T>(other._push_size)
@@ -253,7 +260,7 @@ namespace jgl
 
 		~Array()
 		{
-			_clear_computed();
+			_delete_computed_content();
 			_delete_array_content();
 		}
 
@@ -437,11 +444,19 @@ namespace jgl
 
 		const T* all()
 		{
+			if (_size == 0)
+				return (nullptr);
+
 			if (_computed == false)
 			{
-				if (_computed_result != nullptr)
-					delete _computed_result;
-				_computed_result = new T[_size];
+				if (_computed_result == nullptr || _computed_result_size < _size)
+				{
+					if (_computed_result != nullptr)
+						delete _computed_result;
+
+					_computed_result = new T[_size];
+					_computed_result_size = _size;
+				}
 
 				for (jgl::Size_t i = 0; i < _size; i++)
 					_computed_result[i] = this->operator[](i);

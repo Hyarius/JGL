@@ -73,7 +73,6 @@ namespace jgl::Widget_component
 		jgl::Vector2Int tmp_size = tmp_font->calc_text_size(_text, _text_size);
 		_calc_text_pos_horizontal(tmp_size);
 		_calc_text_pos_vertical(tmp_size);
-		_baked = false;
 	}
 	void Text_label::set_text_size(jgl::Size_t p_text_size)
 	{
@@ -87,6 +86,7 @@ namespace jgl::Widget_component
 		_computed_font = tmp_font;
 		_baked = false;
 	}
+
 	void Text_label::_recalc()
 	{
 		jgl::Font* tmp_font = _font;
@@ -97,7 +97,6 @@ namespace jgl::Widget_component
 		_calc_text_pos(tmp_font);
 
 		_computed_font = tmp_font;
-		_baked = false;
 	}
 
 	Text_label::Text_label(jgl::String p_text, jgl::Widget* p_owner) : Graphical_component(p_owner)
@@ -115,23 +114,6 @@ namespace jgl::Widget_component
 		_baked = false;
 
 		_font = nullptr;
-
-		const jgl::String shader_name = "Texture_text_shader_2D";
-
-		_shader = jgl::Application::active_application()->shader(shader_name);
-
-		if (_shader == nullptr)
-			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
-
-		_texture_uniform = _shader->uniform("textureID")->copy();
-
-		_vertex_buffer = _shader->buffer("model_space")->copy();
-		_uvs_buffer = _shader->buffer("vertexUV")->copy();
-		_color_buffer = _shader->buffer("color_space")->copy();
-		_color_outline_buffer = _shader->buffer("color_outline_space")->copy();
-		_alpha_buffer = _shader->buffer("alpha_value")->copy();
-		_indexes_buffer = _shader->indexes_buffer()->copy();
-
 	}
 	void Text_label::set_text_alone(jgl::String p_text)
 	{
@@ -157,8 +139,37 @@ namespace jgl::Widget_component
 		_baked = false;
 	}
 
+	void Text_label::_initialize_opengl()
+	{
+		const jgl::String shader_name = "Texture_text_shader_2D";
+		
+		if (_shader == nullptr)
+			_shader = jgl::Application::active_application()->shader(shader_name);
+
+		if (_shader == nullptr)
+			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
+
+		if (_texture_uniform == nullptr)
+			_texture_uniform = _shader->uniform("textureID")->copy();
+
+		if (_vertex_buffer == nullptr)
+			_vertex_buffer = _shader->buffer("model_space")->copy();
+		if (_uvs_buffer == nullptr)
+			_uvs_buffer = _shader->buffer("vertexUV")->copy();
+		if (_color_buffer == nullptr)
+			_color_buffer = _shader->buffer("color_space")->copy();
+		if (_color_outline_buffer == nullptr)
+			_color_outline_buffer = _shader->buffer("color_outline_space")->copy();
+		if (_alpha_buffer == nullptr)
+			_alpha_buffer = _shader->buffer("alpha_value")->copy();
+		if (_indexes_buffer == nullptr)
+			_indexes_buffer = _shader->indexes_buffer()->copy();
+	}
+
 	void Text_label::_bake(jgl::Font* p_font)
 	{
+		_initialize_opengl();
+
 		jgl::String tmp_text;
 
 		if (_hidden == true)
@@ -189,13 +200,12 @@ namespace jgl::Widget_component
 
 	void Text_label::_render(jgl::Font* p_font)
 	{
-		//THROW_INFORMATION("Rendering label");
 		_shader->activate();
 
 		p_font->activate();
 
 		_texture_uniform->send(0);
-		
+
 		_vertex_buffer->activate();
 		_uvs_buffer->activate();
 		_color_buffer->activate();
@@ -206,7 +216,6 @@ namespace jgl::Widget_component
 		_shader->cast(jgl::Shader::Mode::Triangle, _indexes_buffer->size() / sizeof(jgl::Uint));
 	}
 
-
 	void Text_label::render()
 	{
 		jgl::Font* tmp_font = _font;
@@ -216,6 +225,7 @@ namespace jgl::Widget_component
 
 		if (_baked == false)
 			_bake(tmp_font);
+
 		_render(tmp_font);
 	}
 }

@@ -191,7 +191,7 @@ namespace jgl
 
 		_box = jgl::Widget_component::Box(this);
 		_box.set_color(jgl::Color(150, 150, 150), jgl::Color(100, 100, 100));
-		_label = jgl::Widget_component::Text_label(p_text, this);
+		_label = jgl::Widget_component::Text_label("", this);
 		_label.set_vertical_align(jgl::Vertical_alignment::Down);
 	}
 
