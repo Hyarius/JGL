@@ -54,7 +54,7 @@ namespace jgl
 
 	void Application::treat_win_message()
 	{
-		if (_win_message_deque.empty() == false)
+		while (_win_message_deque.empty() == false)
 		{
 			_win_message_deque_mutex.lock();
 			Win_message* tmp_message = _win_message_deque.front();
