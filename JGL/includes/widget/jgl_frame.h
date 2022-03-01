@@ -11,7 +11,7 @@ namespace jgl
 {
 	class Frame : public jgl::Widget
 	{
-	private:
+	protected:
 		Widget_component::Box _box;
 
 		void _on_geometry_change();

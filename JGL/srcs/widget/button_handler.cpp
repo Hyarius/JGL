@@ -66,6 +66,11 @@ namespace jgl
 		_label.set_vertical_align(jgl::Vertical_alignment::Centred);
 	}
 
+	void Button::define_function(std::function< void(jgl::Data_contener&) > p_funct)
+	{
+		_funct = p_funct;
+	}
+
 	void Button::define_action(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param)
 	{
 		_funct = p_funct;

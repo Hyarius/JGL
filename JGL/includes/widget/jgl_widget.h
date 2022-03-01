@@ -57,7 +57,7 @@ namespace jgl
 		void activate() { _active = true; }
 		void desactivate() { _active = false; }
 
-		jgl::Bool is_pointed();
+		virtual jgl::Bool is_pointed();
 
 		void resize(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area);
 

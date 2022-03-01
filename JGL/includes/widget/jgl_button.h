@@ -9,7 +9,7 @@ namespace jgl
 {
 	class Button : public jgl::Widget
 	{
-	private:
+	protected:
 		std::function< void(jgl::Data_contener&) > _funct = nullptr;
 		jgl::Data_contener _param = jgl::Data_contener();
 
@@ -25,6 +25,7 @@ namespace jgl
 		Button(std::function< void(jgl::Data_contener&) > p_funct = nullptr, jgl::Widget* p_parent = nullptr);
 		Button(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param, jgl::Widget* p_parent);
 
+		void define_function(std::function< void(jgl::Data_contener&) > p_funct);
 		void define_action(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param);
 
 		const std::function< void(jgl::Data_contener&) >& function() const { return (_funct); }

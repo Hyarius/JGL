@@ -7,6 +7,7 @@ namespace jgl
 {
 	class Contener : public jgl::Widget
 	{
+	protected:
 		void _on_geometry_change()
 		{
 

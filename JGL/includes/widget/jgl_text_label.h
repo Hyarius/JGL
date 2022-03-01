@@ -7,7 +7,7 @@ namespace jgl
 {
 	class Text_label : public jgl::Widget
 	{
-	private:
+	protected:
 		jgl::Widget_component::Text_label _label;
 		jgl::Widget_component::Box _box;
 

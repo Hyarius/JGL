@@ -8,7 +8,7 @@ namespace jgl
 {
 	class Sprite_label : public jgl::Widget
 	{
-	private:
+	protected:
 		jgl::Widget_component::Box _box;
 		jgl::Sprite_sheet* _sprite_sheet;
 		jgl::Vector2Int _sprite;
