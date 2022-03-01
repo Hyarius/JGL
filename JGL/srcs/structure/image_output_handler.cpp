@@ -44,8 +44,10 @@ namespace jgl
 	void Image_output::clear()
 	{
 		glViewport(0, 0, _size.x, _size.y);
+		glColorMask(TRUE, TRUE, TRUE, TRUE);
+		glClearColor(0, 0, 0, 0);
 		g_viewport_actual_size = jgl::Vector2Int(_size.x, _size.y);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void Image_output::desassociate()
