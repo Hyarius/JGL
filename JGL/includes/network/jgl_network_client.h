@@ -22,6 +22,8 @@ namespace jgl
 		std::thread _thread_context;
 		jgl::Connection<T>* _connection;
 
+		jgl::Ulong _message_timeout_delay = 0;
+
 		/*
 			data used to authenticate
 		*/
@@ -127,7 +129,7 @@ namespace jgl
 		/*
 			Reconnect the client to the desired address, represented by the string [host], at the connection port [port]
 		*/
-		bool reconnect(jgl::String& host, const jgl::Ushort port)
+		bool reconnect(jgl::String host, const jgl::Ushort port)
 		{
 			try
 			{
@@ -193,6 +195,8 @@ namespace jgl
 		*/
 		void update()
 		{
+			if (_connection == nullptr)
+				return;
 			if (_connection->state() == jgl::Connection<T>::State::Unknown)
 			{
 				if (_input.empty() == false)
@@ -240,13 +244,18 @@ namespace jgl
 			}
 			else if (_connection->state() == jgl::Connection<T>::State::Accepted)
 			{
-				if (_input.empty() == false)
+				while (_input.empty() == false)
 				{
-					auto msg = _input.pop_front().msg;
+					auto input = _input.pop_front();
+					auto msg = input.msg;
 
 					if (_activity_map.count(msg.type()) != 0)
 					{
-						_activity_map[msg.type()](msg, _activity_param_map[msg.type()]);
+						if (jgl::Application::active_application() == nullptr || _message_timeout_delay == 0 || 
+							input.time + _message_timeout_delay < jgl::Application::active_application()->time())
+						{
+							_activity_map[msg.type()](msg, _activity_param_map[msg.type()]);
+						}
 					}
 					else
 					{

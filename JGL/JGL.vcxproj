@@ -175,6 +175,7 @@
     <ClCompile Include="srcs\structure\image_output_handler.cpp" />
     <ClCompile Include="srcs\structure\jgl_stream.cpp" />
     <ClCompile Include="srcs\structure\jgl_thread.cpp" />
+    <ClCompile Include="srcs\structure\jgl_timer.cpp" />
     <ClCompile Include="srcs\structure\keyboard_handler.cpp" />
     <ClCompile Include="srcs\structure\mouse_handler.cpp" />
     <ClCompile Include="srcs\structure\perlin_handler.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="includes\structure\jgl_stream.h" />
     <ClInclude Include="includes\structure\jgl_string.h" />
     <ClInclude Include="includes\structure\jgl_thread.h" />
+    <ClInclude Include="includes\structure\jgl_timer.h" />
     <ClInclude Include="includes\structure\jgl_vector.h" />
     <ClInclude Include="includes\structure\jgl_viewport.h" />
     <ClInclude Include="includes\widget\component\jgl_box_component.h" />

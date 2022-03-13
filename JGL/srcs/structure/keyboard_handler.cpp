@@ -138,7 +138,22 @@ namespace jgl
         {jgl::Key::Process, "Process"},
 	};
 
-	jgl::Keyboard::Keyboard()
+    void jgl::Keyboard::_update()
+    {
+        for (jgl::Size_t i = 0; i < KEY_COUNT; i++)
+        {
+            if (_data[i] == jgl::Input_status::Pressed)
+            {
+                _data[i] = jgl::Input_status::Down;
+            }
+            else if (_data[i] == jgl::Input_status::Release)
+            {
+                _data[i] = jgl::Input_status::Up;
+            }
+        }
+    }
+    
+    jgl::Keyboard::Keyboard()
 	{
 		for (jgl::Size_t i = 0; i < KEY_COUNT; i++)
 			_data[i] = jgl::Input_status::Up;

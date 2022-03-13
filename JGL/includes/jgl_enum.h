@@ -161,7 +161,7 @@ namespace jgl
         Angle_bracket = 226,
         Process = 229,
 	};
-#define KEY_COUNT (0xFE + 1)
+#define KEY_COUNT (255)
 
     enum class Horizontal_alignment
     {

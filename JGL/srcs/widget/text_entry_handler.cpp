@@ -6,7 +6,7 @@ namespace jgl
 	void Text_entry::_on_geometry_change()
 	{
 		_box.set_geometry(_anchor, _area, _depth);
-		_label.set_geometry(_anchor + _box.border_size() * 2, _area - _box.border_size() * 4, _depth);
+		_label.set_geometry(_anchor + _box.border_size() * 2, _area - _box.border_size() * 4, _depth + 1);
 		if (_text_size != -1)
 		{
 			_label.set_text_size(_text_size);
@@ -199,10 +199,7 @@ namespace jgl
 	{
 		_cursor = 0;
 		_text = p_text;
-		_compute_high_cursor();
-		_compute_low_cursor();
-		_compute_text();
-		_compute_cursor_pos();
+		compute();
 	}
 
 	void Text_entry::reset_text(jgl::String p_text)
@@ -210,6 +207,7 @@ namespace jgl
 		_cursor = p_text.size();
 		_text = p_text;
 		_label.set_text("");
+		compute();
 	}
 
 	void Text_entry::select()

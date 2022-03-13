@@ -87,6 +87,20 @@ namespace jgl
 			if (msg.message == WM_QUIT) {
 				quit(); // Set running to false if we have a message to quit
 			}
+			else if (msg.message == WM_SYSKEYDOWN && msg.wParam == VK_MENU)
+			{
+				jgl::Key value = static_cast<jgl::Key>(msg.wParam);
+
+				actualize_key(jgl::Application::active_application()->keyboard(), value, jgl::Input_status::Pressed);
+				THROW_INFORMATION("Key system pressed : " + jgl::Keyboard::key_name(value));
+			}
+			else if (msg.message == WM_SYSKEYUP && msg.wParam == VK_MENU)
+			{
+				jgl::Key value = static_cast<jgl::Key>(msg.wParam);
+
+				actualize_key(jgl::Application::active_application()->keyboard(), value, jgl::Input_status::Release);
+				THROW_INFORMATION("Key system release : " + jgl::Keyboard::key_name(value));
+			}
 			else {
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);

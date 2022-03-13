@@ -36,11 +36,20 @@ namespace jgl
 	public:
 		Text_entry(jgl::String p_text = "", jgl::Widget* p_parent = nullptr);
 
+		void set_cursor(jgl::Size_t p_pos) { _cursor = p_pos;  compute(); }
+
 		void set_text(jgl::String p_text);
 
 		void reset_text(jgl::String p_text = "");
 
 		void set_text_size(jgl::Int p_size) { _text_size = p_size; _label.set_text_size(p_size); }
+
+		void compute() {
+			_compute_high_cursor();
+			_compute_low_cursor();
+			_compute_text();
+			_compute_cursor_pos();
+		}
 
 		jgl::Widget_component::Box& box() { return (_box); }
 		jgl::Widget_component::Text_label& label() { return (_label); }

@@ -1,6 +1,8 @@
 #pragma once
 
 
+#include "structure/jgl_timer.h"
+
 #include "structure/jgl_stream.h"
 #include "structure/jgl_thread.h"
 #include "structure/jgl_glyph.h"

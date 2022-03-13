@@ -3,9 +3,10 @@
 
 #include "network/jgl_network_message.h"
 
+#include "application/jgl_application.h"
+
 namespace jgl
 {
-
 	template <typename T, typename std::enable_if<std::is_enum<T>::value == true>::type* = nullptr>
 	class Connection
 	{
@@ -268,9 +269,9 @@ namespace jgl
 		void _add_message_to_queue()
 		{
 			if (_owner == Owner::server)
-				_input->push_back({ this, _tmp_message });
+				_input->push_back({ this, _tmp_message, (jgl::Application::active_application() != nullptr ? jgl::Application::active_application()->time() : 0) });
 			else
-				_input->push_back({ nullptr, _tmp_message });
+				_input->push_back({ nullptr, _tmp_message, (jgl::Application::active_application() != nullptr ? jgl::Application::active_application()->time() : 0) });
 			_read_header();
 		}
 	};

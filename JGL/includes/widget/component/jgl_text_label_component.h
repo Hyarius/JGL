@@ -48,6 +48,8 @@ namespace jgl::Widget_component
 		Text_label(jgl::String p_text = "default text", jgl::Widget* p_owner = nullptr);
 
 		const jgl::String& text() { return (_text); }
+		const jgl::Color& text_color() { return (_text_color); }
+		const jgl::Color& text_outline_color() { return (_text_outline_color); }
 		const jgl::Size_t& text_size() { return (_text_size); }
 		const jgl::Vector2Int& text_pos() { return (_text_pos); }
 		const jgl::Bool& hidden() { return (_hidden); }

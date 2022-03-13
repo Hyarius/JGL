@@ -122,9 +122,12 @@ namespace jgl::Widget_component
 	}
 	void Text_label::set_text(jgl::String p_text)
 	{
-		_text = p_text;
-		_recalc();
-		_baked = false;
+		if (p_text != _text)
+		{
+			_text = p_text;
+			_recalc();
+			_baked = false;
+		}
 	}
 
 	void Text_label::set_geometry(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area, jgl::Float p_depth)
@@ -177,12 +180,19 @@ namespace jgl::Widget_component
 		else
 			tmp_text = _text;
 
-		jgl::Array<jgl::Vector3> vertex_array;
-		jgl::Array<jgl::Vector2> uvs_array;
-		jgl::Array<jgl::Color> color_array;
-		jgl::Array<jgl::Color> color_outline_array;
-		jgl::Array<jgl::Float> alpha_array;
-		jgl::Array<jgl::Uint> index_array;
+		static jgl::Array<jgl::Vector3> vertex_array;
+		static jgl::Array<jgl::Vector2> uvs_array;
+		static jgl::Array<jgl::Color> color_array;
+		static jgl::Array<jgl::Color> color_outline_array;
+		static jgl::Array<jgl::Float> alpha_array;
+		static jgl::Array<jgl::Uint> index_array;
+
+		vertex_array.clear();
+		uvs_array.clear();
+		color_array.clear();
+		color_outline_array.clear();
+		alpha_array.clear();
+		index_array.clear();
 
 		p_font->prepare_render_text(
 			vertex_array, uvs_array, color_array, color_outline_array, alpha_array, index_array,

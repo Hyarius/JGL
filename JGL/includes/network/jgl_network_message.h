@@ -90,6 +90,14 @@ namespace jgl
 		}
 
 		/*
+			Skip a number of bytes inside the message
+		*/
+		void skip(jgl::Size_t p_nb_to_skip)
+		{
+			header.readed += p_nb_to_skip;
+		}
+
+		/*
 			Print the header data of the message
 		*/
 		friend std::ostream& operator << (std::ostream& os, const Message<T>& msg)
@@ -217,6 +225,7 @@ namespace jgl
 	{
 		Connection<T, nullptr>* remote = nullptr;
 		Message<T> msg;
+		jgl::Ulong time;
 
 		/*
 			Return the type of message stored in input message

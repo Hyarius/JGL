@@ -138,6 +138,9 @@
     <ClCompile Include="srcs\application\gl_object.cpp">
       <Filter>Source Files\application</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\structure\jgl_timer.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">
@@ -294,6 +297,9 @@
       <Filter>Header Files\structure</Filter>
     </ClInclude>
     <ClInclude Include="includes\structure\jgl_thread.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_timer.h">
       <Filter>Header Files\structure</Filter>
     </ClInclude>
   </ItemGroup>

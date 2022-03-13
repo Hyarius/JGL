@@ -239,7 +239,7 @@ namespace jgl
 					jgl::Key value;
 
 					(*tmp_message) >> value;
-					actualize_key(jgl::Application::active_application()->keyboard(), value, jgl::Input_status::Release);
+					actualize_key(jgl::Application::active_application()->keyboard(), value, jgl::Input_status::Pressed);
 					THROW_INFORMATION("Key system pressed : " + jgl::Keyboard::key_name(value));
 					break;
 				}
@@ -248,6 +248,7 @@ namespace jgl
 					jgl::Key value;
 
 					(*tmp_message) >> value;
+					actualize_key(jgl::Application::active_application()->keyboard(), value, jgl::Input_status::Release);
 					THROW_INFORMATION("Key system release : " + jgl::Keyboard::key_name(value));
 					break;
 				}

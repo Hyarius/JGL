@@ -15,16 +15,7 @@ namespace jgl
 		jgl::Input_status _data[KEY_COUNT];
 		jgl::Glyph _char_entry;
 
-		void _update()
-		{
-			for (jgl::Size_t i = 0; i < KEY_COUNT; i++)
-			{
-				if (_data[i] == jgl::Input_status::Pressed)
-					_data[i] = jgl::Input_status::Down;
-				else if (_data[i] == jgl::Input_status::Release)
-					_data[i] = jgl::Input_status::Up;
-			}
-		}
+		void _update();
 
 		void _actualize_entry(jgl::Glyph entry)
 		{

@@ -305,7 +305,7 @@ namespace jgl
 					if (client != p_ignore && client->state() == Connection<T>::State::Accepted)
 						client->send(msg);
 				}
-				else if (client != nullptr)
+				else if (client != nullptr && client != p_ignore)
 				{
 					_client_disconnect(client);
 					delete client;

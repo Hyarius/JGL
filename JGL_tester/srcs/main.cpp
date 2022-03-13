@@ -22,7 +22,8 @@ private:
 
 	void _render()
 	{
-
+		if (jgl::Application::active_application()->keyboard().get_key(jgl::Key::Alt) == jgl::Input_status::Down)
+			jgl::draw_rectangle_color(jgl::Color::red(), 10, 300);
 	}
 
 	jgl::Bool _update()

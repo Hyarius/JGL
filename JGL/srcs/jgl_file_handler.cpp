@@ -59,7 +59,7 @@ namespace jgl
 		while ((dirent_ptr = readdir(dir)) != NULL)
 		{
 			jgl::String tmp_name = dirent_ptr->d_name;
-			jgl::String tmp = path + tmp_name + extension;
+			jgl::String tmp = path + tmp_name;
 			jgl::File_type type = static_cast<jgl::File_type>(dirent_ptr->d_type);
 
 			jgl::String path = "";
