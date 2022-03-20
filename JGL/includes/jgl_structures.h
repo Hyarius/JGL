@@ -25,3 +25,8 @@
 #include "structure/jgl_font.h"
 
 #include "structure/jgl_viewport.h"
+
+#include "structure/jgl_memento.h"
+#include "structure/jgl_observer.h"
+#include "structure/jgl_singleton.h"
+#include "structure/jgl_state_machine.h"

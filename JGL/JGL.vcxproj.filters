@@ -141,6 +141,12 @@
     <ClCompile Include="srcs\structure\jgl_timer.cpp">
       <Filter>Source Files\structure</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\widget\jgl_updater_widget.cpp">
+      <Filter>Source Files\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\widget\jgl_graphical_widget.cpp">
+      <Filter>Source Files\widget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">
@@ -300,6 +306,27 @@
       <Filter>Header Files\structure</Filter>
     </ClInclude>
     <ClInclude Include="includes\structure\jgl_timer.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\widget\jgl_graphical_widget.h">
+      <Filter>Header Files\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\widget\jgl_singleton_widget.h">
+      <Filter>Header Files\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\widget\jgl_updater_widget.h">
+      <Filter>Header Files\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_memento.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_observer.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_singleton.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_state_machine.h">
       <Filter>Header Files\structure</Filter>
     </ClInclude>
   </ItemGroup>

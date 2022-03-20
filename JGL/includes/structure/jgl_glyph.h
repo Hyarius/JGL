@@ -7,7 +7,7 @@ namespace jgl
 	class Glyph
 	{
 	private:
-		char _content[5] = { 0, 0, 0, 0, 0 };
+		jgl::Char _content[5] = { 0, 0, 0, 0, 0 };
 
 		static jgl::Int _count_char_len(const char to_parse)
 		{
@@ -125,16 +125,16 @@ namespace jgl
 			The content is a const char [5]
 			/!\ DO NOT DELETE THIS POINTER /!\
 		*/
-		const char* content() const {
+		const jgl::Char* content() const {
 			return (_content);
 		}
 
 		/*
 			Return the number of char used to describ this glyph
 		*/
-		jgl::Size_t size() const
+		jgl::Uint size() const
 		{
-			jgl::Size_t result = 0;
+			jgl::Uint result = 0;
 
 			for (jgl::Size_t i = 0; _content[i] != 0; i++)
 				result++;
@@ -145,9 +145,9 @@ namespace jgl
 			Return the glyph value
 			Glyph expressed as UTF-8 value
 		*/
-		jgl::Size_t value() const
+		jgl::Uint value() const
 		{
-			jgl::Size_t self_value = static_cast<jgl::Uchar>(_content[0]) + 255 * static_cast<jgl::Uchar>(_content[1]) + 255 * 255 * static_cast<jgl::Uchar>(_content[2]) + 255 * 255 * 255 * static_cast<jgl::Uchar>(_content[3]);
+			jgl::Uint self_value = static_cast<jgl::Uchar>(_content[0]) + 255 * static_cast<jgl::Uchar>(_content[1]) + 255 * 255 * static_cast<jgl::Uchar>(_content[2]) + 255 * 255 * 255 * static_cast<jgl::Uchar>(_content[3]);
 
 			return (self_value);
 		}
@@ -156,7 +156,7 @@ namespace jgl
 			Check if two glyph are equal
 			Return true if equal, false if not
 		*/
-		bool operator == (const Glyph& other) const 
+		jgl::Bool operator == (const Glyph& other) const 
 		{
 			if (value() == other.value())
 				return (true);
@@ -167,7 +167,7 @@ namespace jgl
 			Check if two glyph are different
 			Return true if different, false if not
 		*/
-		bool operator != (const Glyph& other) const
+		jgl::Bool operator != (const Glyph& other) const
 		{
 			if (value() != other.value())
 				return (true);
@@ -178,7 +178,7 @@ namespace jgl
 			Check if one glyph is greater than [other]
 			Return true if greater, false if not
 		*/
-		bool operator > (const Glyph& other) const
+		jgl::Bool operator > (const Glyph& other) const
 		{
 			if (value() > other.value())
 				return (true);
@@ -189,7 +189,7 @@ namespace jgl
 			Check if one glyph is lower than [other]
 			Return true if lower, false if not
 		*/
-		bool operator < (const Glyph& other) const
+		jgl::Bool operator < (const Glyph& other) const
 		{
 			if (value() < other.value())
 				return (true);
@@ -200,7 +200,7 @@ namespace jgl
 			Check if one glyph is greater or equal than [other]
 			Return true if greater or equal, false if not
 		*/
-		bool operator >= (const Glyph& other) const
+		jgl::Bool operator >= (const Glyph& other) const
 		{
 			if (value() >= other.value())
 				return (true);
@@ -211,7 +211,7 @@ namespace jgl
 			Check if one glyph is lower or equal than [other]
 			Return true if lower or equal, false if not
 		*/
-		bool operator <= (const Glyph& other) const
+		jgl::Bool operator <= (const Glyph& other) const
 		{
 			if (value() <= other.value())
 				return (true);

@@ -20,6 +20,8 @@
 #include <sys/stat.h>
 #include <bitset>
 #include <deque>
+#include <cstdint>
+#include <type_traits>
 
 #include "jgl_dirent.h"
 

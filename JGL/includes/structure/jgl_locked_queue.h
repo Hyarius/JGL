@@ -105,7 +105,7 @@ namespace jgl
 		/*
 			Returns the number of element in the queue
 		*/
-		uint32_t size()
+		jgl::Size_t size()
 		{
 			std::scoped_lock lock(muxQueue);
 			return _content.size();

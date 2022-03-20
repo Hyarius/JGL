@@ -102,6 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,6 +119,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,6 +136,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,6 +153,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -188,6 +192,8 @@
     <ClCompile Include="srcs\widget\component\graphical_component_handler.cpp" />
     <ClCompile Include="srcs\widget\component\text_label_component_handler.cpp" />
     <ClCompile Include="srcs\widget\contener_handler.cpp" />
+    <ClCompile Include="srcs\widget\jgl_graphical_widget.cpp" />
+    <ClCompile Include="srcs\widget\jgl_updater_widget.cpp" />
     <ClCompile Include="srcs\widget\frame_handler.cpp" />
     <ClCompile Include="srcs\widget\text_entry_handler.cpp" />
     <ClCompile Include="srcs\widget\text_label_handler.cpp" />
@@ -214,6 +220,7 @@
     <ClInclude Include="includes\network\jgl_network_connection.h" />
     <ClInclude Include="includes\network\jgl_network_message.h" />
     <ClInclude Include="includes\network\jgl_network_server.h" />
+    <ClInclude Include="includes\structure\jgl_memento.h" />
     <ClInclude Include="includes\structure\jgl_data_contener.h" />
     <ClInclude Include="includes\structure\jgl_exception.h" />
     <ClInclude Include="includes\structure\jgl_font.h" />
@@ -221,6 +228,7 @@
     <ClInclude Include="includes\structure\jgl_locked_queue.h" />
     <ClInclude Include="includes\structure\jgl_perlin.h" />
     <ClInclude Include="includes\structure\jgl_pool.h" />
+    <ClInclude Include="includes\structure\jgl_observer.h" />
     <ClInclude Include="includes\structure\jgl_shared_object.h" />
     <ClInclude Include="includes\structure\jgl_array.h" />
     <ClInclude Include="includes\structure\jgl_color.h" />
@@ -228,7 +236,9 @@
     <ClInclude Include="includes\structure\jgl_keyboard.h" />
     <ClInclude Include="includes\structure\jgl_matrix.h" />
     <ClInclude Include="includes\structure\jgl_mouse.h" />
+    <ClInclude Include="includes\structure\jgl_singleton.h" />
     <ClInclude Include="includes\structure\jgl_sprite_sheet.h" />
+    <ClInclude Include="includes\structure\jgl_state_machine.h" />
     <ClInclude Include="includes\structure\jgl_stream.h" />
     <ClInclude Include="includes\structure\jgl_string.h" />
     <ClInclude Include="includes\structure\jgl_thread.h" />
@@ -238,6 +248,9 @@
     <ClInclude Include="includes\widget\component\jgl_box_component.h" />
     <ClInclude Include="includes\widget\component\jgl_component.h" />
     <ClInclude Include="includes\widget\component\jgl_text_label_component.h" />
+    <ClInclude Include="includes\widget\jgl_graphical_widget.h" />
+    <ClInclude Include="includes\widget\jgl_singleton_widget.h" />
+    <ClInclude Include="includes\widget\jgl_updater_widget.h" />
     <ClInclude Include="includes\widget\jgl_widget_components.h" />
     <ClInclude Include="includes\widget\jgl_button.h" />
     <ClInclude Include="includes\widget\jgl_check_box.h" />

@@ -8,7 +8,7 @@ namespace jgl
 		{
 			if (_funct != nullptr)
 			{
-				_funct(_param);
+				cast();
 			}
 			return (true);
 		}
@@ -64,6 +64,11 @@ namespace jgl
 		_label = jgl::Widget_component::Text_label("Click me", this);
 		_label.set_horizontal_align(jgl::Horizontal_alignment::Centred);
 		_label.set_vertical_align(jgl::Vertical_alignment::Centred);
+	}
+
+	void Button::cast()
+	{
+		_funct(_param);
 	}
 
 	void Button::define_function(std::function< void(jgl::Data_contener&) > p_funct)

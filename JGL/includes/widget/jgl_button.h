@@ -25,6 +25,7 @@ namespace jgl
 		Button(std::function< void(jgl::Data_contener&) > p_funct = nullptr, jgl::Widget* p_parent = nullptr);
 		Button(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param, jgl::Widget* p_parent);
 
+		void cast();
 		void define_function(std::function< void(jgl::Data_contener&) > p_funct);
 		void define_action(std::function< void(jgl::Data_contener&) > p_funct, jgl::Data_contener p_param);
 

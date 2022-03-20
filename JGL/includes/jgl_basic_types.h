@@ -14,7 +14,14 @@ namespace jgl
 
 	using Int = int32_t;
 	using Uint = uint32_t;
+
+#if INTPTR_MAX == INT64_MAX
+	using Size_t = uint64_t;
+#elif INTPTR_MAX == INT32_MAX
 	using Size_t = uint32_t;
+#else
+	using Size_t = uint32_t;
+#endif
 
 	using Long = int64_t;
 	using Ulong = uint64_t;
