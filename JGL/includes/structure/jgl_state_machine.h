@@ -12,7 +12,7 @@ namespace jgl
 	private:
 
 	public:
-		Abstract_activity()
+		virtual ~Abstract_activity()
 		{
 
 		}
@@ -30,6 +30,7 @@ namespace jgl
 	private:
 		jgl::Map<State, Abstract_activity*> _activities;
 
+		Abstract_activity* _active_activity = nullptr;
 		std::recursive_mutex _mutex;
 		State _last_state;
 		State _state;
@@ -63,14 +64,16 @@ namespace jgl
 				return;
 
 			_mutex.lock();
-			if (_state == _last_state)
+			if (_state == _last_state && _active_activity != nullptr)
 			{
-				_activities[_state]->execute();
+				_active_activity->execute();
 			}
 			else
 			{
 				_last_state = _state;
-				_activities[_state]->on_transition();
+				_active_activity = _activities[_state];
+				if (_active_activity != nullptr)
+					_active_activity->on_transition();
 			}
 			_mutex.unlock();
 		}

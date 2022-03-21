@@ -7,38 +7,46 @@ namespace jgl
 	class Originator
 	{
 	private:
+		class Caretaker
+		{
+		private:
+			jgl::Array < jgl::Data_contener > _snapshots;
+
+		public:
+			Caretaker()
+			{
+
+			}
+
+			void push_back(jgl::Data_contener p_snapshot)
+			{
+				_snapshots.push_back(p_snapshot);
+			}
+
+			const jgl::Data_contener&& pop_back()
+			{
+				if (_snapshots.size() == 0)
+					return (jgl::Data_contener());
+
+				const jgl::Data_contener result = _snapshots.last();
+				_snapshots.pop_back();
+				return (std::move(result));
+			}
+		};
+
+		Caretaker _caretaker;
+
+		virtual const jgl::Data_contener _on_save() = 0;
+		virtual void _on_restore(const jgl::Data_contener&& p_param) = 0;
 
 	public:
-		virtual const jgl::Data_contener save() = 0;
-		virtual void restore(const jgl::Data_contener p_snapshot) = 0;
-	};
-
-	template<typename Originator_type>
-	class Caretaker
-	{
-	private:
-		jgl::Array < jgl::Data_contener > _snapshots;
-
-	public:
-		Caretaker()
+		void save()
 		{
-			static_assert(std::is_base_of<Originator, Originator_type>::value, "Caretaker can only allow Originator enherenced object");
+			_caretaker.push_back(_on_save());
 		}
-
-		void save(Originator_type& p_originator)
+		void restore()
 		{
-			_snapshots.push_back(p_originator.save());
+			_on_restore(_caretaker.pop_back());
 		}
-
-		const jgl::Data_contener pop_front()
-		{
-			if (_snapshots.size() == 0)
-				return (jgl::Data_contener());
-
-			const jgl::Data_contener result = _snapshots.last();
-			_snapshots.pop_back();
-			return (result);
-		}
-
 	};
 }

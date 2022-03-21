@@ -6,47 +6,69 @@
 
 namespace jgl
 {
-
-	template<typename T, typename std::enable_if<std::is_enum<T>::value == true>::type* = nullptr >
+	template<typename T, typename U>
 	class Publisher
 	{
 	public:
 		typedef T Event;
+		typedef U Context;
+		typedef std::function<void(Context&)> Activity;
 
 		class Subscriber
 		{
-
 		private:
+			Event _event;
+			Activity _funct;
 
 		public:
-			virtual void update(Event p_event, jgl::Data_contener& p_param) = 0;
+			Subscriber(Event p_event = {}, Activity p_funct = nullptr) :
+				_event(p_event),
+				_funct(p_funct)
+			{
+
+			}
+
+			Event event() {
+				return (_event);
+			}
+
+			void update(Context& p_param)
+			{
+				if (_funct != nullptr)
+					_funct(p_param); 
+			}
 		};
 
 	protected:
-		jgl::Map<Event, jgl::Array<Subscriber*>> _event_subscribers;
+		Context _context;
+		jgl::Array<Subscriber> _event_subscribers;
 
 	public:
-		Publisher()
+		Publisher(Context p_context = {}) :
+			_context(p_context)
 		{
 
 		}
 
-		void notify(Event p_event, jgl::Data_contener p_param = jgl::Data_contener())
-		{
-			if (_event_subscribers.count(p_event) != 0)
-			{
-				jgl::Array<Subscriber*>& tmp_array = _event_subscribers[p_event];
+		Context& context() { return (_context); }
+		const Context& context() const { return (_context); }
 
-				for (jgl::Size_t i = 0; i < tmp_array.size(); i++)
-				{
-					p_param.reset();
-					tmp_array[i]->update(p_event, p_param);
-				}
+		void notify(Event p_event)
+		{
+			for (jgl::Size_t i = 0; i < _event_subscribers.size(); i++)
+			{
+				Subscriber& tmp_subscriber = _event_subscribers[i];
+				if (tmp_subscriber.event() == p_event)
+					tmp_subscriber.update(_context);
 			}
 		}
-		void subscribe(Event p_event, Subscriber* p_subscriber)
+		void subscribe(Subscriber&& p_subscriber)
 		{
-			_event_subscribers[p_event].push_back(p_subscriber);
+			_event_subscribers.push_back(p_subscriber);
+		}
+		void subscribe(Event p_event, Activity p_funct)
+		{
+			_event_subscribers.push_back(Subscriber(p_event, p_funct));
 		}
 	};
 
