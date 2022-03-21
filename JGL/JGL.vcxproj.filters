@@ -147,6 +147,9 @@
     <ClCompile Include="srcs\widget\jgl_graphical_widget.cpp">
       <Filter>Source Files\widget</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\structure\jgl_state_machine.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">

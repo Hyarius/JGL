@@ -177,6 +177,7 @@
     <ClCompile Include="srcs\structure\font_handler.cpp" />
     <ClCompile Include="srcs\structure\image_handler.cpp" />
     <ClCompile Include="srcs\structure\image_output_handler.cpp" />
+    <ClCompile Include="srcs\structure\jgl_state_machine.cpp" />
     <ClCompile Include="srcs\structure\jgl_stream.cpp" />
     <ClCompile Include="srcs\structure\jgl_thread.cpp" />
     <ClCompile Include="srcs\structure\jgl_timer.cpp" />

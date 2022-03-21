@@ -30,6 +30,7 @@ namespace jgl
 	private:
 		jgl::Map<State, Abstract_activity*> _activities;
 
+		std::recursive_mutex _mutex;
 		State _last_state;
 		State _state;
 
@@ -38,13 +39,18 @@ namespace jgl
 		{
 			_activities.clear();
 			_state = p_starting_state;
-			_last_state = {};
+			_last_state = p_starting_state;
 		}
 		void set_state(State p_state)
 		{
 			if (_activities.count(_state) == 0)
-				THROW_EXCEPTION(jgl::Error_level::Warning, 1, "No activity set for state [" + jgl::itoa(static_cast<jgl::Int>(_state)) + "]");
+			{
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No activity set for state [" + jgl::itoa(static_cast<jgl::Int>(_state)) + "]");
+			}
+			_mutex.lock();
+			_last_state = _state;
 			_state = p_state;
+			_mutex.unlock();
 		}
 		void add_activity(State p_state, Abstract_activity* p_activity)
 		{
@@ -56,11 +62,17 @@ namespace jgl
 			if (_activities.count(_state) == 0)
 				return;
 
+			_mutex.lock();
 			if (_state == _last_state)
+			{
 				_activities[_state]->execute();
+			}
 			else
+			{
+				_last_state = _state;
 				_activities[_state]->on_transition();
-			_last_state = _state;
+			}
+			_mutex.unlock();
 		}
 	};
 }

@@ -6,19 +6,21 @@
 
 namespace jgl
 {
-	class Subscriber
-	{
-	private:
-
-	public:
-		virtual void update(jgl::Data_contener& p_param) = 0;
-	};
 
 	template<typename T, typename std::enable_if<std::is_enum<T>::value == true>::type* = nullptr >
 	class Publisher
 	{
 	public:
 		typedef T Event;
+
+		class Subscriber
+		{
+
+		private:
+
+		public:
+			virtual void update(Event p_event, jgl::Data_contener& p_param) = 0;
+		};
 
 	protected:
 		jgl::Map<Event, jgl::Array<Subscriber*>> _event_subscribers;
@@ -38,7 +40,7 @@ namespace jgl
 				for (jgl::Size_t i = 0; i < tmp_array.size(); i++)
 				{
 					p_param.reset();
-					tmp_array[i]->update(p_param);
+					tmp_array[i]->update(p_event, p_param);
 				}
 			}
 		}
