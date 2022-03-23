@@ -50,8 +50,8 @@ namespace jgl
 
 		}
 
-		Context& context() { return (_context); }
-		const Context& context() const { return (_context); }
+		Context* context() { return (&_context); }
+		const Context* context() const { return (&_context); }
 
 		void notify(Event p_event)
 		{
