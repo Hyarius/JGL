@@ -62,7 +62,7 @@ namespace jgl
 		/*
 			Return the connection status
 		*/
-		State state() {return (_state);}
+		State state() { return (_state); }
 
 		/*
 			Set the connection status to accepted
@@ -175,18 +175,18 @@ namespace jgl
 
 	private:
 		/*
-		
+
 		* -------- PART OF MESSAGE SENDING/READING
-		
+
 		*/
 		void _write_header()
 		{
-			asio::async_write(_socket, asio::buffer(&_output.front().header(), sizeof(Data_contener::Header)),
+			asio::async_write(_socket, asio::buffer(&_output.front().header, sizeof(Message_header<T>)),
 				[this](std::error_code ec, size_t length)
 				{
 					if (!ec)
 					{
-						if (_output.front().size() > 0)
+						if (_output.front().content.size() > 0)
 							_write_content();
 						else
 						{
@@ -206,7 +206,7 @@ namespace jgl
 
 		void _write_content()
 		{
-			asio::async_write(_socket, asio::buffer(_output.front().content().data(), _output.front().content().size()),
+			asio::async_write(_socket, asio::buffer(_output.front().content.data(), _output.front().content.size()),
 				[this](std::error_code ec, size_t length)
 				{
 					if (!ec)
@@ -226,14 +226,14 @@ namespace jgl
 
 		void _read_header()
 		{
-			asio::async_read(_socket, asio::buffer(&_tmp_message.header(), sizeof(Data_contener::Header)),
+			asio::async_read(_socket, asio::buffer(&_tmp_message.header, sizeof(Message_header<T>)),
 				[this](std::error_code ec, size_t length)
 				{
 					if (!ec)
 					{
-						if (_tmp_message.header().size > 0)
+						if (_tmp_message.header.size > 0)
 						{
-							_tmp_message.content().resize(_tmp_message.header().size);
+							_tmp_message.content.resize(_tmp_message.header.size);
 							_read_content();
 						}
 						else
@@ -251,7 +251,7 @@ namespace jgl
 
 		void _read_content()
 		{
-			asio::async_read(_socket, asio::buffer(_tmp_message.content().data(), _tmp_message.content().size()),
+			asio::async_read(_socket, asio::buffer(_tmp_message.content.data(), _tmp_message.content.size()),
 				[this](std::error_code ec, size_t length)
 				{
 					if (!ec)
