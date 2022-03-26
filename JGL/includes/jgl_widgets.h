@@ -4,6 +4,7 @@
 
 #include "widget/jgl_graphical_widget.h"
 #include "widget/jgl_updater_widget.h"
+#include "widget/jgl_singleton_widget.h"
 
 #include "widget/jgl_button.h"
 #include "widget/jgl_check_box.h"

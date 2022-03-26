@@ -46,7 +46,7 @@ namespace jgl
 		{
 			if (_activities.count(_state) == 0)
 			{
-				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No activity set for state [" + jgl::itoa(static_cast<jgl::Int>(_state)) + "]");
+				THROW_EXCEPTION(jgl::Error_level::Warning, 1, "No activity set for state [" + jgl::itoa(static_cast<jgl::Int>(_state)) + "]");
 			}
 			_mutex.lock();
 			_last_state = _state;
