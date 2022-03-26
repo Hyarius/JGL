@@ -65,16 +65,6 @@ public:
 
 int main(int argc, char **argv)
 {
-	jgl::Publisher<int, int> tmp_publisher(10);
-	tmp_publisher.subscribe(jgl::Publisher<int, int>::Subscriber(1, [&](int& p_param) {jgl::cout << "Event 1 received !"; }));
-	tmp_publisher.subscribe(jgl::Publisher<int, int>::Subscriber(2, [&](int& p_param) {jgl::cout << "Event 2 received !"; }));
-
-	tmp_publisher.notify(0);
-	tmp_publisher.notify(3);
-	tmp_publisher.notify(2);
-	tmp_publisher.notify(4);
-	tmp_publisher.notify(1);
-
 	jgl::Application app("JGL_tester", jgl::Vector2Int(600, 600), jgl::Color(80, 80, 80));
 	app.set_default_font("ressource/font/karma suture.ttf");
 	app.active_multithread();

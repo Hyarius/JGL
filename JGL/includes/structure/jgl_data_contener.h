@@ -7,25 +7,26 @@
 
 namespace jgl
 {
-	class Data_contener
+	struct Abstract_data_contener_header
 	{
-	public:
-		struct Header
-		{
-			jgl::Size_t size = 0;
-			mutable jgl::Size_t readed = 0;
-		};
+		jgl::Size_t size = 0;
+		mutable jgl::Size_t readed = 0;
+	};
+
+	template <typename HeaderType = jgl::Abstract_data_contener_header>
+	class Abstract_data_contener
+	{
 	protected:
-		Header _header;
+		HeaderType _header;
 		std::vector<jgl::Uchar> _content = {};
 
 	public:
-		Header& header()
+		HeaderType& header()
 		{
 			return (_header);
 		}
 
-		const Header& header() const
+		const HeaderType& header() const
 		{
 			return (_header);
 		}
@@ -53,8 +54,9 @@ namespace jgl
 		/*
 			Create a new empty data_contener with undefined ID
 		*/
-		Data_contener()
+		Abstract_data_contener()
 		{
+			static_assert(std::is_base_of<jgl::Abstract_data_contener_header, HeaderType>::value, "Abstract_data_contener can only allow jgl::Abstract_data_contener_header enherenced header template");
 			_content.clear();
 		}
 
@@ -112,7 +114,7 @@ namespace jgl
 		}
 
 		template<typename DataType>
-		Data_contener& operator << (const DataType& data)
+		Abstract_data_contener& operator << (const DataType& data)
 		{
 			static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pushed into vector");
 
@@ -128,7 +130,7 @@ namespace jgl
 		}
 
 		template<typename DataType>
-		const Data_contener& operator >> (DataType& data) const 
+		const Abstract_data_contener& operator >> (DataType& data) const 
 		{
 			static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
 
@@ -142,7 +144,7 @@ namespace jgl
 		}
 
 		template<>
-		Data_contener& operator << <jgl::String>	(const jgl::String& text)
+		Abstract_data_contener& operator << <jgl::String>	(const jgl::String& text)
 		{
 			*this << text.size();
 			for (jgl::Uint i = 0; i < text.size(); i++)
@@ -151,7 +153,7 @@ namespace jgl
 		}
 
 		template<>
-		const Data_contener& operator >> <jgl::String>	(jgl::String& text) const
+		const Abstract_data_contener& operator >> <jgl::String>	(jgl::String& text) const
 		{
 			jgl::Size_t size;
 			jgl::Size_t i = 0;
@@ -169,4 +171,6 @@ namespace jgl
 			return *this;
 		}
 	};
+
+	using Data_contener = Abstract_data_contener<>;
 }
