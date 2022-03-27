@@ -132,15 +132,22 @@ namespace jgl
 			header.readed += p_length;
 		}
 
-		void print(jgl::String p_text)
+		void print(jgl::String p_text, jgl::Bool p_binary_mode = true)
 		{
 			jgl::cout << p_text << " : ";
 			for (jgl::Size_t i = 0; i < content.size(); i++)
 			{
 				if (i != 0)
 					jgl::cout << "-";
-				std::bitset<8> y(content[i]);
-				jgl::cout << "[" << y << "]";
+				if (p_binary_mode == true)
+				{
+					std::bitset<8> y(content[i]);
+					jgl::cout << "[" << y << "]";
+				}
+				else
+				{
+					jgl::cout << "[" << content[i] << "]";
+				}
 			}
 			jgl::cout << jgl::endl;
 		}
@@ -193,7 +200,7 @@ namespace jgl
 		template<>
 		Message<T>& operator >> <jgl::String>	(jgl::String& text)
 		{
-			jgl::Uint size;
+			jgl::Size_t size;
 			jgl::Uint i = 0;
 
 			*this >> size;

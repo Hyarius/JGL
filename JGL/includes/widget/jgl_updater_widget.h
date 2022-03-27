@@ -10,7 +10,6 @@ namespace jgl
 		void _render() final;
 
 		jgl::Bool _update() = 0;
-		jgl::Bool _fixed_update() = 0;
 
 	public:
 		Updater_widget(jgl::Widget* p_parent);
