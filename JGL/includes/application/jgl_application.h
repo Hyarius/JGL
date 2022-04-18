@@ -316,7 +316,6 @@ namespace jgl
 		const jgl::Ulong& max_fps() const { return (1000 * _tick_delta); }
 		const jgl::Vector2Int size() const { return (_size); }
 		const jgl::String& title() const { return (_title); }
-		jgl::Ulong getTime() const;
 		const jgl::Ulong& time() const { return (_time); }
 		const jgl::Bool masked() const { return (_masked); }
 

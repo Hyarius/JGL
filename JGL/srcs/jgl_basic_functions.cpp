@@ -458,4 +458,11 @@ namespace jgl
 		p_stream.flush();
 		return (p_stream);
 	}
+
+	jgl::Ulong get_time()
+	{
+		auto epoch = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch();
+
+		return (std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count());
+	}
 }

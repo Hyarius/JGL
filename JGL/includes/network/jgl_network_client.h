@@ -102,7 +102,14 @@ namespace jgl
 				asio::ip::tcp::resolver resolver(_asio_context);
 				asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(host_converted, std::to_string(port));
 
-				_connection = new Connection<T>(jgl::Connection<T>::Owner::client, _asio_context, asio::ip::tcp::socket(_asio_context), &_input);
+				asio::ip::tcp::socket socket(_asio_context);
+
+				socket.open(asio::ip::tcp::v4());
+
+				asio::ip::tcp::no_delay no_delay(true);
+				socket.set_option(no_delay);
+
+				_connection = new Connection<T>(jgl::Connection<T>::Owner::client, _asio_context, std::move(socket), &_input);
 
 				_connection->connect_to_server(endpoints);
 
@@ -110,17 +117,17 @@ namespace jgl
 			}
 			catch (const std::exception& e)
 			{
-				THROW_EXCEPTION(jgl::Error_level::Warning, 1, "Client Exception: " + jgl::String(e.what()));
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "Client Exception: " + jgl::String(e.what()));
 				return false;
 			}
 			catch (const std::string& ex)
 			{
-				THROW_EXCEPTION(jgl::Error_level::Warning, 1, "Client Exception: " + ex);
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "Client Exception: " + ex);
 				return false;
 			}
 			catch (...)
 			{
-				THROW_EXCEPTION(jgl::Error_level::Warning, 1, "Client Exception unknow");
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "Client Exception unknow");
 				return false;
 			}
 			return true;

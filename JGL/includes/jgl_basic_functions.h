@@ -192,4 +192,6 @@ namespace jgl
 	void save_to_bmp(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
 
 	Stream& endl(jgl::Stream& p_stream);
+
+	jgl::Ulong get_time();
 }

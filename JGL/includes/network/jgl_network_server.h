@@ -59,23 +59,42 @@ namespace jgl
 			_acceptor.async_accept(
 				[this](std::error_code ec, asio::ip::tcp::socket socket)
 				{
-					if (!ec)
+					try
 					{
-						THROW_INFORMATION("[SERVER] New Connection: " + socket.remote_endpoint().address().to_string());
+						if (!ec)
+						{
+							THROW_INFORMATION("[SERVER] New Connection: " + socket.remote_endpoint().address().to_string());
 
-						jgl::Connection<T>* newconn = new jgl::Connection<T>(jgl::Connection<T>::Owner::server, _asio_context, std::move(socket), &_input);
+							asio::ip::tcp::no_delay no_delay(true);
+							socket.set_option(no_delay);
 
-						_client_connect(newconn);
-						_active_connection.push_back(std::move(newconn));
+							jgl::Connection<T>* newconn = new jgl::Connection<T>(jgl::Connection<T>::Owner::server, _asio_context, std::move(socket), &_input);
 
-						_active_connection.back()->connect_to_client(_id_count++);
+							_client_connect(newconn);
 
-						THROW_INFORMATION("[" + jgl::itoa(_active_connection.back()->id()) + "] Connection Approved");
+							_active_connection.push_back(std::move(newconn));
 
+							_active_connection.back()->connect_to_client(_id_count++);
+
+							THROW_INFORMATION("[" + jgl::itoa(_active_connection.back()->id()) + "] Connection Approved");
+
+						}
+						else
+						{
+							THROW_INFORMATION("[SERVER] New Connection Error: " + ec.message());
+						}
 					}
-					else
+					catch (const std::exception& e)
 					{
-						THROW_INFORMATION("[SERVER] New Connection Error: " + ec.message());
+						THROW_EXCEPTION(jgl::Error_level::Error, 1, "Server Exception: " + jgl::String(e.what()));
+					}
+					catch (const std::string& ex)
+					{
+						THROW_EXCEPTION(jgl::Error_level::Error, 1, "Server Exception: " + ex);
+					}
+					catch (...)
+					{
+						THROW_EXCEPTION(jgl::Error_level::Error, 1, "Server Exception unknow");
 					}
 
 					_wait_for_connection();

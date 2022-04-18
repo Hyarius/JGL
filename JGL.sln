@@ -1,14 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31613.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JGL", "JGL\JGL.vcxproj", "{0849BEA7-7D08-429B-989D-34ABD0925C06}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JGL_tester", "JGL_tester\JGL_tester.vcxproj", "{30A119FF-0264-4277-B21E-059D6CAED72E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0849BEA7-7D08-429B-989D-34ABD0925C06} = {0849BEA7-7D08-429B-989D-34ABD0925C06}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,14 +21,6 @@ Global
 		{0849BEA7-7D08-429B-989D-34ABD0925C06}.Release|x64.Build.0 = Release|x64
 		{0849BEA7-7D08-429B-989D-34ABD0925C06}.Release|x86.ActiveCfg = Release|Win32
 		{0849BEA7-7D08-429B-989D-34ABD0925C06}.Release|x86.Build.0 = Release|Win32
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Debug|x64.ActiveCfg = Debug|x64
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Debug|x64.Build.0 = Debug|x64
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Debug|x86.ActiveCfg = Debug|Win32
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Debug|x86.Build.0 = Debug|Win32
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Release|x64.ActiveCfg = Release|x64
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Release|x64.Build.0 = Release|x64
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Release|x86.ActiveCfg = Release|Win32
-		{30A119FF-0264-4277-B21E-059D6CAED72E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

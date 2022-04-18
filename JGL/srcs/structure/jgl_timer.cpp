@@ -10,7 +10,7 @@ namespace jgl
 
 	void Timer::start()
 	{
-		_starting_time = jgl::Application::active_application()->getTime();
+		_starting_time = jgl::get_time();
 		_started = true;
 	}
 
@@ -23,6 +23,6 @@ namespace jgl
 	{
 		if (_started == false)
 			return (true);
-		return (_starting_time + _timer_duration < jgl::Application::active_application()->time());
+		return (_starting_time + _timer_duration <= jgl::Application::active_application()->time());
 	}
 }

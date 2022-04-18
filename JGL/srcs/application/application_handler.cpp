@@ -136,17 +136,10 @@ namespace jgl
 		_play = false;
 	}
 
-	jgl::Ulong Application::getTime() const
-	{
-		auto epoch = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch();
-
-		return (std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count());
-	}
-
 
 	void Application::_renderer_run()
 	{
-		jgl::Ulong old_time = getTime();
+		jgl::Ulong old_time = get_time();
 
 		jgl::Ulong delta_time = 0;
 
@@ -179,9 +172,9 @@ namespace jgl
 
 	void Application::_updater_run()
 	{
-		jgl::Ulong next_tick = getTime();
+		jgl::Ulong next_tick = get_time();
 
-		jgl::Ulong old_time = getTime();
+		jgl::Ulong old_time = next_tick;
 
 		jgl::Ulong delta_time = 0;
 
@@ -190,7 +183,7 @@ namespace jgl
 		while (_play == true)
 		{
 			_update_input();
-			_time = getTime();
+			_time = get_time();
 
 			treat_win_message();
 
@@ -217,10 +210,10 @@ namespace jgl
 	{
 		if (_multithread == false)
 		{
-			jgl::Ulong next_tick = getTime();
+			jgl::Ulong next_tick = get_time();
 			_opengl_context.setup(_background);
 
-			jgl::Ulong old_time = getTime();
+			jgl::Ulong old_time = next_tick;
 
 			jgl::Ulong delta_time = 0;
 
@@ -230,7 +223,7 @@ namespace jgl
 			{
 				_update_input();
 
-				_time = getTime();
+				_time = get_time();
 
 				if ((_time - old_time) > 1000.0f)
 				{
