@@ -78,19 +78,17 @@ namespace jgl
 	}
 	Image_handler::Image_handler(jgl::String path)
 	{
-		jgl::Int width = 0, height = 0, nrChannels = 0;
+		_data = stbi_load(path.c_str(), &_width, &_height, &_nbChannels, 0);
 
-		unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-
-		if (data == nullptr)
+		if (_data == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Warning, 1, "Can't load file " + path);
 
 		glGenTextures(1, &_id);
 		glBindTexture(GL_TEXTURE_2D, _id);
-		if (nrChannels == 3)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		else if (nrChannels == 4)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		if (_nbChannels == 3)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, _data);
+		else if (_nbChannels == 4)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data);
 		if (jgl::Application::active_application() == nullptr)
 			THROW_EXCEPTION(jgl::Error_level::Critical, 0, "No application started while loading an image");
 		THROW_INFORMATION("Creating a new texture with id [" + jgl::itoa(_id) + "]");
@@ -108,6 +106,26 @@ namespace jgl
 	{
 		if (_id != -1)
 			glDeleteTextures(1, &_id);
+	}
+	jgl::Uint Image_handler::pixel(jgl::Uint p_x, jgl::Uint p_y)
+	{
+		if (p_x > static_cast<jgl::Uint>(_width) || p_y > static_cast<jgl::Uint>(_height))
+		{
+			jgl::cout << "Pixel out of range : [" << p_x << " vs " << _width << "] / [" << p_y << " vs " << _height << "]" << jgl::endl;
+			return (0);
+		}
+		unsigned char datas[4] = {0, 0, 0, 0};
+
+		jgl::Uint index = (p_x * _nbChannels) + (_width * _nbChannels) * p_y;
+		for (jgl::Size_t comp = 0; comp < _nbChannels; comp++)
+			datas[comp] = _data[index + (_nbChannels - 1 - comp)];
+
+		if (_nbChannels == 3)
+		{
+			datas[3] = 0xFF;
+		}
+
+		return (*(reinterpret_cast<jgl::Uint*>(datas)));
 	}
 
 	Image::Image(GLuint p_id) : jgl::Image_handler(p_id)

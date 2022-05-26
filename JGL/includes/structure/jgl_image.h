@@ -11,6 +11,11 @@ namespace jgl
 	{
 	protected:
 		GLuint _id;
+		unsigned char *_data;
+
+		jgl::Int _width = 0;
+		jgl::Int _height = 0;
+		jgl::Int _nbChannels = 0;
 
 		void _draw(
 			jgl::Vector2Int pos_a, jgl::Vector2Int pos_b, jgl::Vector2Int pos_c,
@@ -34,7 +39,13 @@ namespace jgl
 
 		~Image_handler();
 
-		const jgl::Uint id() { return (_id); }
+		const unsigned char* data() { return reinterpret_cast<const unsigned char *>(_data); }
+		const jgl::Int id() { return (_id); }
+		const jgl::Int width() { return (_width); }
+		const jgl::Int height() { return (_height); }
+
+		jgl::Uint pixel(jgl::Uint p_x, jgl::Uint p_y);
+		jgl::Uint pixel(jgl::Vector2Uint p_pos) { return (pixel(p_pos.x, p_pos.y)); }
 
 		void activate(GLenum texture = GL_TEXTURE0)
 		{
