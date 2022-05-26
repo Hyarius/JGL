@@ -6,33 +6,31 @@
 
 namespace jgl
 {
-	template<typename T, typename U>
+	template<typename TEvent, typename TContext>
 	class Publisher
 	{
 	public:
-		typedef T Event;
-		typedef U Context;
-		typedef std::function<void(Context&)> Activity;
+		typedef std::function<void(TContext&)> Activity;
 
 		class Subscriber
 		{
 		private:
-			Event _event;
+			TEvent _event;
 			Activity _funct;
 
 		public:
-			Subscriber(Event p_event = {}, Activity p_funct = nullptr) :
+			Subscriber(TEvent p_event = {}, Activity p_funct = nullptr) :
 				_event(p_event),
 				_funct(p_funct)
 			{
 
 			}
 
-			Event event() {
+			TEvent event() {
 				return (_event);
 			}
 
-			void update(Context& p_param)
+			void update(TContext& p_param)
 			{
 				if (_funct != nullptr)
 					_funct(p_param); 
@@ -40,20 +38,20 @@ namespace jgl
 		};
 
 	protected:
-		Context _context;
+		TContext _context;
 		jgl::Array<Subscriber> _event_subscribers;
 
 	public:
-		Publisher(Context p_context = {}) :
+		Publisher(TContext p_context = {}) :
 			_context(p_context)
 		{
 
 		}
 
-		Context* context() { return (&_context); }
-		const Context* context() const { return (&_context); }
+		TContext* context() { return (&_context); }
+		const TContext* context() const { return (&_context); }
 
-		void notify(Event p_event)
+		void notify(TEvent p_event)
 		{
 			for (jgl::Size_t i = 0; i < _event_subscribers.size(); i++)
 			{
@@ -66,7 +64,7 @@ namespace jgl
 		{
 			_event_subscribers.push_back(p_subscriber);
 		}
-		void subscribe(Event p_event, Activity p_funct)
+		void subscribe(TEvent p_event, Activity p_funct)
 		{
 			_event_subscribers.push_back(Subscriber(p_event, p_funct));
 		}

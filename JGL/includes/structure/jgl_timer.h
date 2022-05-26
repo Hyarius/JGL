@@ -14,6 +14,9 @@ namespace jgl
 
 	public:
 		Timer(jgl::Ulong p_timer_period = 1000);
+
+		jgl::Bool started() { return (_started);}
+
 		void start();
 		void stop();
 		jgl::Bool timeout();

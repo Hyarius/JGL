@@ -13,11 +13,15 @@ private:
 
 	jgl::Text_entry* _text_entry;
 
+	jgl::Selecter<jgl::Int>* _selecter;
+
 	void _on_geometry_change()
 	{
 		_render_fps_label->set_geometry(jgl::Vector2Int(50, 50), jgl::Vector2Int(250, 50));
 		_update_fps_label->set_geometry(jgl::Vector2Int(50, 120), jgl::Vector2Int(255, 50));
 		_create_button->set_geometry(jgl::Vector2Int(50, 190), jgl::Vector2Int(255, 50));
+		_text_entry->set_geometry(jgl::Vector2Int(50, 260), jgl::Vector2Int(455, 50));
+		_selecter->set_geometry(jgl::Vector2Int(50, 320), jgl::Vector2Int(455, 50));
 	}
 
 	void _render()
@@ -54,12 +58,23 @@ public:
 		_update_fps_label = new jgl::Text_label("", this);
 		_update_fps_label->activate();
 
+		_text_entry = new jgl::Text_entry("", this);
+
 		_create_button = new jgl::Button([&](jgl::Data_contener& p_param) {
-				_text_entry = new jgl::Text_entry("", this);
-				_text_entry->set_geometry(jgl::Vector2Int(50, 260), jgl::Vector2Int(455, 50));
-				_text_entry->activate();
+			_text_entry->activate();
 			}, this);
 		_create_button->activate();
+
+		_selecter = new jgl::Selecter<jgl::Int>([&](jgl::Int& p_value) {
+				return (jgl::itoa(p_value));
+			}, this);
+		_selecter->add_value(0);
+		_selecter->add_value(10);
+		_selecter->add_value(20);
+		_selecter->add_value(15);
+		_selecter->add_value(5);
+		_selecter->set_index(2);
+		_selecter->activate();
 	}
 };
 

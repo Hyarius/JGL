@@ -254,6 +254,7 @@
     <ClInclude Include="includes\widget\component\jgl_component.h" />
     <ClInclude Include="includes\widget\component\jgl_text_label_component.h" />
     <ClInclude Include="includes\widget\jgl_graphical_widget.h" />
+    <ClInclude Include="includes\widget\jgl_selecter_widget.h" />
     <ClInclude Include="includes\widget\jgl_singleton_widget.h" />
     <ClInclude Include="includes\widget\jgl_updater_widget.h" />
     <ClInclude Include="includes\widget\jgl_widget_components.h" />
