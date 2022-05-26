@@ -53,7 +53,7 @@ namespace jgl
 
 		jgl::Widget_component::Box& box() { return (_box); }
 		jgl::Widget_component::Text_label& label() { return (_label); }
-		jgl::String text() const { return (_text); }
+		const jgl::String& text() const { return (_text); }
 
 		jgl::Bool is_selected() { return (_is_selected); }
 		void select();

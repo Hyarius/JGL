@@ -402,6 +402,7 @@ namespace jgl
 		return h ^ (h >> 16);
 	}
 
+
 	jgl::Long generate_nbr(const jgl::Long min, const jgl::Long max)
 	{
 		jgl::Long value = 0;
@@ -409,7 +410,9 @@ namespace jgl
 		for (jgl::Size_t i = 0; i < 4; i++)
 		{
 			value = value << 8;
-			value += rand();
+			jgl::Uint value_tmp;
+			rand_s(&value_tmp);
+			value += value_tmp;
 		}
 		return((value % (max - min)) + min);
 	}

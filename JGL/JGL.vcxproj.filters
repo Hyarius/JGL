@@ -332,5 +332,8 @@
     <ClInclude Include="includes\structure\jgl_state_machine.h">
       <Filter>Header Files\structure</Filter>
     </ClInclude>
+    <ClInclude Include="includes\widget\jgl_selecter_widget.h">
+      <Filter>Header Files\widget</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,6 +7,8 @@
 #include "structure/jgl_vector.h"
 #include "structure/jgl_font.h"
 
+#include "structure/jgl_pool.h"
+
 #include "application/jgl_shader.h"
 
 #include "widget/jgl_widget.h"

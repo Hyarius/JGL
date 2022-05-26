@@ -1,5 +1,6 @@
 #pragma once
 
+#define _CRT_RAND_S 
 #include <ios>
 #include <fstream>
 #include <stdint.h>

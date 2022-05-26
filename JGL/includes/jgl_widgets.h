@@ -13,3 +13,5 @@
 #include "widget/jgl_sprite_label.h"
 #include "widget/jgl_text_entry.h"
 #include "widget/jgl_text_label.h"
+
+#include "widget/jgl_selecter_widget.h"

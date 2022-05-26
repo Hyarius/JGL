@@ -58,9 +58,9 @@ namespace jgl
 		_funct = p_funct;
 		_param = p_param;
 		_box[0] = jgl::Widget_component::Box(this);
-		_box[0].set_color(jgl::Color(100, 100, 100), jgl::Color(150, 150, 150));
+		_box[0].set_color(jgl::Color(150, 150, 150), jgl::Color(100, 100, 100));
 		_box[1] = jgl::Widget_component::Box(this);
-		_box[0].set_color(jgl::Color(60, 60, 60), jgl::Color(100, 100, 100));
+		_box[1].set_color(jgl::Color(100, 100, 100), jgl::Color(60, 60, 60));
 		_label = jgl::Widget_component::Text_label("Click me", this);
 		_label.set_horizontal_align(jgl::Horizontal_alignment::Centred);
 		_label.set_vertical_align(jgl::Vertical_alignment::Centred);
