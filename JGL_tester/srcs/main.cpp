@@ -21,7 +21,7 @@ private:
 		_update_fps_label->set_geometry(jgl::Vector2Int(50, 120), jgl::Vector2Int(255, 50));
 		_create_button->set_geometry(jgl::Vector2Int(50, 190), jgl::Vector2Int(255, 50));
 		_text_entry->set_geometry(jgl::Vector2Int(50, 260), jgl::Vector2Int(455, 50));
-		_selecter->set_geometry(jgl::Vector2Int(50, 320), jgl::Vector2Int(455, 50));
+		//_selecter->set_geometry(jgl::Vector2Int(50, 320), jgl::Vector2Int(455, 50));
 	}
 
 	void _render()
@@ -48,6 +48,10 @@ private:
 	}
 
 public:
+	enum class Test
+	{
+		A, B, C, D
+	};
 	Main_application(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	{
 		_render_fps = 0;
@@ -75,6 +79,9 @@ public:
 		_selecter->add_value(5);
 		_selecter->set_index(2);
 		_selecter->activate();
+
+		jgl::Server_manager<Test>::instanciate(this);
+		jgl::Client_manager<Test>::instanciate(this);
 	}
 };
 

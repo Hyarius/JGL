@@ -18,6 +18,10 @@ namespace jgl
 		*/
 		typedef void (*client_activity_funct_ptr)(jgl::Message<T>&, jgl::Data_contener);
 	protected:
+		void _unsecured_send(const jgl::Message<T>& msg)
+		{
+			_connection->send(msg);
+		}
 		asio::io_context _asio_context;
 		std::thread _thread_context;
 		jgl::Connection<T>* _connection;
@@ -225,7 +229,7 @@ namespace jgl
 						THROW_INFORMATION("Awsner : " + jgl::itoa(result) + " of size " + jgl::itoa(sizeof(result)));
 						msg << key;
 						msg << result;
-						send(msg);
+						_unsecured_send(msg);
 					}
 					else if (msg.size() == sizeof(bool))
 					{
@@ -277,7 +281,7 @@ namespace jgl
 		*/
 		void send(const jgl::Message<T>& msg)
 		{
-			if (is_connected() && _connection->state() != jgl::Connection<T>::State::Refused)
+			if (_connection->state() == jgl::Connection<T>::State::Accepted)
 				_connection->send(msg);
 		}
 

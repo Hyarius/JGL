@@ -15,3 +15,6 @@
 #include "widget/jgl_text_label.h"
 
 #include "widget/jgl_selecter_widget.h"
+
+#include "widget/jgl_server_manager.h"
+#include "widget/jgl_client_manager.h"

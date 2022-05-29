@@ -30,3 +30,5 @@
 #include "structure/jgl_observer.h"
 #include "structure/jgl_singleton.h"
 #include "structure/jgl_state_machine.h"
+#include "structure/jgl_texture_atlas.h"
+#include "structure/jgl_translation_atlas.h"

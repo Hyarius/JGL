@@ -23,13 +23,16 @@ namespace jgl
 
 		void _on_geometry_change()
 		{
-			jgl::Vector2Int button_size = jgl::Vector2Int(_area.y < _area.x / 3 ? _area.y : _area.x / 3, _area.y);
-			jgl::Float space = (_space == -1 ? button_size.x / 10 : _space);
-			jgl::Vector2Int label_size = jgl::Vector2Int(_area.x - button_size.x * 2 - space * 2, _area.y);
+			if (area() != 0)
+			{
+				jgl::Vector2Int button_size = jgl::Vector2Int(_area.y < _area.x / 3 ? _area.y : _area.x / 3, _area.y);
+				jgl::Float space = (_space == -1 ? button_size.x / 10 : _space);
+				jgl::Vector2Int label_size = jgl::Vector2Int(_area.x - button_size.x * 2 - space * 2, _area.y);
 
-			_previous_button.set_geometry(0, button_size);
-			_text_label.set_geometry(jgl::Vector2Int(button_size.x + space, 0), label_size);
-			_next_button.set_geometry(jgl::Vector2Int(button_size.x + label_size.x + space * 2, 0), button_size);
+				_previous_button.set_geometry(0, button_size);
+				_text_label.set_geometry(jgl::Vector2Int(button_size.x + space, 0), label_size);
+				_next_button.set_geometry(jgl::Vector2Int(button_size.x + label_size.x + space * 2, 0), button_size);
+			}
 		}
 
 		void _render()

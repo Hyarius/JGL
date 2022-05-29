@@ -1,6 +1,8 @@
 #pragma once
 
 #include "jgl_basic_types.h"
+#include "jgl_basic_functions.h"
+#include "structure/jgl_stream.h"
 
 namespace jgl
 {

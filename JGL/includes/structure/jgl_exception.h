@@ -2,7 +2,7 @@
 
 #include "jgl_basic_types.h"
 #include "structure/jgl_string.h"
-
+#include "structure/jgl_stream.h"
 
 namespace jgl
 {

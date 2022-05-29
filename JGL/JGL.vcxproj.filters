@@ -150,6 +150,12 @@
     <ClCompile Include="srcs\structure\jgl_state_machine.cpp">
       <Filter>Source Files\structure</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\structure\texture_atlas.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\structure\translation_atlas.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">
@@ -333,6 +339,18 @@
       <Filter>Header Files\structure</Filter>
     </ClInclude>
     <ClInclude Include="includes\widget\jgl_selecter_widget.h">
+      <Filter>Header Files\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_texture_atlas.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_translation_atlas.h">
+      <Filter>Header Files\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\widget\jgl_client_manager.h">
+      <Filter>Header Files\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\widget\jgl_server_manager.h">
       <Filter>Header Files\widget</Filter>
     </ClInclude>
   </ItemGroup>

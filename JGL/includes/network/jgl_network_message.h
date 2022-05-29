@@ -2,7 +2,8 @@
 #define JGL_NETWORK_MESSAGE_H
 
 #include "jgl_basic_types.h"
-#include "structure/jgl_string.h"
+#include "structure/jgl_stream.h"
+#include "structure/jgl_thread.h"
 
 namespace jgl
 {

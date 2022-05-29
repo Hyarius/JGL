@@ -2,6 +2,7 @@
 
 #include "jgl_includes.h"
 #include "jgl_basic_types.h"
+#include "jgl_exception.h"
 
 namespace jgl
 {

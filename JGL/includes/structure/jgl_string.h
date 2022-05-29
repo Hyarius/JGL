@@ -3,7 +3,6 @@
 #include "jgl_basic_types.h"
 #include "jgl_glyph.h"
 #include "jgl_array.h"
-#include "jgl_stream.h"
 
 #define JGL_STRING_BUFFER_SIZE 100
 

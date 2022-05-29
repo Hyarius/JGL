@@ -4,6 +4,7 @@
 #include "structure/jgl_locked_queue.h"
 #include "network/jgl_network_message.h"
 #include "network/jgl_network_connection.h"
+#include "structure/jgl_data_contener.h"
 
 namespace jgl
 {

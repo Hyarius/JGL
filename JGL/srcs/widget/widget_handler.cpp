@@ -79,7 +79,8 @@ namespace jgl
 		_anchor = p_anchor;
 		_area = p_area;
 		_viewport->set_geometry(_anchor, _area);
-		_on_geometry_change();
+		if (_area.x > 0 && _area.y > 0)
+			_on_geometry_change();
 	}
 
 	bool Widget::_update_children()
