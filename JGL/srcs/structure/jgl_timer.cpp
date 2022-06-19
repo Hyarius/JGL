@@ -8,6 +8,12 @@ namespace jgl
 		_timer_duration = p_timer_period;
 	}
 
+	void Timer::set_duration(jgl::Ulong p_timer_period)
+	{
+		_started = false;
+		_timer_duration = p_timer_period;
+	}
+
 	void Timer::start()
 	{
 		_starting_time = jgl::get_time();
@@ -23,6 +29,11 @@ namespace jgl
 	{
 		if (_started == false)
 			return (true);
-		return (_starting_time + _timer_duration <= jgl::Application::active_application()->time());
+		if (_starting_time + _timer_duration <= jgl::Application::active_application()->time())
+		{
+			_started = false;
+			return (true);
+		}
+		return (false);
 	}
 }

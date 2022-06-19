@@ -468,4 +468,45 @@ namespace jgl
 
 		return (std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count());
 	}
+
+	jgl::Array<Vector2Int> 		calc_line_2d(Vector2Int p_start, Vector2Int p_end)
+	{
+		jgl::Array<Vector2Int> result;
+		const bool steep = (fabs(p_end.y - p_start.y) > fabs(p_end.x - p_start.x));
+		if (steep)
+		{
+			std::swap(p_start.x, p_start.y);
+			std::swap(p_end.x, p_end.y);
+		}
+		if (p_start.x > p_end.x)
+		{
+			std::swap(p_start.x, p_end.x);
+			std::swap(p_start.y, p_end.y);
+		}
+
+		float dx = p_end.x - p_start.x;
+		float dy = fabs(p_end.y - p_start.y);
+
+		float error = dx / 2.0f;
+		int ystep = (p_start.y < p_end.y) ? 1 : -1;
+		int y = (int)p_start.y;
+
+		int maxX = (int)p_end.x;
+
+		for (int x = (int)p_start.x; x < maxX; x++)
+		{
+			if (steep)
+				result.push_back(Vector2Int(y, x));
+			else
+				result.push_back(Vector2Int(x, y));
+
+			error -= dy;
+			if (error < 0)
+			{
+				y += ystep;
+				error += dx;
+			}
+		}
+		return (result);
+	}
 }

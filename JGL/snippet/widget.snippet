@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Widget</Title>
+			<Shortcut>jglWidget</Shortcut>
+			<Description>Create jgl widget</Description>
+			<Author>Hyarius</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+				<SnippetType>SurroundsWith</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>name</ID>
+					<ToolTip>Class name</ToolTip>
+					<Default>MyClass</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="cpp"><![CDATA[class $name$ : public jgl::Widget
+				{
+				private:
+					void _render();
+					void _on_geometry_change();
+					
+					jgl::Bool _update();
+					jgl::Bool _fixed_update();
+					
+				public:
+					$name$(jgl::Widget *p_parent);
+				};
+				
+				void $name$::_render()
+				{
+					
+				}
+				
+				void $name$::_on_geometry_change()
+				{
+					
+				}
+				
+				jgl::Bool $name$::_update()
+				{
+					return (false);
+				}
+				
+				jgl::Bool $name$::_fixed_update()
+				{
+					return (false);
+				}
+				
+				$name$::$name$(jgl::Widget *p_parent) : jgl::Widget(p_parent)
+				{
+				
+				}]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

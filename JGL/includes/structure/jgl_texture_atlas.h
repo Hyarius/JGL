@@ -8,7 +8,7 @@ namespace jgl
 {
 	class Texture_atlas
 	{
-	private:
+	protected:
 		jgl::Map<jgl::String, jgl::Image_handler*> _content;
 
 	public:

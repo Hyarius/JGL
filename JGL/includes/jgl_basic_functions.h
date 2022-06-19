@@ -194,4 +194,6 @@ namespace jgl
 	Stream& endl(jgl::Stream& p_stream);
 
 	jgl::Ulong get_time();
+
+	jgl::Array<Vector2Int> 		calc_line_2d(jgl::Vector2Int p_start, jgl::Vector2Int p_end);
 }

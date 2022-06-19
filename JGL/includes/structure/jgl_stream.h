@@ -43,4 +43,7 @@ namespace jgl
 
 		void set_prefix(jgl::String p_prefix);
 	};
+
+#define DEBUG_LINE(){DEBUG_LINE_TEXT("");}
+#define DEBUG_LINE_TEXT(text){jgl::cout << __FUNCTION__ << "::" << __LINE__;if(text != ""){jgl::cout << "::" << text;}jgl::cout << jgl::endl;}
 }

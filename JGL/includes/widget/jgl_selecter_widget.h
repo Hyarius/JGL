@@ -83,6 +83,11 @@ namespace jgl
 			_next_button.activate();
 		}
 
+		T value()
+		{
+			return (_values[_value_index]);
+		}
+
 		void add_value(T p_value)
 		{
 			_values.push_back(p_value);
