@@ -156,6 +156,9 @@
     <ClCompile Include="srcs\structure\translation_atlas.cpp">
       <Filter>Source Files\structure</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\structure\jgl_tiledmap.cpp">
+      <Filter>Source Files\structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">
@@ -352,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="includes\widget\jgl_server_manager.h">
       <Filter>Header Files\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structure\jgl_tilemap.h">
+      <Filter>Header Files\structure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

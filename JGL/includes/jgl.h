@@ -14,3 +14,5 @@
 #include "jgl_application.h"
 
 #include "jgl_widgets.h"
+
+#include "structure/jgl_tilemap.h"

@@ -1,5 +1,9 @@
 #include "jgl_tester.h"
 
+using Node = jgl::INode;
+using Chunk = jgl::IBakableChunk<Node, 16, 16>;
+using Tiledmap = jgl::Tilemap<Chunk>;
+
 class Main_application : public jgl::Widget
 {
 private:
@@ -90,6 +94,11 @@ int main(int argc, char **argv)
 	jgl::Application app("JGL_tester", jgl::Vector2Int(600, 600), jgl::Color(80, 80, 80));
 	app.set_default_font("ressource/font/karma suture.ttf");
 	app.active_multithread();
+
+	Tiledmap map;
+
+	Chunk* tmp = map.request_chunk(jgl::Vector2Int(0, 0));
+	tmp->bake(&map, false);
 
 	Main_application app_main(nullptr);
 	app_main.set_geometry(0, app.size());

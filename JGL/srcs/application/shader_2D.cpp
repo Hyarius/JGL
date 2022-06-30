@@ -107,3 +107,46 @@ jgl::String texture_bitmap_shader_frag = {
 			"discard;"
 	"}"
 };
+
+
+jgl::String vertex_tilemap_shader_code = R"(#version 330 core
+
+layout(location = 0) in vec3 model_space;
+layout(location = 1) in vec2 model_uvs;
+layout(location = 2) in float animation_sprite_delta;
+
+uniform vec3 delta_model;
+uniform int animation_state;
+uniform vec2 uvs_unit;
+
+out vec2 UV;
+
+void main()
+{
+	gl_Position = vec4(model_space + delta_model, 1.0f);
+
+	UV = model_uvs + (vec2(animation_state * animation_sprite_delta, 0) * uvs_unit);
+})";
+
+jgl::String fragment_tilemap_shader_code = R"(#version 330 core
+
+in vec2 UV;
+
+layout(location = 0) out vec4 color;
+
+uniform sampler2D textureID;
+
+void main()
+{
+	if (UV.x < 0 || UV.x > 1 || UV.y < 0 || UV.y > 1)
+	{
+		color = vec4(1, 0, 0, 1);
+	}
+	else
+	{
+		color = texture(textureID, UV).rgba;
+
+		if (color.a == 0)
+			discard;
+	}
+})";

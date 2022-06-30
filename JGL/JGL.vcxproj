@@ -184,6 +184,7 @@
     <ClCompile Include="srcs\structure\jgl_state_machine.cpp" />
     <ClCompile Include="srcs\structure\jgl_stream.cpp" />
     <ClCompile Include="srcs\structure\jgl_thread.cpp" />
+    <ClCompile Include="srcs\structure\jgl_tiledmap.cpp" />
     <ClCompile Include="srcs\structure\jgl_timer.cpp" />
     <ClCompile Include="srcs\structure\keyboard_handler.cpp" />
     <ClCompile Include="srcs\structure\mouse_handler.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="includes\structure\jgl_string.h" />
     <ClInclude Include="includes\structure\jgl_texture_atlas.h" />
     <ClInclude Include="includes\structure\jgl_thread.h" />
+    <ClInclude Include="includes\structure\jgl_tilemap.h" />
     <ClInclude Include="includes\structure\jgl_timer.h" />
     <ClInclude Include="includes\structure\jgl_translation_atlas.h" />
     <ClInclude Include="includes\structure\jgl_vector.h" />
