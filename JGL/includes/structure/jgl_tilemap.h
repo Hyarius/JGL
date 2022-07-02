@@ -13,18 +13,26 @@ namespace jgl
 {
 	struct INode
 	{
+		static const jgl::Short OBSTACLE = 0b0000000000000000;
+		static const jgl::Short NORTH_WALKABLE = 0b0000000000000001;
+		static const jgl::Short EAST_WALKABLE = 0b0000000000000010;
+		static const jgl::Short SOUTH_WALKABLE = 0b0000000000000100;
+		static const jgl::Short WEST_WALKABLE = 0b0000000000001000;
+		static const jgl::Short WALKABLE = 0b0000000000001111;
 		static jgl::Vector2Int SIZE;
 		static jgl::Vector3 UNIT;
-		jgl::Ushort id;
+		jgl::Ulong id;
 		jgl::Vector2 sprite;
 		jgl::Char animation_size;
 		jgl::Bool autotiled;
+		jgl::Bool obstacle;
 
-		INode(jgl::Ushort p_id = 0, jgl::Bool p_autotiled = false) :
+		INode(jgl::Ulong p_id, jgl::Vector2Int p_sprite, jgl::Bool p_autotiled, jgl::Short p_obstacle, jgl::Int p_animation_size) :
 			id(p_id),
-			sprite(0),
-			animation_size(0),
-			autotiled(p_autotiled)
+			sprite(p_sprite),
+			animation_size(p_animation_size),
+			autotiled(p_autotiled),
+			obstacle(p_obstacle)
 		{
 
 		}
@@ -33,6 +41,11 @@ namespace jgl
 	template <typename TNodeType, const jgl::Size_t NChunkSize, const jgl::Size_t NChunkDepth = 1>
 	class IChunk
 	{
+	public:
+		typedef TNodeType NodeType;
+		static const jgl::Size_t C_SIZE = NChunkSize;
+		static const jgl::Size_t C_DEPTH = NChunkDepth;
+
 	protected:
 		static inline jgl::Array<TNodeType*> _nodes = {};
 
@@ -64,19 +77,16 @@ namespace jgl
 
 		jgl::Short content(jgl::Vector2Int p_pos)
 		{
-			static_assert(NChunkDepth == 1, "Chunk depth > 1 : Use content(Vector3Int)");
 			return (_content[p_pos.x][p_pos.y][0]);
 		}
 
 		jgl::Short content(jgl::Vector2Int p_pos, jgl::Int p_z)
 		{
-			static_assert(NChunkDepth != 1, "Chunk depth == 1 : Use content(Vector2Int)");
 			return (_content[p_pos.x][p_pos.y][p_z]);
 		}
 
 		jgl::Short content(jgl::Vector3Int p_pos)
 		{
-			static_assert(NChunkDepth != 1, "Chunk depth == 1 : Use content(Vector2Int)");
 			return (_content[p_pos.x][p_pos.y][p_pos.z]);
 		}
 
@@ -94,11 +104,12 @@ namespace jgl
 	};
 
 	template<typename TBakableChunkType>
-	class Tilemap;
+	class ITilemap;
 
 	template <typename TNodeType, const jgl::Size_t NChunkSize, const jgl::Size_t NChunkDepth = 1>
 	class IBakableChunk : public IChunk<TNodeType, NChunkSize, NChunkDepth>
 	{
+
 	protected:
 		struct Shader_data
 		{
@@ -304,8 +315,8 @@ namespace jgl
 		};
 		static inline jgl::Vector2 _delta_uvs[4] = {
 			jgl::Vector2(0, 0),
-			jgl::Vector2(1, 0),
 			jgl::Vector2(0, 1),
+			jgl::Vector2(1, 0),
 			jgl::Vector2(1, 1)
 		};
 		static inline jgl::Uint _element_index[6] = {
@@ -318,7 +329,7 @@ namespace jgl
 		{
 			if (TNodeType::UNIT == 0.0f)
 			{
-				TNodeType::UNIT = jgl::convert_screen_to_opengl(jgl::Vector2Int(TNodeType::UNIT.x, TNodeType::UNIT.y), 1) - jgl::convert_screen_to_opengl(0, 0);
+				TNodeType::UNIT = jgl::convert_screen_to_opengl(jgl::Vector2Int(TNodeType::SIZE.x, TNodeType::SIZE.y), 1) - jgl::convert_screen_to_opengl(0, 0);
 			}
 			if (_shader_data.generated == false)
 				_shader_data.generate();
@@ -359,7 +370,7 @@ namespace jgl
 				}
 				if (next_value == -1)
 				{
-
+					values[j] = true;
 				}
 				else
 				{
@@ -453,8 +464,15 @@ namespace jgl
 		IBakableChunk(jgl::Vector2Int p_pos) : IChunk<TNodeType, NChunkSize, NChunkDepth>(p_pos),
 			_baked(false)
 		{
-
+			unbake();
 		}
+
+		static void set_node_texture(jgl::Sprite_sheet *p_node_texture)
+		{
+			_node_texture = p_node_texture;
+		}
+
+		jgl::Bool baked() { return (_baked); }
 
 		void unbake()
 		{
@@ -470,7 +488,8 @@ namespace jgl
 			_mutex.unlock();
 		}
 
-		void bake(Tilemap<IBakableChunk>* p_map, jgl::Bool rebake)
+		template <typename TMapChunkType>
+		void bake(ITilemap<TMapChunkType>* p_map, jgl::Bool rebake)
 		{
 			_mutex.lock();
 			_initialize_opengl_data();
@@ -536,7 +555,70 @@ namespace jgl
 	};
 
 	template<typename TBakableChunkType>
-	class Tilemap
+	class ITilemap
+	{
+	private:
+
+	public:
+		virtual TBakableChunkType* chunk(jgl::Vector2Int p_pos) = 0;
+	};
+
+	template<typename TBakableChunkType, const jgl::Size_t NSize_x, const jgl::Size_t NSize_y>
+	class Finite_tilemap : public ITilemap <TBakableChunkType>
+	{
+	protected:
+		TBakableChunkType* _chunks[NSize_x][NSize_y];
+
+	public:
+		Finite_tilemap()
+		{
+			for (jgl::Size_t i = 0; i < NSize_x; i++)
+				for (jgl::Size_t j = 0; j < NSize_y; j++)
+				{
+					_chunks[i][j] = nullptr;
+				}
+		}
+
+		void unbake()
+		{
+			TBakableChunkType::NodeType::UNIT = 0;
+			for (jgl::Size_t i = 0; i < NSize_x; i++)
+				for (jgl::Size_t j = 0; j < NSize_y; j++)
+				{
+					if (_chunks[i][j] != nullptr)
+						_chunks[i][j]->unbake();
+				}
+		}
+
+		TBakableChunkType* request_chunk(jgl::Vector2Int p_pos)
+		{
+			if (p_pos.x >= NSize_x || p_pos.y >= NSize_y)
+				return (nullptr);
+			else if (_chunks[p_pos.x][p_pos.y] == nullptr)
+				_chunks[p_pos.x][p_pos.y] = new TBakableChunkType(p_pos);
+			return (_chunks[p_pos.x][p_pos.y]);
+		}
+
+		TBakableChunkType* chunk(jgl::Vector2Int p_pos)
+		{
+			if (p_pos.x >= NSize_x || p_pos.y >= NSize_y)
+				return (nullptr);
+			return (_chunks[p_pos.x][p_pos.y]);
+		}
+
+		void add_chunk(jgl::Vector2Int p_pos, TBakableChunkType* p_chunk)
+		{
+			if (p_pos.x >= NSize_x || p_pos.y >= NSize_y)
+				return ;
+			else if (_chunks[p_pos.x][p_pos.y] != nullptr)
+				delete _chunks[p_pos.x][p_pos.y];
+			_chunks[p_pos.x][p_pos.y] = p_chunk;
+		}
+	};
+
+
+	template<typename TBakableChunkType>
+	class Tilemap : public ITilemap <TBakableChunkType>
 	{
 	protected:
 		jgl::Map<jgl::Vector2Int, TBakableChunkType*> _chunks;
@@ -549,6 +631,7 @@ namespace jgl
 
 		void unbake()
 		{
+			TBakableChunkType::NodeType::UNIT = 0;
 			for (auto tmp : _chunks)
 			{
 				tmp.second->unbake();
