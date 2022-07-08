@@ -405,6 +405,9 @@ namespace jgl
 
 	jgl::Long generate_nbr(const jgl::Long min, const jgl::Long max)
 	{
+		if (min == max)
+			return (min);
+
 		jgl::Long value = 0;
 
 		for (jgl::Size_t i = 0; i < 4; i++)

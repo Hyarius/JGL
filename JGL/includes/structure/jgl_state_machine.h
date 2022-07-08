@@ -5,44 +5,46 @@
 
 namespace jgl
 {
-	class Abstract_activity
-	{
-	protected:
-
-	private:
-
-	public:
-		virtual ~Abstract_activity()
-		{
-
-		}
-		virtual void execute() = 0;
-		virtual void on_transition() = 0;
-	};
-
-	template <typename State>
+	template <typename TState>
 	class State_machine
 	{
-	public:
+		public:class Abstract_activity
+		{
+		protected:
+			State_machine<TState>* _owner;
+
+		public:
+			Abstract_activity(State_machine<TState>* p_owner) :
+				_owner(p_owner)
+			{
+				
+			}
+			virtual ~Abstract_activity()
+			{
+
+			}
+			virtual void execute() = 0;
+			virtual void on_transition() = 0;
+		};
 
 	protected:
 
 	private:
-		jgl::Map<State, Abstract_activity*> _activities;
+		jgl::Map<TState, Abstract_activity*> _activities;
 
 		Abstract_activity* _active_activity = nullptr;
 		std::recursive_mutex _mutex;
-		State _last_state;
-		State _state;
+		TState _last_state;
+		TState _state;
 
 	public:
-		State_machine(State p_starting_state = {})
+		State_machine(TState p_starting_state = {})
 		{
 			_activities.clear();
 			_state = p_starting_state;
 			_last_state = p_starting_state;
 		}
-		void set_state(State p_state)
+		void set_state(TState p_state)
 		{
 			if (_activities.count(_state) == 0)
 			{
@@ -53,7 +55,7 @@ namespace jgl
 			_state = p_state;
 			_mutex.unlock();
 		}
-		void add_activity(State p_state, Abstract_activity* p_activity)
+		void add_activity(TState p_state, Abstract_activity* p_activity)
 		{
 			_activities[p_state] = p_activity;
 		}

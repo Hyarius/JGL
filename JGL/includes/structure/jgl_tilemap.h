@@ -19,7 +19,7 @@ namespace jgl
 		static const jgl::Short SOUTH_WALKABLE = 0b0000000000000100;
 		static const jgl::Short WEST_WALKABLE = 0b0000000000001000;
 		static const jgl::Short WALKABLE = 0b0000000000001111;
-		static jgl::Vector2Int SIZE;
+		static jgl::Size_t SIZE;
 		static jgl::Vector3 UNIT;
 		jgl::Ulong id;
 		jgl::Vector2 sprite;
@@ -90,16 +90,27 @@ namespace jgl
 			return (_content[p_pos.x][p_pos.y][p_pos.z]);
 		}
 
+		virtual void set_content(jgl::Int p_x, jgl::Int p_y, jgl::Int p_z, jgl::Short p_value)
+		{
+			if (p_x < 0 || p_x >= C_SIZE || p_y < 0 || p_y >= C_SIZE || p_z < 0 || p_z >= C_DEPTH)
+				return;
+			_content[p_x][p_y][p_z] = p_value;
+		}
+
 		void set_content(jgl::Vector2Int p_pos, jgl::Short p_value)
 		{
-			static_assert(NChunkDepth == 1, "Chunk depth > 1 : Use set_content(Vector3Int, jgl::Short)");
-			_content[p_pos.x][p_pos.y][0] = p_value;
+			set_content(p_pos.x, p_pos.y, 0, p_value);
+		}
+
+
+		void set_content(jgl::Vector2Int p_pos, jgl::Int p_depth, jgl::Short p_value)
+		{
+			set_content(p_pos.x, p_pos.y, p_depth, p_value);
 		}
 
 		void set_content(jgl::Vector3Int p_pos, jgl::Short p_value)
 		{
-			static_assert(NChunkDepth != 1, "Chunk depth == 1 : Use set_content(Vector2Int, jgl::Short)");
-			_content[p_pos.x][p_pos.y][p_pos.z] = p_value;
+			set_content(p_pos.x, p_pos.y, p_pos.z, p_value);
 		}
 	};
 
@@ -329,7 +340,7 @@ namespace jgl
 		{
 			if (TNodeType::UNIT == 0.0f)
 			{
-				TNodeType::UNIT = jgl::convert_screen_to_opengl(jgl::Vector2Int(TNodeType::SIZE.x, TNodeType::SIZE.y), 1) - jgl::convert_screen_to_opengl(0, 0);
+				TNodeType::UNIT = jgl::convert_screen_to_opengl(jgl::Vector2Int(TNodeType::SIZE, TNodeType::SIZE), 1) - jgl::convert_screen_to_opengl(0, 0);
 			}
 			if (_shader_data.generated == false)
 				_shader_data.generate();
@@ -560,7 +571,59 @@ namespace jgl
 	private:
 
 	public:
+		jgl::Vector2Int convert_world_to_chunk(jgl::Vector2Int p_pos)
+		{
+			jgl::Vector2 result;
+
+			result.x = static_cast<jgl::Float>(p_pos.x) / static_cast<jgl::Float>(TBakableChunkType::C_SIZE);
+			result.y = static_cast<jgl::Float>(p_pos.y) / static_cast<jgl::Float>(TBakableChunkType::C_SIZE);
+
+			return (result.floor());
+		}
+
+		jgl::Vector2Int convert_world_to_chunk(jgl::Vector3Int p_pos)
+		{
+			return (convert_world_to_chunk(jgl::Vector2Int(p_pos.x, p_pos.y)));
+		}
+
 		virtual TBakableChunkType* chunk(jgl::Vector2Int p_pos) = 0;
+
+		void set_content(jgl::Vector2Int p_pos, jgl::Int p_depth, jgl::Short p_value)
+		{
+			jgl::Vector2Int chunk_pos = this->convert_world_to_chunk(p_pos);
+			TBakableChunkType* tmp_chunk = this->chunk(chunk_pos);
+			if (tmp_chunk != nullptr)
+				tmp_chunk->set_content(p_pos - chunk_pos * TBakableChunkType::C_SIZE, p_depth, p_value);
+		}
+
+		void set_content(jgl::Vector2Int p_pos, jgl::Short p_value)
+		{
+			set_content(p_pos, 0, p_value);
+		}
+
+		void set_content(jgl::Vector3Int p_pos, jgl::Short p_value)
+		{
+			set_content(jgl::Vector2Int(p_pos.x, p_pos.y), p_pos.z, p_value);
+		}
+
+		jgl::Short content(jgl::Vector2Int p_pos, jgl::Int p_depth)
+		{
+			jgl::Vector2Int chunk_pos = this->convert_world_to_chunk(p_pos);
+			TBakableChunkType* tmp_chunk = this->chunk(chunk_pos);
+			if (tmp_chunk != nullptr)
+				return (tmp_chunk->content(p_pos - chunk_pos * TBakableChunkType::C_SIZE, p_depth));
+			return (0);
+		}
+
+		jgl::Short content(jgl::Vector2Int p_pos)
+		{
+			return (content(p_pos, 0));
+		}
+
+		jgl::Short content(jgl::Vector3Int p_pos)
+		{
+			return (content(jgl::Vector2Int(p_pos.x, p_pos.y), p_pos.z));
+		}
 	};
 
 	template<typename TBakableChunkType, const jgl::Size_t NSize_x, const jgl::Size_t NSize_y>

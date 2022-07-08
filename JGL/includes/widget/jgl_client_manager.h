@@ -45,6 +45,23 @@ namespace jgl
 				return (nullptr);
 			return (jgl::Singleton_widget< Client_manager<TMessage> >::instance()->get_client());
 		}
+
+		void start(jgl::String p_address, jgl::Ushort p_server_port)
+		{
+			Client_manager::instance()->client()->connect(p_address, p_server_port);
+		}
+
+		static void send(jgl::Message<TMessage>& p_msg)
+		{
+			if (Client_manager<TMessage>::client() != nullptr)
+			{
+				Client_manager<TMessage>::client()->send(p_msg);
+			}
+			else
+			{
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No client accesible");
+			}
+		}
 	};
 
 }
