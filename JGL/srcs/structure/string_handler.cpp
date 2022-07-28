@@ -270,6 +270,22 @@ namespace jgl
 		return (npos);
 	}
 
+	const Int String::rfind(const String& to_find) const
+	{
+		for (Int i = size() - 1; i >= 0; i--)
+		{
+			jgl::Bool found = true;
+			for (Size_t j = 0; j < to_find.size() && found == true; j++)
+			{
+				if (this->operator[](i + j) != to_find[j])
+					found = false;
+			}
+			if (found == true)
+				return (i);
+		}
+		return (npos);
+	}
+
 	const jgl::Bool String::compose_only(const String& to_find) const
 	{
 		jgl::Bool result = false;

@@ -51,7 +51,7 @@ namespace jgl
 			Client_manager::instance()->client()->connect(p_address, p_server_port);
 		}
 
-		static void send(jgl::Message<TMessage>& p_msg)
+		static void send(jgl::Message<TMessage> p_msg)
 		{
 			if (Client_manager<TMessage>::client() != nullptr)
 			{
@@ -60,6 +60,18 @@ namespace jgl
 			else
 			{
 				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No client accesible");
+			}
+		}
+
+		void add_activity(TMessage p_msg_type, std::function< void(jgl::Message<TMessage>&, jgl::Data_contener&) > p_funct, jgl::Data_contener p_param = jgl::Data_contener())
+		{
+			if (Client_manager<TMessage>::client() != nullptr)
+			{
+				Client_manager<TMessage>::client()->add_activity(p_msg_type, p_funct, p_param);
+			}
+			else
+			{
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No Client accesible");
 			}
 		}
 	};

@@ -130,6 +130,9 @@ namespace jgl
 				asio::async_connect(_socket, endpoints,
 					[this](std::error_code ec, asio::ip::tcp::endpoint endpoint)
 					{
+						asio::ip::tcp::no_delay no_delay(true);
+						_socket.set_option(no_delay);
+
 						if (!ec)
 							_read_header();
 					});

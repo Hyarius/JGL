@@ -372,7 +372,6 @@ namespace jgl
 		{
 			while (_max_size < new_size)
 				_add_new_line();
-			_size = new_size;
 		}
 
 		void clear()

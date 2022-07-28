@@ -52,37 +52,51 @@ namespace jgl
 			return (jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server());
 		}
 
-		void send_to(jgl::Connection<TMessage>* p_client, const jgl::Message<TMessage>& p_msg)
-		{
-			if (jgl::Singleton_widget< Server_manager<TMessage> >::server() != nullptr)
-			{
-				jgl::Singleton_widget< Server_manager<TMessage> >::server()->send_to(p_client, p_msg);
-			}
-			else
-			{
-				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No Server accesible");
-			}
-		}
-
-		void send_to_all(const jgl::Message<TMessage>& p_msg, jgl::Connection<TMessage>* p_ignore = nullptr &&
-			jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server() != nullptr)
-		{
-			if (jgl::Singleton_widget< Server_manager<TMessage> >::server() != nullptr)
-			{
-				jgl::Singleton_widget< Server_manager<TMessage> >::server()->send_to_all(p_msg, p_ignore);
-			}
-			else
-			{
-				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No Server accesible");
-			}
-		}
-
-		void send_to_array(const jgl::Message<TMessage>& p_msg, jgl::Array<jgl::Connection<TMessage>*>* p_list)
+		void send_to(jgl::Connection<TMessage>* p_client, const jgl::Message<TMessage> p_msg)
 		{
 			if (jgl::Singleton_widget< Server_manager<TMessage> >::instance() != nullptr &&
-				jgl::Singleton_widget< Server_manager<TMessage> >::server() != nullptr)
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server() != nullptr)
 			{
-				jgl::Singleton_widget< Server_manager<TMessage> >::server()->send_to_array(p_msg, p_list);
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server()->send_to(p_client, p_msg);
+			}
+			else
+			{
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No Server accesible");
+			}
+		}
+
+		void send_to_all(const jgl::Message<TMessage> p_msg, jgl::Connection<TMessage>* p_ignore = nullptr)
+		{
+			if (jgl::Singleton_widget< Server_manager<TMessage> >::instance() != nullptr &&
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server() != nullptr)
+			{
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server()->send_to_all(p_msg, p_ignore);
+			}
+			else
+			{
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No Server accesible");
+			}
+		}
+
+		void send_to_array(const jgl::Message<TMessage> p_msg, jgl::Array<jgl::Connection<TMessage>*>& p_list)
+		{
+			if (jgl::Singleton_widget< Server_manager<TMessage> >::instance() != nullptr &&
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server() != nullptr)
+			{
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server()->send_to_array(p_msg, p_list);
+			}
+			else
+			{
+				THROW_EXCEPTION(jgl::Error_level::Error, 1, "No Server accesible");
+			}
+		}
+
+		void add_activity(TMessage p_msg_type, std::function< void(jgl::Connection<TMessage>*, jgl::Message<TMessage>&, jgl::Data_contener&) > p_funct, jgl::Data_contener p_param = jgl::Data_contener())
+		{
+			if (jgl::Singleton_widget< Server_manager<TMessage> >::instance() != nullptr &&
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server() != nullptr)
+			{
+				jgl::Singleton_widget< Server_manager<TMessage> >::instance()->get_server()->add_activity(p_msg_type, p_funct, p_param);
 			}
 			else
 			{

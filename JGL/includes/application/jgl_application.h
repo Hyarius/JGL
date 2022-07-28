@@ -309,6 +309,7 @@ namespace jgl
 		jgl::Bool multithread() { return (_multithread); }
 		void active_multithread() { _multithread = true; }
 
+		void reset();
 		void resize(jgl::Int x, jgl::Int y);
 		void set_masked(jgl::Bool p_masked) { _masked = p_masked; }
 		void set_max_fps(jgl::Ulong nb_fps) { _tick_delta = 1000 / nb_fps; }

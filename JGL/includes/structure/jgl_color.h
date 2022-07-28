@@ -52,6 +52,11 @@ namespace jgl
 		/*
 			Create a color defined to represent a white color
 		*/
+		static jgl::Color transparent() { return (jgl::Color(0, 0, 0, 0)); }
+
+		/*
+			Create a color defined to represent a white color
+		*/
 		static jgl::Color white() { return (jgl::Color(255, 255, 255)); }
 
 		/*

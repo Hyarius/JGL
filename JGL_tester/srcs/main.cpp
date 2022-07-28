@@ -95,10 +95,6 @@ int main(int argc, char **argv)
 	app.set_default_font("ressource/font/karma suture.ttf");
 	app.active_multithread();
 
-	Tiledmap map;
-
-	Chunk* tmp = map.request_chunk(jgl::Vector2Int(0, 0));
-	tmp->bake(&map, false);
 
 	Main_application app_main(nullptr);
 	app_main.set_geometry(0, app.size());

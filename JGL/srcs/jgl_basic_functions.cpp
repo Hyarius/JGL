@@ -6,6 +6,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "external_lib/stb_image_write.h"
 
+#include "jgl_define.h"
+
 jgl::Exception e_exception;
 
 namespace jgl
@@ -13,6 +15,25 @@ namespace jgl
 	jgl::Int jgl::String::npos = -1;
 	Glyph jgl::String::nullchar = '\0';
 	jgl::Error_level Exception::_minimal_error_level = jgl::Error_level::Error;
+
+	std::string methodName(const std::string& prettyFunction)
+	{
+		size_t begin = prettyFunction.rfind("::") + 2;
+		size_t end = prettyFunction.rfind("(") - begin;
+
+		return prettyFunction.substr(begin, end) + "()";
+	}
+
+	std::string className(const std::string& prettyFunction)
+	{
+		size_t colons = prettyFunction.rfind("::");
+		if (colons == jgl::String::npos)
+			return "::";
+		size_t begin = prettyFunction.substr(0, colons).rfind(" ") + 1;
+		size_t end = colons - begin;
+
+		return prettyFunction.substr(begin, end);
+	}
 
 	jgl::String glGetTypeString(GLenum type)
 	{

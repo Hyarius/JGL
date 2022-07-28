@@ -136,6 +136,10 @@ namespace jgl
 		_play = false;
 	}
 
+	void Application::reset()
+	{
+		_opengl_context.setup(_background);
+	}
 
 	void Application::_renderer_run()
 	{

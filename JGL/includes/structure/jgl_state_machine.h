@@ -5,32 +5,58 @@
 
 namespace jgl
 {
+	class Abstract_activity
+	{
+	protected:
+
+	public:
+		Abstract_activity()
+		{
+
+		}
+		virtual ~Abstract_activity()
+		{
+
+		}
+		virtual void execute() = 0;
+		virtual void on_transition() = 0;
+	};
+
+	class Activity : public Abstract_activity
+	{
+	private:
+		std::function<void()> _execute_funct;
+		std::function<void()> _transition_funct;
+
+	public:
+		Activity(std::function<void()> p_execute_funct)
+		{
+			_execute_funct = p_execute_funct;
+			_transition_funct = nullptr;
+		}
+		Activity(std::function<void()> p_execute_funct, std::function<void()> p_transition_funct)
+		{
+			_execute_funct = p_execute_funct;
+			_transition_funct = p_transition_funct;
+		}
+		void execute()
+		{
+			if (_execute_funct != nullptr)
+				_execute_funct();
+		}
+		void on_transition()
+		{
+			if (_transition_funct != nullptr)
+				_transition_funct();
+		}
+	};
+
 	template <typename TState>
 	class State_machine
 	{
-		public:class Abstract_activity
-		{
-		protected:
-			State_machine<TState>* _owner;
-
-		public:
-			Abstract_activity(State_machine<TState>* p_owner) :
-				_owner(p_owner)
-			{
-				
-			}
-			virtual ~Abstract_activity()
-			{
-
-			}
-			virtual void execute() = 0;
-			virtual void on_transition() = 0;
-		};
-
-	protected:
-
 	private:
 		jgl::Map<TState, Abstract_activity*> _activities;
+		jgl::Array<Abstract_activity*> _allocated_activity;
 
 		Abstract_activity* _active_activity = nullptr;
 		std::recursive_mutex _mutex;
@@ -43,6 +69,17 @@ namespace jgl
 			_activities.clear();
 			_state = p_starting_state;
 			_last_state = p_starting_state;
+		}
+		~State_machine()
+		{
+			for (jgl::Size_t i = 0; i < _allocated_activity.size(); i++)
+			{
+				delete _allocated_activity[i];
+			}
+		}
+		TState state() const
+		{
+			return (_state);
 		}
 		void set_state(TState p_state)
 		{
@@ -58,6 +95,20 @@ namespace jgl
 		void add_activity(TState p_state, Abstract_activity* p_activity)
 		{
 			_activities[p_state] = p_activity;
+		}
+		void add_activity(TState p_state, std::function<void()> p_execute_funct)
+		{
+			Activity* new_activity = new Activity(p_execute_funct);
+
+			_allocated_activity.push_back(new_activity);
+			_activities[p_state] = new_activity;
+		}
+		void add_activity(TState p_state, std::function<void()> p_execute_funct, std::function<void()> p_on_transition_funct)
+		{
+			Activity* new_activity = new Activity(p_execute_funct, p_on_transition_funct);
+
+			_allocated_activity.push_back(new_activity);
+			_activities[p_state] = new_activity;
 		}
 
 		void update()

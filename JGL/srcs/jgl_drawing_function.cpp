@@ -89,6 +89,31 @@ namespace jgl
 		}
 	}
 
+	void cast_draw_color(jgl::Array<jgl::Vector3>& p_vertex_array, jgl::Array<jgl::Color>& p_color_array, jgl::Array<jgl::Uint>& p_indexes_array)
+	{
+		const jgl::String shader_name = "Color_shader_2D";
+
+		static jgl::Shader* tmp_shader = nullptr;
+		static jgl::Buffer* model_buffer = nullptr;
+		static jgl::Buffer* color_buffer = nullptr;
+
+		if (tmp_shader == nullptr)
+			tmp_shader = jgl::Application::active_application()->shader(shader_name);
+
+		if (tmp_shader == nullptr)
+			THROW_EXCEPTION(jgl::Error_level::Error, 0, "No shader named " + shader_name);
+
+		if (model_buffer == nullptr)
+			model_buffer = tmp_shader->buffer("model_space");
+		if (color_buffer == nullptr)
+			color_buffer = tmp_shader->buffer("color_space");
+
+		model_buffer->send(p_vertex_array.all(), p_vertex_array.size());
+		color_buffer->send(p_color_array.all(), p_color_array.size());
+		tmp_shader->indexes_buffer()->send(p_indexes_array.all(), p_indexes_array.size());
+		tmp_shader->launch(jgl::Shader::Mode::Triangle);
+	}
+
 	void draw_rectangle_color(jgl::Color color, jgl::Vector2Int pos, jgl::Vector2Int size, jgl::Float depth)
 	{
 		const jgl::String shader_name = "Color_shader_2D";

@@ -22,4 +22,6 @@ namespace jgl
 		jgl::String text, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color);
 	jgl::Vector2Int prepare_render_text(jgl::Array<Vector3>* vertex_array, jgl::Array<jgl::Vector2>* uvs_array, jgl::Array<jgl::Color>* color_array, jgl::Array<jgl::Color>* color_outline_array, jgl::Array<jgl::Float>* alpha_array, jgl::Array<jgl::Uint>* index_array,
 		jgl::String text, jgl::Vector2Int pos, jgl::Uint size, jgl::Float level, jgl::Float alpha, jgl::Color text_color, jgl::Color outline_color);
+
+	void cast_draw_color(jgl::Array<jgl::Vector3>& vertex_content, jgl::Array<jgl::Color>& color_content, jgl::Array<jgl::Uint>& indexes_array);
 }

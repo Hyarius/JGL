@@ -38,6 +38,7 @@ namespace jgl
 		jgl::Locked_queue<jgl::Input_message<T>> _input;
 
 		std::deque<jgl::Connection<T>*> _active_connection;
+		jgl::Connection<T>* _self;
 		std::deque<jgl::Connection<T>*> _accepted_connection;
 
 		asio::io_context _asio_context;
@@ -75,10 +76,10 @@ namespace jgl
 
 							_active_connection.push_back(std::move(newconn));
 
+							if (_active_connection.size() == 1)
+								_self = _active_connection.front();
+
 							_active_connection.back()->connect_to_client(_id_count++);
-
-							THROW_INFORMATION("[" + jgl::itoa(_active_connection.back()->id()) + "] Connection Approved");
-
 						}
 						else
 						{
@@ -112,7 +113,7 @@ namespace jgl
 				}
 				else
 				{
-					THROW_EXCEPTION(jgl::Error_level::Warning, 1, "Message_received of unknow id (" + jgl::itoa(static_cast<jgl::Int>(msg.type())) + ")");
+					THROW_EXCEPTION(jgl::Error_level::Warning, 1, "[SERVER] - Message_received of unknow id(" + jgl::itoa(static_cast<jgl::Int>(msg.type())) + ")");
 				}
 			}
 			else if (client->state() == jgl::Connection<T>::State::Unknown)
@@ -125,8 +126,6 @@ namespace jgl
 		{
 			jgl::Message<T> msg;
 
-			THROW_INFORMATION("Received connection from a new client [" + jgl::itoa(client->id()) + "] -> sending key [" + jgl::itoa(_key) + "]");
-
 			msg << _key;
 
 			client->send(msg);
@@ -134,7 +133,6 @@ namespace jgl
 
 		jgl::Bool _valid_client_connect(jgl::Connection<T>* client, jgl::Message<T>& msg)
 		{
-			THROW_INFORMATION("Validation connection from a client [" + jgl::itoa(client->id()) + "]");
 			jgl::Long key;
 			jgl::Long presumed_result;
 			jgl::Long real_result;
@@ -143,13 +141,9 @@ namespace jgl
 			msg >> presumed_result;
 
 
-			THROW_INFORMATION("Key received : " + jgl::itoa(key) + " of size " + jgl::itoa(sizeof(key)));
 			real_result = _compute_magic_number(key);
-			THROW_INFORMATION("Awsner : " + jgl::itoa(real_result) + " of size " + jgl::itoa(sizeof(real_result)));
-			THROW_INFORMATION("Magic number send : " + jgl::itoa(key) + " -> result proposed : " + jgl::itoa(presumed_result) + " vs espected " + jgl::itoa(real_result));
 			if (real_result == presumed_result)
 			{
-				THROW_INFORMATION("Connection accepted, send confirmation to client [" + jgl::itoa(client->id()) + "]");
 				client->accepted_by_server();
 				if (_login_funct != nullptr)
 					_login_funct(client, _login_param);
@@ -158,18 +152,15 @@ namespace jgl
 				jgl::Bool response = true;
 				msg << response;
 
-				THROW_INFORMATION("Send a message of size : " + jgl::itoa(msg.size()));
 				client->send(msg);
 				return (true);
 			}
 			else
 			{
-				THROW_INFORMATION("Connection rejected, send rejection to client [" + jgl::itoa(client->id()) + "]");
 				client->refused_by_server();
 				msg.clear();
 				jgl::Bool response = false;
 				msg << response;
-				THROW_INFORMATION("Send a message of size : " + jgl::itoa(msg.size()));
 				client->send(msg);
 				return (false);
 			}
@@ -197,6 +188,11 @@ namespace jgl
 		virtual ~Server()
 		{
 			stop();
+		}
+
+		Connection<T>* self()
+		{
+			return (_self);
 		}
 
 		/*
@@ -344,16 +340,13 @@ namespace jgl
 		/*
 			Send a message to connection stored in an array of connection.
 		*/
-		void send_to_array(const jgl::Message<T>& p_msg, jgl::Array<jgl::Connection<T> *>* p_list)
+		void send_to_array(const jgl::Message<T>& p_msg, jgl::Array<jgl::Connection<T> *>& p_list)
 		{
-			if (p_list != nullptr)
+			for (jgl::Size_t i = 0; i < p_list.size(); i++)
 			{
-				for (jgl::Size_t i = 0; i < p_list->size(); i++)
-				{
-					if (p_list->operator[](i) != nullptr)
-						send_to(p_list->operator[](i), p_msg);
+				if (p_list[i] != nullptr)
+					send_to(p_list[i], p_msg);
 
-				}
 			}
 		}
 

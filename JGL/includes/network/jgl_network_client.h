@@ -94,6 +94,14 @@ namespace jgl
 			_abstract_version_key_number = abstract_version;
 		}
 
+		void connect_handler(const std::error_code& error)
+		{
+			if (!error)
+			{
+				// Connect succeeded.
+			}
+		}
+
 		/*
 			Connect the client to the desired address, represented by the string [host], at the connection port [port]
 		*/
@@ -214,19 +222,15 @@ namespace jgl
 				{
 					auto msg = _input.pop_front().msg;
 
-					THROW_INFORMATION("Validation process begin : message received of size (" + jgl::itoa(msg.size()) + ")");
 					if (msg.size() == sizeof(jgl::Long))
 					{
-						THROW_INFORMATION("Validation process begin : magic number message");
 						jgl::Long key;
 						jgl::Long result;
 
 						msg >> key;
 
 						msg.clear();
-						THROW_INFORMATION("Key received : " + jgl::itoa(key) + " of size " + jgl::itoa(sizeof(key)));
 						result = _compute_magic_number(key);
-						THROW_INFORMATION("Awsner : " + jgl::itoa(result) + " of size " + jgl::itoa(sizeof(result)));
 						msg << key;
 						msg << result;
 						_unsecured_send(msg);
@@ -238,18 +242,16 @@ namespace jgl
 						msg >> Accepted;
 						if (Accepted == true)
 						{
-							THROW_INFORMATION("Validation process begin : confirmation type [Accepted]");
 							_connection->accepted_by_server();
 						}
 						else
 						{
-							THROW_INFORMATION("Validation process begin : confirmation type [Rejected]");
 							_connection->refused_by_server();
 						}
 					}
 					else
 					{
-						THROW_INFORMATION("Validation process begin : unknow type");
+
 					}
 				}
 			}
@@ -270,7 +272,7 @@ namespace jgl
 					}
 					else
 					{
-						THROW_EXCEPTION(jgl::Error_level::Warning, 1, "Message_received of unknow id (" + jgl::itoa(static_cast<jgl::Int>(msg.type())) + ")");
+						THROW_EXCEPTION(jgl::Error_level::Warning, 1, "[CLIENT] - Message_received of unknow id (" + jgl::itoa(static_cast<jgl::Int>(msg.type())) + ")");
 					}
 				}
 			}

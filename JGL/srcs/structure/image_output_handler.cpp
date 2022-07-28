@@ -54,6 +54,7 @@ namespace jgl
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		jgl::Application::active_application()->viewport()->use();
+		jgl::Application::active_application()->reset();
 	}
 
 	void Image_output::check_framebuffer_status(jgl::String msg)

@@ -90,6 +90,8 @@ namespace jgl
 
 		const Int find(const String& to_find) const;
 
+		const Int rfind(const String& to_find) const;
+
 		const jgl::Bool compose_only(const String& to_find) const;
 
 		String substr(const Size_t& start, const Size_t& size) const;

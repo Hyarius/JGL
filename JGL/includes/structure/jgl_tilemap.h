@@ -25,7 +25,7 @@ namespace jgl
 		jgl::Vector2 sprite;
 		jgl::Char animation_size;
 		jgl::Bool autotiled;
-		jgl::Bool obstacle;
+		jgl::Short obstacle;
 
 		INode(jgl::Ulong p_id, jgl::Vector2Int p_sprite, jgl::Bool p_autotiled, jgl::Short p_obstacle, jgl::Int p_animation_size) :
 			id(p_id),
@@ -57,6 +57,16 @@ namespace jgl
 		{
 			_nodes.push_back(p_node);
 		}
+		static TNodeType* node(jgl::Size_t p_index)
+		{
+			if (p_index >= _nodes.size())
+				return (nullptr);
+			return (_nodes[p_index]);
+		}
+		static const jgl::Array<TNodeType*>& nodes()
+		{
+			return (_nodes);
+		}
 
 		IChunk(jgl::Vector2Int p_pos) :
 			_pos(p_pos)
@@ -73,6 +83,11 @@ namespace jgl
 					}
 				}
 			}
+		}
+
+		jgl::Short* content()
+		{
+			return (&(_content[0][0][0]));
 		}
 
 		jgl::Short content(jgl::Vector2Int p_pos)
@@ -179,7 +194,7 @@ namespace jgl
 
 				if (indexes_buffer->size() != 0 && _node_texture != nullptr)
 				{
-					_node_texture->activate();
+					IBakableChunk::node_texture()->activate();
 
 					model_space_buffer->activate();
 					model_uvs_buffer->activate();
@@ -482,6 +497,10 @@ namespace jgl
 		{
 			_node_texture = p_node_texture;
 		}
+		static jgl::Sprite_sheet* node_texture()
+		{
+			return (_node_texture);
+		}
 
 		jgl::Bool baked() { return (_baked); }
 
@@ -571,7 +590,7 @@ namespace jgl
 	private:
 
 	public:
-		jgl::Vector2Int convert_world_to_chunk(jgl::Vector2Int p_pos)
+		static jgl::Vector2Int convert_world_to_chunk(jgl::Vector2Int p_pos)
 		{
 			jgl::Vector2 result;
 
@@ -581,7 +600,7 @@ namespace jgl
 			return (result.floor());
 		}
 
-		jgl::Vector2Int convert_world_to_chunk(jgl::Vector3Int p_pos)
+		static jgl::Vector2Int convert_world_to_chunk(jgl::Vector3Int p_pos)
 		{
 			return (convert_world_to_chunk(jgl::Vector2Int(p_pos.x, p_pos.y)));
 		}

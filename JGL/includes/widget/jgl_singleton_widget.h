@@ -25,7 +25,6 @@ namespace jgl
 			if (_instance == nullptr)
 			{
 				_instance = new T(p_parent);
-				_instance->activate();
 			}
 			return (_instance);
 		}
