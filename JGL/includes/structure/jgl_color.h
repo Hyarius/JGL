@@ -23,7 +23,7 @@ namespace jgl
 			Every color should be represented by an jgl::Int from 0 (none) to 255 (full)
 			The color model is RGBA
 		*/
-		Color(const jgl::Int p_r, const jgl::Int p_g, const jgl::Int p_b, const jgl::Int p_a = 255) :
+		Color(const jgl::Int& p_r, const jgl::Int& p_g, const jgl::Int& p_b, const jgl::Int& p_a = 255) :
 			r(static_cast<jgl::Float>(p_r % 256) / 255.0f),
 			g(static_cast<jgl::Float>(p_g % 256) / 255.0f),
 			b(static_cast<jgl::Float>(p_b % 256) / 255.0f),
@@ -36,18 +36,25 @@ namespace jgl
 			Every color should be represented by an jgl::Uint from 0 (none) to 255 (full)
 			The color model is RGBA
 		*/
-		Color(const jgl::Uint p_r, const jgl::Uint p_g, const jgl::Uint p_b, const jgl::Uint p_a = 255) : r(static_cast<jgl::Float>(p_r % 256) / 255.0f), g(static_cast<jgl::Float>(p_g % 256) / 255.0f), b(static_cast<jgl::Float>(p_b % 256) / 255.0f), a(static_cast<jgl::Float>(p_a % 256) / 255.0f) {}
+		Color(const jgl::Uint& p_r, const jgl::Uint& p_g, const jgl::Uint& p_b, const jgl::Uint& p_a = 255) : r(static_cast<jgl::Float>(p_r % 256) / 255.0f), g(static_cast<jgl::Float>(p_g % 256) / 255.0f), b(static_cast<jgl::Float>(p_b % 256) / 255.0f), a(static_cast<jgl::Float>(p_a % 256) / 255.0f) {}
 
 		/*
 			jgl::Float constructor
 			Every color should be represented by an jgl::Float from 0 (none) to 1 (full)
 			The color model is RGBA
 		*/
-		Color(const jgl::Float p_r, const jgl::Float p_g, const jgl::Float p_b, const jgl::Float p_a = 1.0f) : 
+		Color(const jgl::Float& p_r, const jgl::Float& p_g, const jgl::Float& p_b, const jgl::Float& p_a = 1.0f) :
 			r(p_r > 1.0f ? 1.0f : (p_r < 0 ? 0.0f : p_r)),
 			g(p_g > 1.0f ? 1.0f : (p_g < 0 ? 0.0f : p_g)),
 			b(p_b > 1.0f ? 1.0f : (p_b < 0 ? 0.0f : p_b)),
 			a(p_a > 1.0f ? 1.0f : (p_a < 0 ? 0.0f : p_a)) {}
+
+
+		Color(const jgl::Color& p_color, const jgl::Float p_a) :
+			r(p_color.r),
+			g(p_color.g),
+			b(p_color.b),
+			a(p_a) {}
 
 		/*
 			Create a color defined to represent a white color
@@ -106,5 +113,7 @@ namespace jgl
 			os << jgl::itoa(value.r * 255, 0) << "/" << jgl::itoa(value.g * 255, 0) << "/" << jgl::itoa(value.b * 255, 0) << "/" << jgl::itoa(value.a * 255, 0);
 			return os;
 		}
+
+		static jgl::Color to_color(jgl::String p_str, jgl::String p_delim);
 	};
 }

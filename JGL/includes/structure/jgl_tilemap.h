@@ -85,6 +85,8 @@ namespace jgl
 			}
 		}
 
+		jgl::Vector2Int pos() { return (_pos); }
+
 		jgl::Short* content()
 		{
 			return (&(_content[0][0][0]));

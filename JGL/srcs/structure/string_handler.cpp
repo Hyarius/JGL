@@ -80,7 +80,9 @@ namespace jgl
 					this->operator[](i + j) == delim[j])
 					j++;
 				if (j == tmp2)
+				{
 					result++;
+				}
 				i += j - 1;
 			}
 		}

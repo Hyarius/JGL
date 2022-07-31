@@ -4,36 +4,34 @@ namespace jgl
 {
 	Timer::Timer(jgl::Ulong p_timer_period)
 	{
-		_started = false;
+		_state = State::Stopped;
 		_timer_duration = p_timer_period;
 	}
 
 	void Timer::set_duration(jgl::Ulong p_timer_period)
 	{
-		_started = false;
+		_state = State::Stopped;
 		_timer_duration = p_timer_period;
 	}
 
 	void Timer::start()
 	{
 		_starting_time = jgl::get_time();
-		_started = true;
+		_state = State::Running;
 	}
 
 	void Timer::stop()
 	{
-		_started = false;
+		_state = State::Stopped;
 	}
 
-	jgl::Bool Timer::timeout()
+	Timer::State Timer::timeout()
 	{
-		if (_started == false)
-			return (true);
-		if (_starting_time + _timer_duration <= jgl::Application::active_application()->time())
+		if (_state == State::Running && _starting_time + _timer_duration <= jgl::Application::active_application()->time())
 		{
-			_started = false;
-			return (true);
+			_state = State::Timeout;
 		}
-		return (false);
+
+		return (_state);
 	}
 }

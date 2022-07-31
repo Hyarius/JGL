@@ -7,8 +7,15 @@ namespace jgl
 {
 	class Timer
 	{
+	public:
+		enum class State
+		{
+			Stopped,
+			Timeout,
+			Running
+		};
 	private:
-		jgl::Bool _started;
+		State _state;
 		jgl::Ulong _starting_time;
 		jgl::Ulong _timer_duration;
 
@@ -16,10 +23,9 @@ namespace jgl
 		Timer(jgl::Ulong p_timer_period = 1000);
 
 		void set_duration(jgl::Ulong p_timer_period);
-		jgl::Bool started() { return (_started);}
 		jgl::Ulong duration() { return (_timer_duration); }
 		void start();
 		void stop();
-		jgl::Bool timeout();
+		State timeout();
 	};
 }

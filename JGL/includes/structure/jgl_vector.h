@@ -149,11 +149,24 @@ namespace jgl
 
 			return (jgl::radian_to_degree(angle));
 		}
+		jgl::Float angle() const
+		{
+			jgl::Float degree = jgl::radian_to_degree(std::atan(static_cast<jgl::Float>(y) / static_cast<jgl::Float>(x)));
+
+			if (x >= 0 && y >= 0)
+				return (degree);
+			else if (x >= 0 && y < 0)
+				return (360 + degree);
+			else if (x < 0 && y >= 0)
+				return (180 + degree);
+			else
+				return (180 + degree);
+		}
 		Vector2_base<T> invert() const
 		{
 			return (Vector2_base<T>(x * -1, y * -1));
 		}
-		Vector2_base rotate(Vector2_base center, float angle) const
+		Vector2_base rotate(Vector2_base center, jgl::Float angle) const
 		{
 			float theta = jgl::degree_to_radian(angle);
 

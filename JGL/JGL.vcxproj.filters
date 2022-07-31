@@ -159,6 +159,9 @@
     <ClCompile Include="srcs\structure\jgl_tiledmap.cpp">
       <Filter>Source Files\structure</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\structure\jgl_color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\jgl.h">

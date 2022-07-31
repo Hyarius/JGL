@@ -11,8 +11,8 @@ namespace jgl
 	class Shader
 	{
 	private:
-		GLuint _program;
-		GLuint _buffer_array;
+		jgl::Uint _program;
+		jgl::Uint _buffer_array;
 		jgl::Buffer* _element_buffer;
 		jgl::Map<jgl::String, jgl::Uniform*> _uniforms;
 		jgl::Map<jgl::String, jgl::Buffer*> _buffers;
@@ -33,8 +33,8 @@ namespace jgl
 		void _parse_buffer(jgl::String base);
 		void _parse_uniform(jgl::String base);
 		void _parse_uniform_information(GLint _location, jgl::Array<jgl::String> tab);
-		void _compile_shader(GLuint p_id, jgl::String p_source);
-		void _compute_program(GLuint p_program_id, GLuint p_vertex_shader_id, GLuint p_fragment_shader_id);
+		void _compile_shader(jgl::Uint p_id, jgl::String p_source);
+		void _compute_program(jgl::Uint p_program_id, jgl::Uint p_vertex_shader_id, jgl::Uint p_fragment_shader_id);
 		void _load_shaders(jgl::String vertex_content, jgl::String fragment_content);
 
 	public:
@@ -59,6 +59,7 @@ namespace jgl
 		}
 
 		void launch(jgl::Shader::Mode type);
+		void launch_instancied(jgl::Shader::Mode type, jgl::Size_t nb_element);
 
 		void cast(jgl::Shader::Mode type, jgl::Size_t nb_elem)
 		{
@@ -68,7 +69,15 @@ namespace jgl
 			}
 		}
 
-		const GLuint program() const { return  (_program); }
+		void cast_instancied(jgl::Shader::Mode type, jgl::Size_t nb_vertex_model, jgl::Size_t nb_element)
+		{
+			if (nb_vertex_model != 0 && nb_element != 0)
+			{
+				glDrawElementsInstanced(static_cast<GLenum>(type), static_cast<GLsizei>(nb_vertex_model), GL_UNSIGNED_INT, nullptr, nb_element);
+			}
+		}
+
+		const jgl::Uint program() const { return  (_program); }
 		const jgl::Map<jgl::String, jgl::Uniform*>& uniforms() const { return (_uniforms); }
 		const jgl::Map<jgl::String, jgl::Buffer*>& buffers() const { return (_buffers); }
 
@@ -101,5 +110,11 @@ namespace jgl
 		}
 
 		jgl::Buffer* indexes_buffer() { return (_element_buffer); }
+
+		void set_attrib_divider(jgl::Int id, jgl::Int divider)
+		{
+			activate();
+			glVertexAttribDivisor(id, divider);
+		}
 	};
 }

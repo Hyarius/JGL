@@ -311,4 +311,17 @@ namespace jgl
 
 		cast(type, _element_buffer->size() / sizeof(jgl::Uint));
 	}
+	void Shader::launch_instancied(jgl::Shader::Mode type, jgl::Size_t nb_element)
+	{
+		activate();
+
+		for (auto it = _buffers.begin(); it != _buffers.end(); it++)
+		{
+			it->second->activate();
+		}
+
+		_element_buffer->activate();
+
+		cast_instancied(type, _element_buffer->size() / sizeof(jgl::Uint), nb_element);
+	}
 }

@@ -107,7 +107,7 @@ namespace jgl
 			model_buffer = tmp_shader->buffer("model_space");
 		if (color_buffer == nullptr)
 			color_buffer = tmp_shader->buffer("color_space");
-
+		tmp_shader->activate();
 		model_buffer->send(p_vertex_array.all(), p_vertex_array.size());
 		color_buffer->send(p_color_array.all(), p_color_array.size());
 		tmp_shader->indexes_buffer()->send(p_indexes_array.all(), p_indexes_array.size());

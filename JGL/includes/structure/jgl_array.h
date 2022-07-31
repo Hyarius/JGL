@@ -372,6 +372,14 @@ namespace jgl
 		{
 			while (_max_size < new_size)
 				_add_new_line();
+			set_size(new_size);
+		}
+
+		void set_size(const jgl::Size_t new_size)
+		{
+			if (_max_size < new_size)
+				resize(new_size);
+			_size = new_size;
 		}
 
 		void clear()
