@@ -236,6 +236,7 @@
     <ClInclude Include="includes\structure\jgl_image.h" />
     <ClInclude Include="includes\structure\jgl_locked_queue.h" />
     <ClInclude Include="includes\structure\jgl_perlin.h" />
+    <ClInclude Include="includes\structure\jgl_polygon2D.h" />
     <ClInclude Include="includes\structure\jgl_pool.h" />
     <ClInclude Include="includes\structure\jgl_observer.h" />
     <ClInclude Include="includes\structure\jgl_shared_object.h" />

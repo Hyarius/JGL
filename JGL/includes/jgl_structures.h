@@ -17,6 +17,7 @@
 #include "structure/jgl_pool.h"
 #include "structure/jgl_shared_object.h"
 #include "structure/jgl_vector.h"
+#include "structure/jgl_polygon2D.h"
 #include "structure/jgl_mouse.h"
 #include "structure/jgl_keyboard.h"
 

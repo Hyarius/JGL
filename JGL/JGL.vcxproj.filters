@@ -362,5 +362,8 @@
     <ClInclude Include="includes\structure\jgl_tilemap.h">
       <Filter>Header Files\structure</Filter>
     </ClInclude>
+    <ClInclude Include="includes\structure\jgl_polygon2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -162,18 +162,6 @@ namespace jgl
 	Vector2Int convert_opengl_to_screen(const Vector3 source);
 
 	/*
-		Lerp between 2 datas with time
-	*/
-	template<typename T>
-	T lerp(T p_start_value, T p_final_value, jgl::Ulong p_duration, jgl::Ulong p_total_duration)
-	{
-		if (p_duration >= p_total_duration)
-			return (p_final_value);
-		if (p_duration == 0)
-			return (p_start_value);
-		return (lerp(p_start_value, p_final_value, 1.0f / (static_cast<jgl::Float>(p_total_duration) / static_cast<jgl::Float>(p_duration))));
-	}
-	/*
 		Lerp between 2 datas with a ratio
 	*/
 	template<typename T>
@@ -184,6 +172,18 @@ namespace jgl
 		if (p_ratio == 0)
 			return (p_start_value);
 		return (p_start_value * (1.0f - p_ratio) + p_final_value * p_ratio);
+	}
+	/*
+		Lerp between 2 datas with time
+	*/
+	template<typename T>
+	T lerp(T p_start_value, T p_final_value, jgl::Ulong p_duration, jgl::Ulong p_total_duration)
+	{
+		if (p_duration >= p_total_duration)
+			return (p_final_value);
+		if (p_duration == 0)
+			return (p_start_value);
+		return (lerp(p_start_value, p_final_value, 1.0f / (static_cast<jgl::Float>(p_total_duration) / static_cast<jgl::Float>(p_duration))));
 	}
 
 	void save_to_tga(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
