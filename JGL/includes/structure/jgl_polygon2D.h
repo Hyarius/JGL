@@ -18,6 +18,7 @@ namespace jgl
 		};
 
 		jgl::Vector2 center;
+		jgl::Vector2 size = 1;
 		jgl::Array<jgl::Vector2> points;
 		jgl::Array<Segment_data> segments;
 
@@ -27,17 +28,28 @@ namespace jgl
 			jgl::Float max;
 		};
 
+		Axis_projection _project_point_on_axis(jgl::Vector2 p_point, jgl::Vector2 p_axis, jgl::Vector2 p_delta_pos = 0) const
+		{
+			Axis_projection result;
+
+			jgl::Float tmp_dot = p_axis.dot(p_point + p_delta_pos);
+			result.min = tmp_dot;
+			result.max = tmp_dot;
+
+			return (result);
+		}
+
 		Axis_projection _projection_on_axis(jgl::Vector2 p_axis, jgl::Vector2 p_delta_pos = 0) const
 		{
 			Axis_projection result;
 
-			jgl::Float tmp_dot = p_axis.dot(points[0] + center + p_delta_pos);
+			jgl::Float tmp_dot = p_axis.dot(points[0] * size + center + p_delta_pos);
 			result.min = tmp_dot;
 			result.max = tmp_dot;
 
 			for (jgl::Size_t i = 1; i < points.size(); i++)
 			{
-				tmp_dot = p_axis.dot(points[i] + center + p_delta_pos);
+				tmp_dot = p_axis.dot(points[i] * size + center + p_delta_pos);
 				if (tmp_dot < result.min)
 					result.min = tmp_dot;
 				else if (tmp_dot > result.max)
@@ -59,6 +71,10 @@ namespace jgl
 		void set_center(jgl::Vector2 p_center)
 		{
 			center = p_center;
+		}
+		void set_size(jgl::Vector2 p_size)
+		{
+			size = p_size;
 		}
 		void add_point(jgl::Vector2 p_point)
 		{
@@ -92,6 +108,22 @@ namespace jgl
 			{
 				Axis_projection projection_a = _projection_on_axis(segments[i].norm);
 				Axis_projection projection_b = p_other._projection_on_axis(segments[i].norm, p_delta_pos);
+
+				if (_calc_distance(projection_a, projection_b) > 0)
+					result = false;
+			}
+
+			return (result);
+		}
+
+		jgl::Bool collide(const jgl::Vector2& p_point, jgl::Vector2 p_delta_pos = 0)
+		{
+			jgl::Bool result = true;
+
+			for (jgl::Size_t i = 0; i < segments.size(); i++)
+			{
+				Axis_projection projection_a = _projection_on_axis(segments[i].norm);
+				Axis_projection projection_b = _project_point_on_axis(p_point, segments[i].norm, p_delta_pos);
 
 				if (_calc_distance(projection_a, projection_b) > 0)
 					result = false;
