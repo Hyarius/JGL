@@ -186,6 +186,25 @@ namespace jgl
 		return (lerp(p_start_value, p_final_value, 1.0f / (static_cast<jgl::Float>(p_total_duration) / static_cast<jgl::Float>(p_duration))));
 	}
 
+	/*
+		Clamp a value between 2 min and max values
+	*/
+	template<typename T>
+	void clamp(const T& p_min, T& p_value, const T& p_max)
+	{
+		if (p_min > p_value)
+			p_value = p_min;
+		if (p_max < p_value)
+			p_value = p_max;
+	}
+	template<typename T>
+	T clamp(const T& p_min, const T& p_value, const T& p_max)
+	{
+		T result = p_value;
+		jgl::clamp(p_min, result, p_max);
+		return (result);
+	}
+		
 	void save_to_tga(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
 	void save_to_png(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);
 	void save_to_jpg(jgl::String p_path, jgl::Vector2Int p_image_size, char* p_buffer_data);

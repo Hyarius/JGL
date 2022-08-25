@@ -12,7 +12,7 @@ namespace jgl
 		jgl::Map<jgl::String, jgl::Image_handler*> _content;
 
 	public:
-		void add_texture(jgl::String p_name, jgl::Image_handler* p_image_handler);
+		jgl::Image_handler* add_texture(jgl::String p_name, jgl::Image_handler* p_image_handler);
 		jgl::Image_handler* get_texture(jgl::String p_name);
 	};
 }

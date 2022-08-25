@@ -40,6 +40,11 @@ namespace jgl
 		return (jgl::Application::active_application()->time() - _starting_time);
 	}
 
+	jgl::Float Timer::percent()
+	{
+		return jgl::clamp(0.0f, static_cast<jgl::Float>(elapsed_time()) / _timer_duration, 100.0f);
+	}
+
 	jgl::String to_string(Timer::State p_state)
 	{
 		switch (p_state)

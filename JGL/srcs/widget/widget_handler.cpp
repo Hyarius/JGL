@@ -76,6 +76,9 @@ namespace jgl
 
 	void Widget::set_geometry(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area)
 	{
+		if (_anchor == p_anchor && _area == p_area)
+			return;
+
 		_anchor = p_anchor;
 		_area = p_area;
 		_viewport->set_geometry(_anchor, _area);

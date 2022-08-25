@@ -59,7 +59,7 @@ namespace jgl
 		*/
 		jgl::Bool empty()
 		{
-			return (header.size == header.readed);
+			return (header.size <= header.readed);
 		}
 
 		/*
@@ -178,7 +178,7 @@ namespace jgl
 		template<typename DataType>
 		Message<T>& operator >> (DataType& data)
 		{
-			static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
+			static_assert(std::is_standard_layout<DataType>::value,"Data is too complex to be pulled from vector");
 
 			jgl::Size_t next_size = (*this).header.readed;// (*this).content.size() - sizeof(DataType);
 

@@ -26,6 +26,7 @@ namespace jgl
 		void set_duration(jgl::Ulong p_timer_period);
 		jgl::Ulong elapsed_time();
 		jgl::Ulong duration() { return (_timer_duration); }
+		jgl::Float percent();
 		void start();
 		void stop();
 		State timeout();

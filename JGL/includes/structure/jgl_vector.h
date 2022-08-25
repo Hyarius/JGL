@@ -6,6 +6,9 @@
 
 namespace jgl
 {
+	template <typename T>
+	void clamp(const T& p_min, T& p_value, const T& p_max);
+
 	float degree_to_radian(const float angle);
 	float radian_to_degree(const float radian);
 	jgl::String ftoa(const jgl::Float n, const jgl::Int afterpoint, const jgl::Int length);
@@ -123,7 +126,7 @@ namespace jgl
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
 			return (Vector2_base<jgl::Float>(static_cast<jgl::Float>(x) / length, static_cast<jgl::Float>(y) / length));
 		}
-		Vector2_base cross(const Vector2_base other) const
+		Vector2_base cross(const Vector2_base other = 0) const
 		{
 			Vector2_base result;
 
@@ -300,6 +303,12 @@ namespace jgl
 				v1.x > v2.x ? v1.x : v2.x,
 				v1.y > v2.y ? v1.y : v2.y
 			));
+		}
+
+		void clamp(const Vector2_base& p_min, const Vector2_base& p_max)
+		{
+			jgl::clamp(p_min.x, x, p_max.x);
+			jgl::clamp(p_min.y, y, p_max.y);
 		}
 	};
 
