@@ -112,7 +112,7 @@ namespace jgl
 			return (sqrt(pow(x, 2.0f)
 				+ pow(y, 2.0f)));
 		}
-		jgl::Float distance(const Vector2_base other) const
+		jgl::Float distance(const Vector2_base& other) const
 		{
 			return (std::sqrt(pow(other.x - x, 2) + pow(other.y - y, 2)));
 		}
@@ -305,10 +305,14 @@ namespace jgl
 			));
 		}
 
-		void clamp(const Vector2_base& p_min, const Vector2_base& p_max)
+		Vector2_base<T> clamp(const Vector2_base<T>& p_min, const Vector2_base<T>& p_max)
 		{
-			jgl::clamp(p_min.x, x, p_max.x);
-			jgl::clamp(p_min.y, y, p_max.y);
+			jgl::Vector2_base<T> result = *this;
+
+			jgl::clamp<T>(p_min.x, result.x, p_max.x);
+			jgl::clamp<T>(p_min.y, result.y, p_max.y);
+
+			return (result);
 		}
 	};
 

@@ -137,6 +137,7 @@ namespace jgl
 		jgl::Vector2Uint _size;
 		GLuint _frameBuffer;
 		GLuint _id;
+		GLuint _depthBuffer;
 		GLenum _drawBuffers[1];
 
 	public:

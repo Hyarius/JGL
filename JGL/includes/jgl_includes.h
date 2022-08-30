@@ -1,5 +1,7 @@
 #pragma once
 
+#define NOMINMAX
+
 #define _CRT_RAND_S 
 #include <ios>
 #include <fstream>

@@ -22,10 +22,13 @@ namespace jgl
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _id, 0);
-		_drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _id, 0);
 
-		glDrawBuffers(1, _drawBuffers);
+		glGenTextures(1, &_depthBuffer);
+		glBindTexture(GL_TEXTURE_2D, _depthBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, _size.x, _size.y);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthBuffer);
 
 		desassociate();
 	}

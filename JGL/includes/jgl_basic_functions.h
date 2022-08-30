@@ -215,4 +215,12 @@ namespace jgl
 	jgl::Ulong get_time();
 
 	jgl::Array<Vector2Int> 		calc_line_2d(jgl::Vector2Int p_start, jgl::Vector2Int p_end);
+
+	template<typename T>
+	inline jgl::Float distance(const jgl::Vector2_base<T>& first, const jgl::Vector2_base<T>& second)
+	{
+		T x = first.x - second.x;
+		T y = first.y - second.y;
+		return (std::sqrt(x * x + y * y));
+	}
 }

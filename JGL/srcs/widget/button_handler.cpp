@@ -68,6 +68,7 @@ namespace jgl
 
 	void Button::cast()
 	{
+		_param.reset();
 		_funct(_param);
 	}
 
