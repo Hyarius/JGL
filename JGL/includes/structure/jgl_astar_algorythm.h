@@ -16,9 +16,8 @@ namespace jgl
 			static inline jgl::Vector2Int C_DESTINATION = -1;
 
 			jgl::Vector2Int pos = -1;
-			jgl::Float road_length = INFINITY;
-			jgl::Float distance_start = INFINITY;
-			jgl::Float distance_end = INFINITY;
+			jgl::Float local = INFINITY;
+			jgl::Float global = INFINITY;
 			AStar_node* parent = nullptr;
 
 			AStar_node()
@@ -29,19 +28,18 @@ namespace jgl
 			{
 				pos = p_pos;
 				parent = p_parent;
-				distance_start = pos.distance(C_SOURCE);
-				distance_end = pos.distance(C_DESTINATION);
+				global = pos.distance(C_DESTINATION);
 				if (parent == nullptr)
-					road_length = 0;
+					local = 0;
 				else
 				{
-					road_length = parent->road_length + parent->pos.distance(pos);
+					local = parent->local + parent->pos.distance(pos);
 				}
 			}
 
 			jgl::Float cumuled_distance()
 			{
-				return (distance_end + road_length);
+				return (global + local);
 			}
 
 			jgl::Bool is_closer(AStar_node* p_other)
@@ -80,17 +78,19 @@ namespace jgl
 		AStar_node* _closest_node()
 		{
 			AStar_node* result = nullptr;
+			jgl::Size_t index = 0;
 
 			for (jgl::Size_t i = 0; i < _to_calc.size(); i++)
 			{
 				if (result == nullptr || _to_calc[i]->is_closer(result) == true)
 				{
 					result = _to_calc[i];
+					index = i;
 				}
 			}
 			if (result != nullptr)
 			{
-				_to_calc.erase(_to_calc.find(result));
+				_to_calc.erase(index);
 			}
 
 			return (result);
@@ -136,7 +136,7 @@ namespace jgl
 					{
 						_add_node(_last_node->pos + direction_value[i], _last_node);
 					}
-					else if (_node_map[_last_node->pos + direction_value[i]].road_length > _last_node->road_length + direction_value[i].length())
+					else if (_node_map[_last_node->pos + direction_value[i]].local > _last_node->local + direction_value[i].length())
 					{
 						_add_node(_last_node->pos + direction_value[i], _last_node);
 					}
@@ -194,25 +194,18 @@ namespace jgl
 			return (true);
 		}
 
-		jgl::Float road_length(jgl::Vector2Int p_pos)
+		jgl::Float local(jgl::Vector2Int p_pos)
 		{
 			if (_node_map.count(p_pos) == 0)
 				return (INFINITY);
-			return (_node_map[p_pos].road_length);
+			return (_node_map[p_pos].local);
 		}
 
-		jgl::Float distance_start(jgl::Vector2Int p_pos)
+		jgl::Float global(jgl::Vector2Int p_pos)
 		{
 			if (_node_map.count(p_pos) == 0)
 				return (INFINITY);
-			return (_node_map[p_pos].distance_start);
-		}
-
-		jgl::Float distance_end(jgl::Vector2Int p_pos)
-		{
-			if (_node_map.count(p_pos) == 0)
-				return (INFINITY);
-			return (_node_map[p_pos].distance_end);
+			return (_node_map[p_pos].global);
 		}
 
 		jgl::Float cumuled_distance(jgl::Vector2Int p_pos)
