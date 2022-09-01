@@ -5,6 +5,7 @@
 #include "structure/jgl_string.h"
 #include "application/jgl_shader.h"
 #include "structure/jgl_sprite_sheet.h"
+#include "structure/jgl_astar_algorythm.h"
 
 extern jgl::String vertex_tilemap_shader_code;
 extern jgl::String fragment_tilemap_shader_code;
@@ -607,6 +608,7 @@ namespace jgl
 		static const jgl::Short outside_world = -2;
 	protected:
 		jgl::Bool _is_diagonal_accessible = false;
+		jgl::AStar_algorithm<ITilemap<TBakableChunkType>> _astar = jgl::AStar_algorithm(this);
 		jgl::Short _empty_obstacle = TBakableChunkType::NodeType::OBSTACLE;
 
 	public:
@@ -749,10 +751,11 @@ namespace jgl
 			return (true);
 		}
 
+	public:
 		void find_path(jgl::Array<jgl::Vector2Int>& p_path, jgl::Vector2Int p_source, jgl::Vector2Int p_destination)
 		{
-			
-			return;
+			_astar.configure(p_source, p_destination);
+			_astar.run(p_path);
 		}
 		jgl::Array<jgl::Vector2Int> find_path(jgl::Vector2Int p_source, jgl::Vector2Int p_destination)
 		{

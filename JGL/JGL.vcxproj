@@ -229,6 +229,7 @@
     <ClInclude Include="includes\network\jgl_network_connection.h" />
     <ClInclude Include="includes\network\jgl_network_message.h" />
     <ClInclude Include="includes\network\jgl_network_server.h" />
+    <ClInclude Include="includes\structure\jgl_astar_algorythm.h" />
     <ClInclude Include="includes\structure\jgl_memento.h" />
     <ClInclude Include="includes\structure\jgl_data_contener.h" />
     <ClInclude Include="includes\structure\jgl_exception.h" />

@@ -365,5 +365,8 @@
     <ClInclude Include="includes\structure\jgl_polygon2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="includes\structure\jgl_astar_algorythm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
