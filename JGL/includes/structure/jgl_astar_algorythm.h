@@ -3,9 +3,11 @@
 #include "structure/jgl_array.h"
 #include "structure/jgl_vector.h"
 #include "jgl_basic_types.h"
+#include <unordered_set>
 
 namespace jgl
 {
+	
 	template <typename TBoardType>
 	class AStar_algorithm
 	{
@@ -16,15 +18,15 @@ namespace jgl
 			static inline jgl::Vector2Int C_DESTINATION = -1;
 
 			jgl::Vector2Int pos = -1;
-			jgl::Float local = INFINITY;
-			jgl::Float global = INFINITY;
-			AStar_node* parent = nullptr;
+			jgl::float local = INFINITY;
+			jgl::float global = INFINITY;
+			const AStar_node* parent = nullptr;
 
 			AStar_node()
 			{
 
 			}
-			AStar_node(jgl::Vector2Int p_pos, AStar_node* p_parent)
+			AStar_node(jgl::Vector2Int p_pos, const AStar_node* p_parent)
 			{
 				pos = p_pos;
 				parent = p_parent;
@@ -37,52 +39,56 @@ namespace jgl
 				}
 			}
 
-			jgl::Float cumuled_distance()
+			jgl::float value() const
 			{
 				return (global + local);
 			}
-
-			jgl::Bool is_closer(AStar_node* p_other)
+			
+			jgl::Bool operator < (const AStar_node& p_other) const 
 			{
-				return (cumuled_distance() < p_other->cumuled_distance());
+				return (value() < p_other.value());
+			}
+			
+			jgl::Bool operator == (const AStar_node& p_other) const 
+			{
+				return (value() == p_other.value());
 			}
 
+			jgl::Size_t hash() const
+			{
+				jgl::Size_t result = pos.x;
+				result *= 37;
+				result += pos.y;
+
+				return result;
+			}
+		
+			friend std::ostream& operator<<(std::ostream& os, const AStar_node& node)
+			{
+				os << node.pos << " - " << node.local << " / " << node.global;
+				return os;
+			}
 		};
 	private:
 		TBoardType* _board;
-		jgl::Map<jgl::Vector2Int, AStar_node> _node_map;
-		jgl::Array<AStar_node*> _to_calc;
+		
+		static inline auto hash = [](const AStar_node& value){ return value.hash(); };
+		static inline auto equal = [](const AStar_node& lhd, const AStar_node& rhd){ return lhd == rhd; };
 
-		static inline jgl::Vector2Int direction_value[8] = {
-			jgl::Vector2Int(-1, -1),
-			jgl::Vector2Int(0, -1),
-			jgl::Vector2Int(1, -1),
-			jgl::Vector2Int(1, 0),
-			jgl::Vector2Int(-1, 0),
-			jgl::Vector2Int(-1, 1),
-			jgl::Vector2Int(0, 1),
-			jgl::Vector2Int(1, 1),
-		};
+		std::unordered_set<AStar_node, decltype(hash), decltype(equal)> _node_set;
+		
+		jgl::Int _range = 1;
+		jgl::Array<const AStar_node*> _to_calc;
+		const AStar_node* _last_node;
 
-		static inline jgl::Float direction_lengths[8] = {
-			1.414f, 1, 1.414f, 1, 1, 1.414f, 1, 1.414f
-		};
-
-		void _add_node(jgl::Vector2Int p_pos, AStar_node* p_parent)
+		const AStar_node* _closest_node()
 		{
-			AStar_node new_node = AStar_node(p_pos, p_parent);
-			_node_map[p_pos] = new_node;
-			_to_calc.push_back(&_node_map[p_pos]);
-		}
-
-		AStar_node* _closest_node()
-		{
-			AStar_node* result = nullptr;
+			const AStar_node* result = nullptr;
 			jgl::Size_t index = 0;
 
 			for (jgl::Size_t i = 0; i < _to_calc.size(); i++)
 			{
-				if (result == nullptr || _to_calc[i]->is_closer(result) == true)
+				if (result == nullptr || *_to_calc[i] < *result == true)
 				{
 					result = _to_calc[i];
 					index = i;
@@ -90,17 +96,30 @@ namespace jgl
 			}
 			if (result != nullptr)
 			{
-				_to_calc.erase(index);
+				_to_calc.erase(_to_calc.begin() + index);
 			}
 
 			return (result);
 		}
-		AStar_node* _last_node;
+		void _add_node(AStar_node p_node)
+		{
+			_node_set.insert(p_node);
+			auto tmp = _node_set.find(p_node);
+			_to_calc.push_back(&(*tmp));
+		}
 
 	public:
+		AStar_algorithm()
+		{
+			set_board(nullptr);
+		}
 		AStar_algorithm(TBoardType* p_board)
 		{
 			set_board(p_board);
+		}
+		void set_range(jgl::Int p_range)
+		{
+			_range = p_range;
 		}
 		void set_board(TBoardType* p_board)
 		{
@@ -112,7 +131,7 @@ namespace jgl
 			AStar_node::C_DESTINATION = p_end;
 			reset();
 		}
-		AStar_node* last_node()
+		const AStar_node* last_node()
 		{
 			return (_last_node);
 		}
@@ -128,17 +147,21 @@ namespace jgl
 			if (_last_node == nullptr)
 				return (true);
 
-			for (jgl::Size_t i = 0; i < 8; i++)
+			for (int x = -_range; x <= _range; x++)
+			for (int y = -_range; y <= _range; y++)
 			{
-				if (_board->can_acces(_last_node->pos, direction_value[i]) == true)
+				jgl::Vector2Int direction = jgl::Vector2Int(x, y);
+				if (_board->can_acces(_last_node->pos, direction) == true)
 				{
-					if (_node_map.count(_last_node->pos + direction_value[i]) == 0)
+					AStar_node tmp_node = AStar_node(_last_node->pos + direction, _last_node);
+					auto founded_element = _node_set.find(tmp_node);
+
+					if (founded_element == _node_set.end() || 
+						founded_element->local > tmp_node.local)
 					{
-						_add_node(_last_node->pos + direction_value[i], _last_node);
-					}
-					else if (_node_map[_last_node->pos + direction_value[i]].local > _last_node->local + direction_value[i].length())
-					{
-						_add_node(_last_node->pos + direction_value[i], _last_node);
+						if (founded_element != _node_set.end())
+							_node_set.erase(tmp_node);
+						_add_node(tmp_node);
 					}
 				}
 			}
@@ -146,7 +169,7 @@ namespace jgl
 			return (false);
 		}
 
-		void compute_result(jgl::Array<jgl::Vector2Int>& p_path, AStar_node* destination_node)
+		void compute_result(jgl::Array<jgl::Vector2Int>& p_path, const AStar_node* destination_node)
 		{
 			if (destination_node == nullptr)
 				return;
@@ -156,18 +179,9 @@ namespace jgl
 				p_path.push_back(destination_node->pos);
 				destination_node = destination_node->parent;
 			}
-
-			p_path.reverse();
+			
+			std::reverse(p_path.begin(), p_path.end());
 			reset();
-		}
-
-		void run(jgl::Array<jgl::Vector2Int>& p_path)
-		{
-			reset();
-
-			while (iterate() == false) {}
-
-			compute_result(p_path, _last_node);
 		}
 
 		jgl::Array<jgl::Vector2Int> run(jgl::Vector2Int p_start, jgl::Vector2Int p_end)
@@ -179,40 +193,66 @@ namespace jgl
 			return (result);
 		}
 
+		void run(jgl::Array<jgl::Vector2Int>& p_path, jgl::Vector2Int p_start, jgl::Vector2Int p_end)
+		{
+			configure(p_start, p_end);
+			run(p_path);
+		}
+
+		jgl::Array<jgl::Vector2Int> run()
+		{
+			jgl::Array<jgl::Vector2Int> result;
+			
+			run(result);
+			
+			return (result);
+		}
+
+		void run(jgl::Array<jgl::Vector2Int>& p_path)
+		{
+			reset();
+
+			while (iterate() == false) {}
+
+			compute_result(p_path, _last_node);
+		}
+
 		void reset()
 		{
 			_last_node = nullptr;
-			_node_map.clear();
+			_node_set.clear();
 			_to_calc.clear();
-			_add_node(AStar_node::C_SOURCE, nullptr);
+			
+			_add_node(AStar_node(AStar_node::C_SOURCE, nullptr));
 		}
 
 		jgl::Bool is_calculated(jgl::Vector2Int p_pos)
 		{
-			if (_node_map.count(p_pos) == 0)
+			if (_node_set.count(p_pos) == 0)
 				return (false);
 			return (true);
 		}
 
-		jgl::Float local(jgl::Vector2Int p_pos)
+		jgl::float local(jgl::Vector2Int p_pos)
 		{
-			if (_node_map.count(p_pos) == 0)
+			if (_node_set.count(p_pos) == 0)
 				return (INFINITY);
-			return (_node_map[p_pos].local);
+			return (_node_set[p_pos].local);
 		}
 
-		jgl::Float global(jgl::Vector2Int p_pos)
+		jgl::float global(jgl::Vector2Int p_pos)
 		{
-			if (_node_map.count(p_pos) == 0)
+			if (_node_set.count(p_pos) == 0)
 				return (INFINITY);
-			return (_node_map[p_pos].global);
+			return (_node_set[p_pos].global);
 		}
 
-		jgl::Float cumuled_distance(jgl::Vector2Int p_pos)
+		jgl::float value(jgl::Vector2Int p_pos)
 		{
-			if (_node_map.count(p_pos) == 0)
+			if (_node_set.count(p_pos) == 0)
 				return (INFINITY);
-			return (_node_map[p_pos].cumuled_distance());
+			return (_node_set[p_pos].value());
 		}
 	};
+
 }
