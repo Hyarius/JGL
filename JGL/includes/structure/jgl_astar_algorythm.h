@@ -18,8 +18,8 @@ namespace jgl
 			static inline jgl::Vector2Int C_DESTINATION = -1;
 
 			jgl::Vector2Int pos = -1;
-			jgl::float local = INFINITY;
-			jgl::float global = INFINITY;
+			jgl::Float local = INFINITY;
+			jgl::Float global = INFINITY;
 			const AStar_node* parent = nullptr;
 
 			AStar_node()
@@ -39,7 +39,7 @@ namespace jgl
 				}
 			}
 
-			jgl::float value() const
+			jgl::Float value() const
 			{
 				return (global + local);
 			}
@@ -233,21 +233,21 @@ namespace jgl
 			return (true);
 		}
 
-		jgl::float local(jgl::Vector2Int p_pos)
+		jgl::Float local(jgl::Vector2Int p_pos)
 		{
 			if (_node_set.count(p_pos) == 0)
 				return (INFINITY);
 			return (_node_set[p_pos].local);
 		}
 
-		jgl::float global(jgl::Vector2Int p_pos)
+		jgl::Float global(jgl::Vector2Int p_pos)
 		{
 			if (_node_set.count(p_pos) == 0)
 				return (INFINITY);
 			return (_node_set[p_pos].global);
 		}
 
-		jgl::float value(jgl::Vector2Int p_pos)
+		jgl::Float value(jgl::Vector2Int p_pos)
 		{
 			if (_node_set.count(p_pos) == 0)
 				return (INFINITY);
