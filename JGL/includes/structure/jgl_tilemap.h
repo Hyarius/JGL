@@ -752,16 +752,17 @@ namespace jgl
 		}
 
 	public:
-		void find_path(jgl::Array<jgl::Vector2Int>& p_path, jgl::Vector2Int p_source, jgl::Vector2Int p_destination)
+		void find_path(jgl::Array<jgl::Vector2Int>& p_path, jgl::Vector2Int p_source, jgl::Vector2Int p_destination, jgl::Int p_distance_from_walls = 0)
 		{
 			_astar.configure(p_source, p_destination);
+			_astar.set_distance_from_walls(p_distance_from_walls);
 			_astar.run(p_path);
 		}
-		jgl::Array<jgl::Vector2Int> find_path(jgl::Vector2Int p_source, jgl::Vector2Int p_destination)
+		jgl::Array<jgl::Vector2Int> find_path(jgl::Vector2Int p_source, jgl::Vector2Int p_destination, jgl::Int p_distance_from_walls = 0)
 		{
 			jgl::Array<jgl::Vector2Int> result;
 
-			find_path(result, p_source, p_destination);
+			find_path(result, p_source, p_destination, p_distance_from_walls);
 
 			return result;
 		}

@@ -50,18 +50,21 @@ namespace jgl
 		};
 	private:
 		TBoardType* _board;
+		jgl::Bool _diagonal_allowed = true;
+		jgl::Int _distance_from_walls = 0;
 		jgl::Map<jgl::Vector2Int, AStar_node> _node_map;
 		jgl::Array<AStar_node*> _to_calc;
+		AStar_node* _last_node;
 
 		static inline jgl::Vector2Int direction_value[8] = {
-			jgl::Vector2Int(-1, -1),
 			jgl::Vector2Int(0, -1),
-			jgl::Vector2Int(1, -1),
 			jgl::Vector2Int(1, 0),
-			jgl::Vector2Int(-1, 0),
-			jgl::Vector2Int(-1, 1),
 			jgl::Vector2Int(0, 1),
+			jgl::Vector2Int(-1, 0),
 			jgl::Vector2Int(1, 1),
+			jgl::Vector2Int(-1, -1),
+			jgl::Vector2Int(1, -1),
+			jgl::Vector2Int(-1, 1),
 		};
 
 		static inline jgl::Float direction_lengths[8] = {
@@ -95,12 +98,37 @@ namespace jgl
 
 			return (result);
 		}
-		AStar_node* _last_node;
+		jgl::Bool _check_distance_from_walls(jgl::Vector2Int p_pos)
+		{
+			for (jgl::Int i = -_distance_from_walls; i <= _distance_from_walls; i++)
+			{
+				for (jgl::Int j = -_distance_from_walls; j <= _distance_from_walls; j++)
+				{
+					jgl::Vector2Int delta = jgl::Vector2Int(i, j);
+					if (delta.distance(0) <= _distance_from_walls && _board->can_acces(p_pos + delta, 0) == false)
+						return (false);
+				}
+			}
+
+			return (true);
+		}
 
 	public:
+		AStar_algorithm()
+		{
+			set_board(nullptr);
+		}
 		AStar_algorithm(TBoardType* p_board)
 		{
 			set_board(p_board);
+		}
+		void set_distance_from_walls(jgl::Int p_distance_from_walls)
+		{
+			_distance_from_walls = p_distance_from_walls;
+		}
+		void set_diagonal_allowed(jgl::Bool p_diagonal_allowed)
+		{
+			_diagonal_allowed = p_diagonal_allowed;
 		}
 		void set_board(TBoardType* p_board)
 		{
@@ -128,9 +156,10 @@ namespace jgl
 			if (_last_node == nullptr)
 				return (true);
 
-			for (jgl::Size_t i = 0; i < 8; i++)
+			for (jgl::Size_t i = 0; i < (_diagonal_allowed == true ? 8 : 4); i++)
 			{
-				if (_board->can_acces(_last_node->pos, direction_value[i]) == true)
+				if (_board->can_acces(_last_node->pos, direction_value[i]) == true && 
+					_check_distance_from_walls(_last_node->pos + direction_value[i]) == true)
 				{
 					if (_node_map.count(_last_node->pos + direction_value[i]) == 0)
 					{
@@ -161,6 +190,33 @@ namespace jgl
 			reset();
 		}
 
+		jgl::Array<jgl::Vector2Int> run(jgl::Vector2Int p_start, jgl::Vector2Int p_end)
+		{
+			jgl::Array<jgl::Vector2Int> result;
+
+			configure(p_start, p_end);
+
+			run(result);
+
+			return (result);
+		}
+
+		jgl::Array<jgl::Vector2Int> run()
+		{
+			jgl::Array<jgl::Vector2Int> result;
+
+			run(result);
+
+			return (result);
+		}
+
+		void run(jgl::Array<jgl::Vector2Int>& p_path, jgl::Vector2Int p_start, jgl::Vector2Int p_end)
+		{
+			configure(p_start, p_end);
+
+			run(p_path);
+		}
+
 		void run(jgl::Array<jgl::Vector2Int>& p_path)
 		{
 			reset();
@@ -168,15 +224,6 @@ namespace jgl
 			while (iterate() == false) {}
 
 			compute_result(p_path, _last_node);
-		}
-
-		jgl::Array<jgl::Vector2Int> run(jgl::Vector2Int p_start, jgl::Vector2Int p_end)
-		{
-			jgl::Array<jgl::Vector2Int> result;
-
-			run(result, p_start, p_end);
-
-			return (result);
 		}
 
 		void reset()
