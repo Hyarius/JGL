@@ -7,7 +7,6 @@
 
 namespace jgl
 {
-	
 	template <typename TBoardType>
 	class AStar_algorithm
 	{
@@ -96,7 +95,7 @@ namespace jgl
 			}
 			if (result != nullptr)
 			{
-				_to_calc.erase(_to_calc.begin() + index);
+				_to_calc.erase(index);
 			}
 
 			return (result);
@@ -180,7 +179,7 @@ namespace jgl
 				destination_node = destination_node->parent;
 			}
 			
-			std::reverse(p_path.begin(), p_path.end());
+			p_path.reverse();
 			reset();
 		}
 
