@@ -66,6 +66,7 @@ namespace jgl
 			}
 			
 			TBoardType* _board;
+			jgl::Size_t _max_path_length = 50;
 			jgl::Bool _diagonal_allowed = true;
 			jgl::Int _distance_from_walls = 0;
 			std::vector<AStar_node*> _to_calc;
@@ -139,9 +140,17 @@ namespace jgl
 			{
 				set_board(p_board);
 			}
+			void set_max_path_length(jgl::Size_t p_max_path_length)
+			{
+				_max_path_length = p_max_path_length;
+			}
 			void set_distance_from_walls(jgl::Int p_distance_from_walls)
 			{
 				_distance_from_walls = p_distance_from_walls;
+			}
+			jgl::Int distance_from_walls()
+			{
+				return (_distance_from_walls);
 			}
 			void set_diagonal_allowed(jgl::Bool p_diagonal_allowed)
 			{
@@ -185,7 +194,7 @@ namespace jgl
 						{
 							_add_node(_last_node->pos + direction_value[i], _last_node);
 						}
-						else if (_nodes(_last_node->pos + direction_value[i]).local > _last_node->local + direction_value[i].length())
+						else if (_nodes(_last_node->pos + direction_value[i]).local > _last_node->local + direction_value[i].length() && _last_node->local + direction_value[i].length() < _max_path_length)
 						{
 							_add_node(_last_node->pos + direction_value[i], _last_node);
 						}
