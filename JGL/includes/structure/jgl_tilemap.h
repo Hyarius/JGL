@@ -605,12 +605,10 @@ namespace jgl
 	class ITilemap
 	{
 	public:	
+		using ChunkType = TBakableChunkType;
 		static const jgl::Short outside_world = -2;
-	protected:
-		jgl::Bool _is_diagonal_accessible = false;
-		jgl::AStar_algorithm<ITilemap<TBakableChunkType>> _astar = jgl::AStar_algorithm(this);
-		jgl::Short _empty_obstacle = TBakableChunkType::NodeType::OBSTACLE;
 
+		jgl::Short _empty_obstacle = TBakableChunkType::NodeType::OBSTACLE;
 	public:
 		virtual jgl::Vector2Int convert_world_to_chunk(const jgl::Vector2Int& p_pos)
 		{
@@ -752,34 +750,24 @@ namespace jgl
 		}
 
 	public:
-		void find_path(jgl::Array<jgl::Vector2Int>& p_path, jgl::Vector2Int p_source, jgl::Vector2Int p_destination, jgl::Int p_distance_from_walls = 0)
-		{
-			_astar.configure(p_source, p_destination);
-			_astar.set_distance_from_walls(p_distance_from_walls);
-			_astar.run(p_path);
-		}
-		jgl::Array<jgl::Vector2Int> find_path(jgl::Vector2Int p_source, jgl::Vector2Int p_destination, jgl::Int p_distance_from_walls = 0)
-		{
-			jgl::Array<jgl::Vector2Int> result;
-
-			find_path(result, p_source, p_destination, p_distance_from_walls);
-
-			return result;
-		}
 	};
 
 	template<typename TBakableChunkType, const jgl::Size_t NSize_x, const jgl::Size_t NSize_y>
 	class Finite_tilemap : public ITilemap <TBakableChunkType>
 	{
-	protected:
-		TBakableChunkType* _chunks[NSize_x][NSize_y];
+	public:
+		static const jgl::Size_t C_SIZE_X = NSize_x;
+		static const jgl::Size_t C_SIZE_Y = NSize_y;
 
-		static inline jgl::Vector2Int _converter_world_to_chunk[NSize_x * TBakableChunkType::C_SIZE][NSize_y * TBakableChunkType::C_SIZE];
+	protected:
+		TBakableChunkType* _chunks[C_SIZE_X][C_SIZE_Y];
+
+		static inline jgl::Vector2Int _converter_world_to_chunk[C_SIZE_X * TBakableChunkType::C_SIZE][C_SIZE_Y * TBakableChunkType::C_SIZE];
 
 	public:
 		jgl::Vector2Int convert_world_to_chunk(const jgl::Vector2Int& p_pos)
 		{
-			if (p_pos.x < 0 || p_pos.y < 0 || p_pos.x >= NSize_x * TBakableChunkType::C_SIZE || p_pos.y >= NSize_y * TBakableChunkType::C_SIZE)
+			if (p_pos.x < 0 || p_pos.y < 0 || p_pos.x >= C_SIZE_X * TBakableChunkType::C_SIZE || p_pos.y >= C_SIZE_Y * TBakableChunkType::C_SIZE)
 				return (-1);
 
 			if (_converter_world_to_chunk[p_pos.x][p_pos.y].x == -1 && _converter_world_to_chunk[p_pos.x][p_pos.y].y == -1)
@@ -793,16 +781,16 @@ namespace jgl
 
 		Finite_tilemap()
 		{
-			for (jgl::Size_t i = 0; i < NSize_x; i++)
-				for (jgl::Size_t j = 0; j < NSize_y; j++)
+			for (jgl::Size_t i = 0; i < C_SIZE_X; i++)
+				for (jgl::Size_t j = 0; j < C_SIZE_Y; j++)
 				{
 					_chunks[i][j] = nullptr;
 				}
 
 
-			for (jgl::Size_t j = 0; j < NSize_y; j++)
+			for (jgl::Size_t j = 0; j < C_SIZE_Y; j++)
 			{
-				for (jgl::Size_t i = 0; i < NSize_x; i++)
+				for (jgl::Size_t i = 0; i < C_SIZE_X; i++)
 				{
 					jgl::Vector2Int chunk_pos = jgl::Vector2Int(i, j);
 
@@ -815,14 +803,13 @@ namespace jgl
 					}
 				}
 			}
-
 		}
 
 		void unbake()
 		{
 			TBakableChunkType::NodeType::UNIT = 0;
-			for (jgl::Size_t i = 0; i < NSize_x; i++)
-				for (jgl::Size_t j = 0; j < NSize_y; j++)
+			for (jgl::Size_t i = 0; i < C_SIZE_X; i++)
+				for (jgl::Size_t j = 0; j < C_SIZE_Y; j++)
 				{
 					if (_chunks[i][j] != nullptr)
 						_chunks[i][j]->unbake();
@@ -831,7 +818,7 @@ namespace jgl
 
 		TBakableChunkType* request_chunk(jgl::Vector2Int p_pos)
 		{
-			if (p_pos.x >= NSize_x || p_pos.y >= NSize_y)
+			if (p_pos.x >= C_SIZE_X || p_pos.y >= C_SIZE_Y)
 				return (nullptr);
 			else if (_chunks[p_pos.x][p_pos.y] == nullptr)
 				_chunks[p_pos.x][p_pos.y] = new TBakableChunkType(p_pos);
@@ -840,14 +827,14 @@ namespace jgl
 
 		TBakableChunkType* chunk(jgl::Vector2Int p_pos)
 		{
-			if (p_pos.x >= NSize_x || p_pos.y >= NSize_y)
+			if (p_pos.x >= C_SIZE_X || p_pos.y >= C_SIZE_Y)
 				return (nullptr);
 			return (_chunks[p_pos.x][p_pos.y]);
 		}
 
 		void add_chunk(jgl::Vector2Int p_pos, TBakableChunkType* p_chunk)
 		{
-			if (p_pos.x >= NSize_x || p_pos.y >= NSize_y)
+			if (p_pos.x >= C_SIZE_X || p_pos.y >= C_SIZE_Y)
 				return ;
 			else if (_chunks[p_pos.x][p_pos.y] != nullptr)
 				delete _chunks[p_pos.x][p_pos.y];
