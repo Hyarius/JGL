@@ -9,6 +9,16 @@ namespace jgl
 		std::lock_guard<std::mutex> lock(_console_mutex);
 		if (jgl::Thread::nb_thread() >= 1)
 			std::cout << "[" << _prefix << "] - ";
+		std::cout << _content.str();
+		_content.clear();
+		_content.str("");
+	}
+
+	void Stream::endl()
+	{
+		std::lock_guard<std::mutex> lock(_console_mutex);
+		if (jgl::Thread::nb_thread() >= 1)
+			std::cout << "[" << _prefix << "] - ";
 		std::cout << _content.str() << std::endl;
 		_content.clear();
 		_content.str("");

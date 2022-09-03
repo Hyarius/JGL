@@ -68,7 +68,7 @@ namespace jgl
 			TBoardType* _board;
 			jgl::Bool _diagonal_allowed = true;
 			jgl::Int _distance_from_walls = 0;
-			jgl::Array<AStar_node*> _to_calc;
+			std::vector<AStar_node*> _to_calc;
 			AStar_node* _last_node;
 
 			static inline jgl::Vector2Int direction_value[8] = {
@@ -110,7 +110,7 @@ namespace jgl
 				}
 				if (result != nullptr)
 				{
-					_to_calc.erase(index);
+					_to_calc.erase(_to_calc.begin() + index);
 				}
 
 				return (result);

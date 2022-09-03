@@ -482,6 +482,13 @@ namespace jgl
 
 	Stream& endl(jgl::Stream& p_stream)
 	{
+		p_stream.endl();
+		return (p_stream);
+	}
+
+	Stream& carriage_return(jgl::Stream& p_stream)
+	{
+		p_stream << "\r";
 		p_stream.flush();
 		return (p_stream);
 	}

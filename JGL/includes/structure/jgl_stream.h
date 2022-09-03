@@ -19,6 +19,7 @@ namespace jgl
 		Stream(jgl::String p_prefix);
 
 		void flush();
+		void endl();
 
 		template <typename T>
 		Stream& operator << (T const & p_element)
