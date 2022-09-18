@@ -11,6 +11,9 @@ extern jgl::String color_model_shader_frag;
 extern jgl::String texture_model_shader_vert;
 extern jgl::String texture_model_shader_frag;
 
+#include <chrono>
+#include <thread>
+
 jgl::Application* jgl::Application::_active_application = nullptr;
 
 void GLAPIENTRY

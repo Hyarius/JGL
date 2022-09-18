@@ -201,7 +201,10 @@
     <ClCompile Include="srcs\widget\component\graphical_component_handler.cpp" />
     <ClCompile Include="srcs\widget\component\text_label_component_handler.cpp" />
     <ClCompile Include="srcs\widget\contener_handler.cpp" />
+    <ClCompile Include="srcs\widget\jgl_debug_screen.cpp" />
     <ClCompile Include="srcs\widget\jgl_graphical_widget.cpp" />
+    <ClCompile Include="srcs\widget\jgl_slider.cpp" />
+    <ClCompile Include="srcs\widget\jgl_loading_bar.cpp" />
     <ClCompile Include="srcs\widget\jgl_updater_widget.cpp" />
     <ClCompile Include="srcs\widget\frame_handler.cpp" />
     <ClCompile Include="srcs\widget\text_entry_handler.cpp" />
@@ -249,6 +252,7 @@
     <ClInclude Include="includes\structure\jgl_mouse.h" />
     <ClInclude Include="includes\structure\jgl_singleton.h" />
     <ClInclude Include="includes\structure\jgl_sprite_sheet.h" />
+    <ClInclude Include="includes\structure\jgl_stat.h" />
     <ClInclude Include="includes\structure\jgl_state_machine.h" />
     <ClInclude Include="includes\structure\jgl_stream.h" />
     <ClInclude Include="includes\structure\jgl_string.h" />
@@ -263,11 +267,16 @@
     <ClInclude Include="includes\widget\component\jgl_component.h" />
     <ClInclude Include="includes\widget\component\jgl_text_label_component.h" />
     <ClInclude Include="includes\widget\jgl_client_manager.h" />
+    <ClInclude Include="includes\widget\jgl_debug_screen.h" />
     <ClInclude Include="includes\widget\jgl_graphical_widget.h" />
+    <ClInclude Include="includes\widget\jgl_selecter.h" />
     <ClInclude Include="includes\widget\jgl_selecter_widget.h" />
     <ClInclude Include="includes\widget\jgl_server_manager.h" />
     <ClInclude Include="includes\widget\jgl_singleton_widget.h" />
+    <ClInclude Include="includes\widget\jgl_slider.h" />
+    <ClInclude Include="includes\widget\jgl_loading_bar.h" />
     <ClInclude Include="includes\widget\jgl_updater_widget.h" />
+    <ClInclude Include="includes\widget\jgl_watchdog_bar.h" />
     <ClInclude Include="includes\widget\jgl_widget_components.h" />
     <ClInclude Include="includes\widget\jgl_button.h" />
     <ClInclude Include="includes\widget\jgl_check_box.h" />

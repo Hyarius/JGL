@@ -57,13 +57,6 @@ namespace jgl
 
 			};
 		protected:
-
-			void _sort_to_calc()
-			{
-				std::sort(_to_calc.begin(),
-					_to_calc.end(),
-					[](AStar_node* a, AStar_node* b) {return *a < *b; });
-			}
 			
 			TBoardType* _board;
 			jgl::Size_t _max_path_length = 50;
@@ -248,6 +241,7 @@ namespace jgl
 
 			void run(jgl::Array<jgl::Vector2Int>& p_path)
 			{
+				p_path.clear();
 				reset();
 
 				while (iterate() == false) {}

@@ -4,6 +4,7 @@
 #include "jgl_basic_types.h"
 #include "structure/jgl_exception.h"
 #include "jgl_basic_functions.h"
+#include "structure/jgl_thread.h"
 
 namespace jgl
 {

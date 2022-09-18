@@ -115,6 +115,15 @@ namespace jgl::Widget_component
 
 		_font = nullptr;
 	}
+
+	jgl::Font* Text_label::font()
+	{
+		jgl::Font* tmp_font = _font;
+		if (tmp_font == nullptr)
+			tmp_font = jgl::Application::active_application()->default_font();
+		return (tmp_font);
+	}
+
 	void Text_label::set_text_alone(jgl::String p_text)
 	{
 		_text = p_text;

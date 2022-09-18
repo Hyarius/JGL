@@ -443,6 +443,30 @@ namespace jgl
 			}
 		}
 
+		Array<T> duplicate()
+		{
+			Array<T> result;
+
+			for (jgl::Int i = 0; i < _size; i++)
+			{
+				result.push_back(this->operator[](i));
+			}
+
+			return (result);
+		}
+
+		Array<T> rduplicate()
+		{
+			Array<T> result;
+
+			for (jgl::Int i = _size - 1; i >= 0; i--)
+			{
+				result.push_back(this->operator[](i));
+			}
+
+			return (result);
+		}
+
 		const bool computed() const { return (_computed); }
 
 		const T* computed_content() const { return (_computed_result); }

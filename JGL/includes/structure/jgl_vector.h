@@ -116,15 +116,20 @@ namespace jgl
 		{
 			return (std::sqrt(pow(other.x - x, 2) + pow(other.y - y, 2)));
 		}
-		Vector2_base<T> normalize() const
+		Vector2_base<jgl::Float> normalize() const
 		{
-			jgl::Float length;
+			jgl::Float tmp_length;
 
-			length = std::sqrt((x * x) + (y * y));
+			tmp_length = length();
 
-			if (length == 0)
+			/*
+			std::cout << "Length : " << length << std::endl;
+			std::cout << "X : " << static_cast<jgl::Float>(x) / length << std::endl;
+			std::cout << "Y : " << static_cast<jgl::Float>(y) / length << std::endl;
+			*/
+			if (tmp_length == 0)
 				THROW_EXCEPTION(jgl::Error_level::Error, -3, "Trying to divide by 0");
-			return (Vector2_base<jgl::Float>(static_cast<jgl::Float>(x) / length, static_cast<jgl::Float>(y) / length));
+			return (Vector2_base<jgl::Float>(static_cast<jgl::Float>(x) / tmp_length, static_cast<jgl::Float>(y) / tmp_length));
 		}
 		Vector2_base cross(const Vector2_base other = 0) const
 		{

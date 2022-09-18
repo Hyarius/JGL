@@ -1,6 +1,8 @@
 #pragma once
 
 #include "jgl_component.h"
+#include "jgl_enum.h"
+#include "structure/jgl_font.h"
 
 namespace jgl::Widget_component
 {
@@ -53,13 +55,7 @@ namespace jgl::Widget_component
 		const jgl::Size_t& text_size() { return (_text_size); }
 		const jgl::Vector2Int& text_pos() { return (_text_pos); }
 		const jgl::Bool& hidden() { return (_hidden); }
-		jgl::Font* font()
-		{
-			jgl::Font* tmp_font = _font;
-			if (tmp_font == nullptr)
-				tmp_font = jgl::Application::active_application()->default_font();
-			return (tmp_font);
-		}
+		jgl::Font* font();
 
 		void set_hidden(jgl::Bool p_hidden) { _hidden = p_hidden; }
 		void set_text_size(jgl::Size_t p_text_size);
