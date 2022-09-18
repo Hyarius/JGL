@@ -65,7 +65,7 @@ namespace jgl
 		//glEnable(GL_CULL_FACE);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glFrontFace(GL_CCW);
-		glDisable(GL_CULL_FACE);
+		//glDisable(GL_CULL_FACE);
 
 		_central_widget = new Central_widget();
 		_central_widget->set_geometry(0, _size);

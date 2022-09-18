@@ -64,10 +64,11 @@ namespace jgl
 		void set_parent(jgl::Widget* p_parent);
 
 		void set_depth(jgl::Float p_depth) {
-			jgl::Float delta = p_depth - _depth; _depth = p_depth;
-
+			jgl::Float delta = p_depth - _depth;
 			for (jgl::Size_t i = 0; i < _childrens.size(); i++)
-				_childrens[i]->set_depth(p_depth + 1.0f + delta);
+				_childrens[i]->set_depth(_childrens[i]->depth() + delta);
+
+			_depth = p_depth;
 		}
 		void set_geometry(jgl::Vector2Int p_anchor, jgl::Vector2Int p_area);
 	};
