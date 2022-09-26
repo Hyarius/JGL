@@ -133,6 +133,7 @@ namespace jgl
 
 		jgl::Bool _valid_client_connect(jgl::Connection<T>* client, jgl::Message<T>& msg)
 		{
+			THROW_INFORMATION("Validation connection from a client [" + jgl::itoa(client->id()) + "]");
 			jgl::Long key;
 			jgl::Long presumed_result;
 			jgl::Long real_result;
@@ -141,9 +142,13 @@ namespace jgl
 			msg >> presumed_result;
 
 
+			THROW_INFORMATION("Key received : " + jgl::itoa(key) + " of size " + jgl::itoa(sizeof(key)));
 			real_result = _compute_magic_number(key);
+			THROW_INFORMATION("Awsner : " + jgl::itoa(real_result) + " of size " + jgl::itoa(sizeof(real_result)));
+			THROW_INFORMATION("Magic number send : " + jgl::itoa(key) + " -> result proposed : " + jgl::itoa(presumed_result) + " vs espected " + jgl::itoa(real_result));
 			if (real_result == presumed_result)
 			{
+				THROW_INFORMATION("Connection accepted, send confirmation to client [" + jgl::itoa(client->id()) + "]");
 				client->accepted_by_server();
 				if (_login_funct != nullptr)
 					_login_funct(client, _login_param);
@@ -152,15 +157,18 @@ namespace jgl
 				jgl::Bool response = true;
 				msg << response;
 
+				THROW_INFORMATION("Send a message of size : " + jgl::itoa(msg.size()));
 				client->send(msg);
 				return (true);
 			}
 			else
 			{
+				THROW_INFORMATION("Connection rejected, send rejection to client [" + jgl::itoa(client->id()) + "]");
 				client->refused_by_server();
 				msg.clear();
 				jgl::Bool response = false;
 				msg << response;
+				THROW_INFORMATION("Send a message of size : " + jgl::itoa(msg.size()));
 				client->send(msg);
 				return (false);
 			}
@@ -193,6 +201,18 @@ namespace jgl
 		Connection<T>* self()
 		{
 			return (_self);
+		}
+
+		Connection<T>* connection(jgl::Long p_id)
+		{
+			for (jgl::Size_t i = 0; i < _accepted_connection.size(); i++)
+			{
+				if (_accepted_connection[i]->id() == p_id)
+				{
+					return (_accepted_connection[i]);
+				}
+			}
+			return (nullptr);
 		}
 
 		/*
@@ -270,9 +290,14 @@ namespace jgl
 		void stop()
 		{
 			_asio_context.stop();
-
 			if (_thread_context.joinable())
+			{
 				_thread_context.join();
+			}
+
+			_acceptor.close();
+
+			_is_active = false;
 
 			THROW_INFORMATION("[SERVER] Stopped");
 		}

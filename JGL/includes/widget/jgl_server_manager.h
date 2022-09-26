@@ -32,6 +32,11 @@ namespace jgl
 		{
 			_server = nullptr;
 		}
+		~Server_manager()
+		{
+			if (_server != nullptr)
+				delete _server;
+		}
 
 	public:
 		void start(jgl::Size_t p_server_port)

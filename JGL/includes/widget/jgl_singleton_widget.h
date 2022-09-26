@@ -32,5 +32,11 @@ namespace jgl
 		{
 			return (_instance);
 		}
+		static void release()
+		{
+			if (_instance != nullptr)
+				delete _instance;
+			_instance = nullptr;
+		}
 	};
 }

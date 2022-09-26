@@ -32,6 +32,12 @@ namespace jgl
 		{
 			_client = new Client<TMessage>();
 		}
+		~Client_manager()
+		{
+			if (_client != nullptr)
+				delete _client;
+			_client = nullptr;
+		}
 
 	public:
 		jgl::Client<TMessage>* get_client()

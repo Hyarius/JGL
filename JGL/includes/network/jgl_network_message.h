@@ -205,6 +205,7 @@ namespace jgl
 			jgl::Uint i = 0;
 
 			*this >> size;
+			text.clear();
 			while (empty() == false && i < size)
 			{
 				jgl::Glyph c;

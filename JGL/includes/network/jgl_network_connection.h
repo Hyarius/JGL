@@ -145,7 +145,9 @@ namespace jgl
 		void disconnect()
 		{
 			if (is_connected())
+			{
 				asio::post(_context, [this]() { _socket.close(); });
+			}
 		}
 
 		/*

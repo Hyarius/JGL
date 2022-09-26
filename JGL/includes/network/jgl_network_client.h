@@ -107,7 +107,6 @@ namespace jgl
 		*/
 		bool connect(jgl::String host, const jgl::Ushort port)
 		{
-			THROW_INFORMATION("Client connection started");
 			try
 			{
 				std::string host_converted = std::string(host.c_str());
@@ -186,7 +185,7 @@ namespace jgl
 			{
 				_connection->disconnect();
 			}
-		
+
 			_asio_context.stop();
 			if (_thread_context.joinable())
 			{

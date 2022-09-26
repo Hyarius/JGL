@@ -15,7 +15,10 @@ namespace jgl
 
 	Widget::~Widget()
 	{
-
+		if (_parent != nullptr)
+		{
+			_parent->_remove_children(this);
+		}
 	}
 
 	jgl::Bool Widget::is_pointed()

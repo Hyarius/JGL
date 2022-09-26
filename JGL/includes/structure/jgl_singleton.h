@@ -24,5 +24,9 @@ namespace jgl
 		{
 			return (_instance);
 		}
+		static void release()
+		{
+			delete _instance;
+		}
 	};
 }
